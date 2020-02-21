@@ -9,13 +9,13 @@ LC - LibrariaCultura
  """
 def get_book_site(slug):
     print("Will return one of the BookSite modules")
-    if "google" in slug:
+    if slug is "GB":
         return GoogleBooks
-    elif "kobo" in slug:
+    elif slug is "KB":
         return Kobo
-    elif "librariacultura" in slug:
+    elif slug is "LB":
         return LibrariaCultura
-    elif "scribd" in slug:
+    elif slug is "SB":
         return Scribd
-    elif "library" in slug:
+    elif slug is "TB":
         return TestBookstore
