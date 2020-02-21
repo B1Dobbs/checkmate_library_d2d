@@ -1,8 +1,10 @@
+from BookData import BookData
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
     # type: (str) -> SiteBookData 
     print("Get book data function from TestBookstore")
+    return BookData()
 
 
 """Given a SiteBookData, search for the book at the `book_site` site
