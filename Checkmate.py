@@ -10,7 +10,7 @@ def get_book_site(slug):
         return LibrariaCultura
     elif "scribd" in slug:
         return Scribd
-    elif "testBookstore" in slug:
+    elif "library" in slug:
         return TestBookstore
 
 class BookData:
