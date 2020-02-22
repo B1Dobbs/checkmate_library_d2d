@@ -37,6 +37,28 @@ def get_book_data(url):
     book_data.series = root.xpath(".//span[@id='series']")[0].text
     book_data.vol_number = root.xpath(".//span[@id='volume_number']")[0].text
 
+    try:
+        book_data.subtitle = root.xpath(".//p[@id='title']/strong")[0].text.split(": ")[1]
+    except:
+        book_data.subtitle = "None"
+    
+    book_data.authors = root.xpath(".//span[@id='author']")[0].text
+    book_data.authors = str.strip(book_data.authors)
+    
+    book_data.book_id = root.xpath(".//span[@id='book_id']")[0].text
+    book_data.book_id = str.strip(book_data.book_id)
+
+    book_data.site_slug = root.xpath("//head/title")[0].text
+    if(book_data.site_slug == "Test Bookstore"):
+        book_data.site_slug = "TB"
+
+    book_data.url = convert_book_id_to_url(book_data.book_id)
+    #book_data.content
+
+    # aria-hidden:true keeps me from getting the value
+    book_data.ready_for_sale = (root.xpath(".//i[@class='fas fa-check-circle check']"))[0].get("aria-hidden")
+    book_data.extra = {"price" : root.xpath(".//span[@id='price']")[0].text, "releaseDate" : root.xpath(".//span[@id='release_date']")[0].text}
+
     return book_data
 
 
@@ -52,5 +74,6 @@ def find_book_matches(book_data):
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
-    # type: (str) -> str 
+    # type: (str) -> str
+    return "http://localhost:8000/library/" + book_id + "/"
     print("Convert book id function from TestBookstore")
