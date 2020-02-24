@@ -3,11 +3,8 @@ from lxml import etree
 from BookSite.common.utils import *
 
 """Notes:
-1. Sight slug just needs to be assigned, no need to check
 2. Might need to do a try and exept on everything... maybe we could make a function for that
-3. Why are we stripping authors and ID?
-4. Book ID in this case will be the ISBN
-5. Make sure the html wasn't changed to aria-hidden """
+ """
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
@@ -44,6 +41,10 @@ def get_book_data(url):
     #book_data.content
 
     book_data.ready_for_sale = root.xpath(".//i/@class")[0].text
+    if(book_data.ready_for_sale == "fa fa-times-circle x-mark"):
+        book_data.ready_for_sale = false
+    else book_data.ready_for_sale = true
+
     book_data.extra = {"price" : root.xpath(".//span[@id='price']")[0].text, "releaseDate" : root.xpath(".//span[@id='release_date']")[0].text}
 
     return book_data
