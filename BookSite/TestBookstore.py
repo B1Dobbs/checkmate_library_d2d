@@ -3,11 +3,8 @@ from lxml import etree
 from BookSite.common.utils import *
 
 """Notes:
-1. Sight slug just needs to be assigned, no need to check
 2. Might need to do a try and exept on everything... maybe we could make a function for that
-3. Why are we stripping authors and ID?
-4. Book ID in this case will be the ISBN
-5. Make sure the html wasn't changed to aria-hidden """
+ """
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
@@ -36,18 +33,18 @@ def get_book_data(url):
     book_data.authors = root.xpath(".//span[@id='author']")[0].text
     book_data.authors = str.strip(book_data.authors)
     
-    book_data.book_id = root.xpath(".//span[@id='book_id']")[0].text
-    book_data.book_id = str.strip(book_data.book_id)
+    book_data.book_id = book_data.isbn
 
-    book_data.site_slug = root.xpath("//head/title")[0].text
-    if(book_data.site_slug == "Test Bookstore"):
-        book_data.site_slug = "TB"
+    book_data.site_slug = "TB"
 
     book_data.url = convert_book_id_to_url(book_data.book_id)
     #book_data.content
 
-    # aria-hidden:true keeps me from getting the value
-    book_data.ready_for_sale = (root.xpath(".//i[@class='fas fa-check-circle check']"))[0].get("aria-hidden")
+    book_data.ready_for_sale = root.xpath(".//i/@class")[0].text
+    if(book_data.ready_for_sale == "fa fa-times-circle x-mark"):
+        book_data.ready_for_sale = false
+    else book_data.ready_for_sale = true
+
     book_data.extra = {"price" : root.xpath(".//span[@id='price']")[0].text, "releaseDate" : root.xpath(".//span[@id='release_date']")[0].text}
 
     return book_data
