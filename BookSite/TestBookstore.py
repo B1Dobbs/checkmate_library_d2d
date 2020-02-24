@@ -40,10 +40,11 @@ def get_book_data(url):
     book_data.url = convert_book_id_to_url(book_data.book_id)
     #book_data.content
 
-    book_data.ready_for_sale = root.xpath(".//i/@class")[0].text
+    book_data.ready_for_sale = root.xpath(".//i/@class")[0]
     if(book_data.ready_for_sale == "fa fa-times-circle x-mark"):
-        book_data.ready_for_sale = false
-    else book_data.ready_for_sale = true
+        book_data.ready_for_sale = False
+    else: 
+        book_data.ready_for_sale = True
 
     book_data.extra = {"price" : root.xpath(".//span[@id='price']")[0].text, "releaseDate" : root.xpath(".//span[@id='release_date']")[0].text}
 
