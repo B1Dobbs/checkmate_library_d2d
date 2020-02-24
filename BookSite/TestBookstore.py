@@ -1,22 +1,13 @@
 from BookData import BookData
 from lxml import etree
-import io
-import requests
-from PIL import Image
+from BookSite.common.utils import *
 
-"""Can propably be moved to common utils"""
-def get_image_from_url(element):
-    image_response = requests.get(element)
-    img = Image.open(io.BytesIO(image_response.content))
-    return img
-
-"""Can propably be moved to common utils"""
-def get_root_from_url(url):
-    content = requests.get(url).content
-    parser = etree.HTMLParser(remove_pis=True)
-    tree = etree.parse(io.BytesIO(content), parser)
-    root = tree.getroot()
-    return root
+"""Notes:
+1. Sight slug just needs to be assigned, no need to check
+2. Might need to do a try and exept on everything... maybe we could make a function for that
+3. Why are we stripping authors and ID?
+4. Book ID in this case will be the ISBN
+5. Make sure the html wasn't changed to aria-hidden """
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
