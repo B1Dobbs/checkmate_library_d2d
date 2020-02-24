@@ -36,18 +36,14 @@ def get_book_data(url):
     book_data.authors = root.xpath(".//span[@id='author']")[0].text
     book_data.authors = str.strip(book_data.authors)
     
-    book_data.book_id = root.xpath(".//span[@id='book_id']")[0].text
-    book_data.book_id = str.strip(book_data.book_id)
+    book_data.book_id = book_data.isbn
 
-    book_data.site_slug = root.xpath("//head/title")[0].text
-    if(book_data.site_slug == "Test Bookstore"):
-        book_data.site_slug = "TB"
+    book_data.site_slug = "TB"
 
     book_data.url = convert_book_id_to_url(book_data.book_id)
     #book_data.content
 
-    # aria-hidden:true keeps me from getting the value
-    book_data.ready_for_sale = (root.xpath(".//i[@class='fas fa-check-circle check']"))[0].get("aria-hidden")
+    book_data.ready_for_sale = root.xpath(".//i/@class")[0].text
     book_data.extra = {"price" : root.xpath(".//span[@id='price']")[0].text, "releaseDate" : root.xpath(".//span[@id='release_date']")[0].text}
 
     return book_data
