@@ -5,6 +5,7 @@ class BookData:
     def __init__(self):
         self.format = None
         self.title = None
+        self.image = None
         self.image_url = None
         self.isbn = None
         self.description = None
