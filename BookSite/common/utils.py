@@ -18,3 +18,13 @@ def get_root_from_url(url):
     tree = etree.parse(io.BytesIO(content), parser)
     root = tree.getroot()
     return root
+
+"""From Kobo"""
+def queryHtml(root, expr):
+    result = None
+    try:
+        result = root.xpath(expr)[0]
+    except:
+        print("WARNING: Could not retrieve data for " + expr)
+
+    return result
