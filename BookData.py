@@ -26,7 +26,8 @@ class BookData:
         print(self.format)
         print(self.title)
         print(self.image_url)
-        self.image.show()
+        if(self.image != None):
+            self.image.show()
         print(self.isbn)
         print(self.description)
         print(self.series)
