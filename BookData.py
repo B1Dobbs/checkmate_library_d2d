@@ -14,6 +14,7 @@ class BookData:
         self.authors = None
         self.ready_for_sale = None
         self.site_slug = None
+        self.parse_status = None
         self.subtitle = None
         self.book_id = None
         self.url = None
@@ -23,37 +24,39 @@ class BookData:
         print("Relative infomation about the book")
 
     def printData(self):
+        print("Book")
+        print("================")
+        print("Format", end = ": \t")
         print(self.format)
+        print("Title", end = ": \t")
         print(self.title)
+        print("Image URL", end = ": \t")
         print(self.image_url)
+      
         if(self.image != None):
             self.image.show()
-        print(self.isbn)
-        print(self.description)
-        print(self.series)
-        print(self.vol_number)
-        print(self.authors)
-        print(self.ready_for_sale)
-        print(self.site_slug)
-        print(self.subtitle)
-        print(self.book_id)
-        print(self.url)
-        print(self.extra)
 
-    # format : string
-    # title : string
-    # image : pillow image
-    # image_url : string
-    # isbn_13 : string
-    # description : string
-    # series : float
-    # vol_number : float
-    # subtitle : subtitle
-    # authors : array 
-    # book_id : string 
-    # site_slug : string 
-    # parse_status : FULLY_PARSED or UNSUCCESSFUL 
-    # url : string 
-    # content : string 
-    # ready_for_sale : boolean 
-    # extra : dictionary
+        print("ISBN", end = ": \t")
+        print(self.isbn)
+        print("Description", end = ": \t")
+        print(self.description)
+        print("Series", end = ": \t")
+        print(self.series)
+        print("Vol. Number", end = ": \t")
+        print(self.vol_number)
+        print("Authors", end = ": \t")
+        print(self.authors)
+        print("Available", end = ": \t")
+        print(self.ready_for_sale)
+        print("Site Slug", end = ": \t")
+        print(self.site_slug)
+        print("Parse Status", end = ": \t")
+        print(self.parse_status)
+        print("Subtitle", end = ": \t")
+        print(self.subtitle)
+        print("Book ID", end = ": \t")
+        print(self.book_id)
+        print("URL", end = ": \t")
+        print(self.url)
+        print("Extra", end = ": \t")
+        print(self.extra)
