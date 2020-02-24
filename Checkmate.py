@@ -8,14 +8,14 @@ SD - Scribd
 LC - LibrariaCultura
  """
 def get_book_site(slug):
-    print("Will return one of the BookSite modules")
-    if "google" in slug:
+    """Will return one of the BookSite modules"""
+    if slug == "GB":
         return GoogleBooks
-    elif "kobo" in slug:
+    elif slug == "KB":
         return Kobo
-    elif "librariacultura" in slug:
+    elif slug == "LB":
         return LibrariaCultura
-    elif "scribd" in slug:
+    elif slug == "SB":
         return Scribd
-    elif "library" in slug:
+    elif slug == "TB":
         return TestBookstore
