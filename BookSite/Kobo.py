@@ -9,9 +9,28 @@ def get_book_data(url):
     root = get_root_from_url(url)
 
     try:
-        book_data.title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
+        title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
+        if ":" in title:
+            title_array = title.split(":")
+            book_data.title = title_array[0]
+            book_data.subtitle = str.strip(title_array[1])
+        else:
+            book_data.title = title
+
         book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")
         book_data.image = get_image_from_url(book_data.image_url)
+
+
+        book_data.authors = queryHtml(root, ".//a[@class='contributor-name']").text
+        book_data.ready_for_sale = True
+        book_data.site_slug = "KB"
+
+        book_id = str(queryHtml(root, ".//link[@rel='canonical']/@href"))
+        book_data.book_id = book_id.split("/")[-1]
+
+        book_data.url = convert_book_id_to_url(book_data.book_id)
+        book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span").text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
+        book_data.content = queryHtml(root, "/html")
 
     except:
         print("ERROR: Processing book at " + url)
@@ -34,4 +53,5 @@ def find_book_matches(book_data):
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
+    return "https://www.kobo.com/us/en/ebook/" + book_id
     print("Convert book id function from Kobo")

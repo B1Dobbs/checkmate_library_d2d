@@ -9,7 +9,7 @@ def testBookstore():
 
 def testKobo():
     book_site = get_book_site("KB")
-    book_data = book_site.get_book_data("https://www.kobo.com/us/en/ebook/the-alchemist-38")
+    book_data = book_site.get_book_data("https://www.kobo.com/us/en/audiobook/the-hunger-games-special-edition")
     book_data.printData()
 
 
