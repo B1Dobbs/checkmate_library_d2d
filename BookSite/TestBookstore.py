@@ -1,9 +1,10 @@
 from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
+import requests, sys, webbrowser, bs4
 
 """Notes:
-2. Might need to do a try and exept on everything... maybe we could make a function for that
+2. Might need to do a try and except on everything... maybe we could make a function for that
  """
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
@@ -58,8 +59,40 @@ of a match it is (1.0 is an exact match).
 This should take into account all the info we have about a book, 
 including the cover.""" 
 def find_book_matches(book_data):
-    # type: (SiteBookData) -> List[Tuple[SiteBookData, float]] 
-    print("Find book matches function from TestBookstore")
+
+    links = []
+    if (book_data.authors): # If an author is sent in to search by, record link matches
+        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.authors
+        res = requests.get(link)
+        res.raise_for_status()
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+        for link in soup.find_all('a', class_="book_title"):
+            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+        
+
+    if (book_data.isbn_13): # If an isbn is sent in to search by, record link matches
+        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.isbn_13
+        res = requests.get(link)
+        res.raise_for_status()
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+        for link in soup.find_all('a', class_="book_title"):
+            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+        
+    if (book_data.title): # If a title is sent in to search by, record link matches
+        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.title
+        res = requests.get(link)
+        res.raise_for_status()
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+        for link in soup.find_all('a', class_="book_title"):
+            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+        
+    links = list(dict.fromkeys(links)) #removes duplicate links from list
+
+    for lnk in links:
+        print(lnk)
 
 
 """Given a book_id, return the direct url for the book.""" 
