@@ -4,6 +4,7 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
+from isbnlib import *
 
 """From Test Bookstore"""
 def get_image_from_url(element):
@@ -35,3 +36,7 @@ def queryHtml(root, expr):
         print("WARNING: Could not retrieve data for " + expr)
 
     return result
+
+"""ISBN 10 to ISBN 13 conversion """
+def isbn10to13(isbn10):
+    return to_isbn13(isbn10)
