@@ -10,8 +10,15 @@ def get_book_data(url):
 
     try:
         book_data.title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
-        book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")
+        book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
         book_data.image = get_image_from_url(book_data.image_url)
+        book_data.isbn = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
+        book_data.description = queryHtml(root, ".//div[@class='synopsis-description']/descendant::*/text()")
+        series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
+        if(series_info is not None):
+            series_info = series_info.text.split("#")
+            book_data.series = series_info[0]
+            book_data.vol_number = series_info[1]
 
     except:
         print("ERROR: Processing book at " + url)

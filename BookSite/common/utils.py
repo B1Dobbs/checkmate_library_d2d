@@ -21,9 +21,16 @@ def get_root_from_url(url):
 
 """From Kobo"""
 def queryHtml(root, expr):
-    result = None
     try:
-        result = root.xpath(expr)[0]
+        result = root.xpath(expr)
+        if len(result) == 1:
+            result = result[0]
+        elif len(result) == 0:
+            result = None
+            raise LookupError
+
+    except LookupError:
+        print("WARNING: No data found for " + expr)
     except:
         print("WARNING: Could not retrieve data for " + expr)
 
