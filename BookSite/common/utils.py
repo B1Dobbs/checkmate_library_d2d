@@ -4,6 +4,8 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
+import requests, sys, webbrowser, bs4
+
 
 """From Test Bookstore"""
 def get_image_from_url(element):
@@ -28,3 +30,15 @@ def queryHtml(root, expr):
         print("WARNING: Could not retrieve data for " + expr)
 
     return result
+
+def testBookStoreLinkSearch(searchVar):
+        links = []
+        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + searchVar
+        res = requests.get(link)
+        res.raise_for_status()
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+        for link in soup.find_all('a', class_="book_title"):
+            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+
+        return links
