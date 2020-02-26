@@ -14,5 +14,5 @@ def testKobo():
 
 
 if __name__ == "__main__":
-    #testBookstore()
-    testKobo()
+    testBookstore()
+    #testKobo()
