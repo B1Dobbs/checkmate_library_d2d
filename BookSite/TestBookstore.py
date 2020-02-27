@@ -5,7 +5,7 @@ import requests, sys, webbrowser, bs4
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
-    book_data = BookData()\
+    book_data = BookData()
     root = get_root_from_url(url)
 
     try:
@@ -28,8 +28,7 @@ def get_book_data(url):
         book_data.series = str.strip(queryHtml(root, ".//span[@id='series']").text)
         book_data.vol_number = str.strip(queryHtml(root, ".//span[@id='volume_number']").text)
         
-        authorsUnstripped = queryHtml(root, ".//span[@id='author']").text
-        book_data.authors = str.strip(authorsUnstripped)
+        book_data.authors = str.strip(queryHtml(root, ".//span[@id='author']/text()")).split(", ")
         
         book_data.book_id = book_data.isbn
 
