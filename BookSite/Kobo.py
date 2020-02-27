@@ -28,7 +28,7 @@ def get_book_data(url):
             book_data.vol_number = series_info[1]
 
 
-        book_data.authors = queryHtml(root, ".//a[@class='contributor-name']").text
+        book_data.authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
         book_data.ready_for_sale = True
         book_data.site_slug = "KB"
 
