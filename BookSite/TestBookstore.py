@@ -44,7 +44,7 @@ def get_book_data(url):
             book_data.ready_for_sale = True
 
         book_data.extra = {"price" : queryHtml(root, ".//span[@id='price']").text, "releaseDate" : queryHtml(root, ".//span[@id='release_date']").text}
-    
+
     except:
         print("ERROR: Processing book at " + url)
         print(sys.exc_info()[0])

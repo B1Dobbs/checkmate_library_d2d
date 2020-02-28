@@ -4,6 +4,7 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
+from Levenshtein import ratio
 
 """From Test Bookstore"""
 def get_image_from_url(element):
@@ -28,3 +29,12 @@ def queryHtml(root, expr):
         print("WARNING: Could not retrieve data for " + expr)
 
     return result
+
+def compare_book_data(book1, book2):
+    percent = 0
+    count = 0
+    for attr, value in book1.__dict__.items():
+        if(value != None and book2.__dict__[attr] != None):
+            percent += ratio(str(book1.__dict__[attr]), str(book2.__dict__[attr])) * 100
+            count += 1
+    return round((percent / count), 2)
