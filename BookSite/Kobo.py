@@ -29,17 +29,17 @@ including the cover."""
 def find_book_matches(book_data):
 
     links = []
-    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.append(koboLinkSearch(book_data['authors']))
+    if book_data.authors != None: # If an author is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.authors)
         
-    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.append(koboLinkSearch(book_data['isbn_13']))
+    if book_data.isbn != None: # If an isbn is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.isbn)
         
-    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(koboLinkSearch(book_data['title']))
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.title)
     
-    if 'series' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(koboLinkSearch(book_data['series']))
+    if book_data.series != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.series)
         
     linksNoDuplicates = [] 
     for i in links: 
@@ -47,7 +47,8 @@ def find_book_matches(book_data):
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
     for lnk in linksNoDuplicates:
-        print(lnk)
+        book_data = get_book_data(lnk)
+        book_data.printData()
 
 
 """Given a book_id, return the direct url for the book.""" 

@@ -28,13 +28,14 @@ def testSiteQuery():
     for lnk in linksNoDuplicates:
         print(lnk)
 
-def testTestBookstore():
-    book_data = {'authors': 'vergara'}
+def testKobo():
+    book_data = BookData()
+    book_data.title = "Zombie"
     
-    book_site = get_book_site("TB")
-    book_site.find_book_matches(book_data)
+    book_site = get_book_site("KB")
+    print(book_site.find_book_matches(book_data))
     
 
 if __name__ == "__main__":
     #testSiteQuery()
-    testTestBookstore()
+    testKobo()
