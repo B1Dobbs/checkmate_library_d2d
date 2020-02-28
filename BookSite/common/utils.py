@@ -56,10 +56,6 @@ def queryHtml(root, expr):
             result = result[0]
         elif len(result) == 0:
             result = None
-            raise LookupError
-
-    except LookupError:
-        print("WARNING: No data found for " + expr)
     except:
         print("WARNING: Could not retrieve data for " + expr)
 
