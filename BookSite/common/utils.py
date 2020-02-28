@@ -31,14 +31,61 @@ def queryHtml(root, expr):
 
     return result
 
+
+def librariaLinkSearch(searchVar):
+    links = []
+    link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar
+    res = requests.get(link)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        for link in p.find_all('a'):
+            links.append(link.get('href'))
+
+    return links
+
+def googleLinkSearch(searchVar):
+    links = []
+    link = 'https://play.google.com/store/search?q=' + searchVar + '&c=books&hl=en_US'
+    res = requests.get(link)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        for link in p.find_all('a'):
+            links.append(link.get('href'))
+
+    return links
+
+""" Search test Book Store for relevant links """
 def testBookStoreLinkSearch(searchVar):
-        links = []
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + searchVar
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+    links = []
+    link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + searchVar
+    res = requests.get(link)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-        for link in soup.find_all('a', class_="book_title"):
-            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+    for link in soup.find_all('a', class_="book_title"):
+        links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
 
-        return links
+    return links
+
+""" Searching Kobo for relevant links """
+def koboLinkSearch(searchVar):
+    links = []
+    link = 'https://www.kobo.com/us/en/search?query=' + searchVar
+    res = requests.get(link)
+    res.raise_for_status
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+    for p in soup.find_all('p', class_="title product-field"):
+        for link in p.find_all('a'):
+            links.append(link.get('href'))
+
+    return links
+
+
+
+
+

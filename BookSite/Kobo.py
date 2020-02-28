@@ -27,8 +27,27 @@ of a match it is (1.0 is an exact match).
 This should take into account all the info we have about a book, 
 including the cover.""" 
 def find_book_matches(book_data):
-    # type: (SiteBookData) -> List[Tuple[SiteBookData, float]] 
-    print("Find book matches function from Kobo")
+
+    links = []
+    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
+        links.append(koboLinkSearch(book_data['authors']))
+        
+    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
+        links.append(koboLinkSearch(book_data['isbn_13']))
+        
+    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
+        links.append(koboLinkSearch(book_data['title']))
+    
+    if 'series' in book_data.keys(): # If a title is sent in to search by, record link matches
+        links.append(koboLinkSearch(book_data['series']))
+        
+    linksNoDuplicates = [] 
+    for i in links: 
+        if i not in linksNoDuplicates: 
+            linksNoDuplicates.append(i) #removes duplicate links from list
+    # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
+    for lnk in linksNoDuplicates:
+        print(lnk)
 
 
 """Given a book_id, return the direct url for the book.""" 
