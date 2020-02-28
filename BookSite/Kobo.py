@@ -36,7 +36,8 @@ def get_book_data(url):
         book_data.book_id = book_id.split("/")[-1]
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
-        book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span").text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
+        print(queryHtml(root, ".//div[@class='price-wrapper']/span"))
+        #book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span").text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
         book_data.content = queryHtml(root, "/html")
 
     except:
@@ -71,9 +72,14 @@ def find_book_matches(book_data):
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
+
+    book_matches = []
     for lnk in linksNoDuplicates:
-        book_data = get_book_data(lnk)
-        book_data.printData()
+        search_book_data = get_book_data(lnk)
+        book_matches.append(search_book_data)
+        #search_book_data.printData()
+    return book_matches
+
 
 
 """Given a book_id, return the direct url for the book.""" 
