@@ -60,38 +60,26 @@ including the cover."""
 def find_book_matches(book_data):
 
     links = []
-    if (book_data.authors): # If an author is sent in to search by, record link matches
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.authors
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
-
-        for link in soup.find_all('a', class_="book_title"):
-            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data['authors'])
         
-
-    if (book_data.isbn_13): # If an isbn is sent in to search by, record link matches
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.isbn_13
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
-
-        for link in soup.find_all('a', class_="book_title"):
-            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data['isbn_13'])
         
-    if (book_data.title): # If a title is sent in to search by, record link matches
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + book_data.title
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data['title'])
+    
+    print(links)
+    linksNoDuplicates = [] 
+    for i in links: 
+        if i not in linksNoDuplicates: 
+            linksNoDuplicates.append(i) #removes duplicate links from list
+    # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
-        for link in soup.find_all('a', class_="book_title"):
-            links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
-        
-    links = list(dict.fromkeys(links)) #removes duplicate links from list
+    for lnk in linksNoDuplicates:
+        search_book_data = get_book_data(lnk)
+        search_book_data.printData()
 
-    for lnk in links:
-        print(lnk)
 
 
 """Given a book_id, return the direct url for the book.""" 
