@@ -34,7 +34,7 @@ def get_book_data(url):
 
         book_data.site_slug = "TB"
 
-        book_data.url = convert_book_id_to_url(book_data.book_id)
+        book_data.url = "http://localhost:8000/library/" + book_data.book_id + "/"
         book_data.content = queryHtml(root, "/html")
 
         book_data.ready_for_sale = queryHtml(root, ".//i/@class")
@@ -97,5 +97,4 @@ def find_book_matches(book_data):
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str
-    return "http://localhost:8000/library/" + book_id + "/"
     print("Convert book id function from TestBookstore")

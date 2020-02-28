@@ -60,5 +60,3 @@ class BookData:
         print(self.url)
         print("Extra", end = ": \t \t")
         print(self.extra)
-        print("Content", end = ": \t")
-        print(self.content)
