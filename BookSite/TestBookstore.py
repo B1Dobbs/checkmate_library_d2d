@@ -62,21 +62,24 @@ def find_book_matches(book_data):
 
     links = []
     if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.append(testBookStoreLinkSearch(book_data['authors']))
+        links += testBookStoreLinkSearch(book_data['authors'])
         
     if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.append(testBookStoreLinkSearch(book_data['isbn_13']))
+        links += testBookStoreLinkSearch(book_data['isbn_13'])
         
     if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(testBookStoreLinkSearch(book_data['title']))
-        
+        links += testBookStoreLinkSearch(book_data['title'])
+    
+    print(links)
     linksNoDuplicates = [] 
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
+
     for lnk in linksNoDuplicates:
-        print(lnk)
+        search_book_data = get_book_data(lnk)
+        search_book_data.printData()
 
 
 
