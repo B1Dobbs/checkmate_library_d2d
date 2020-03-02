@@ -4,6 +4,7 @@ import io
 import requests, sys, webbrowser, bs4
 from PIL import Image
 from BookSite.common.utils import *
+from Checkmate import *
     
 def testSiteQuery():
 
@@ -27,7 +28,14 @@ def testSiteQuery():
     for lnk in linksNoDuplicates:
         print(lnk)
 
+def testKobo():
+    book_data = BookData()
+    book_data.title = "Zombie"
+    
+    book_site = get_book_site("KB")
+    print(book_site.find_book_matches(book_data))
     
 
 if __name__ == "__main__":
     testSiteQuery()
+    #testKobo()
