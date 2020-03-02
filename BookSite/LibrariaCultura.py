@@ -33,12 +33,14 @@ def get_book_data(url):
         #Parsing Author Name
         collaborators = authorsTag.split("|")
         matchingAuthor = [s for s in collaborators if "Autor" in s]
+        authorsArray = []
 
         for a in matchingAuthor:
-            authorsNamesString = matchingAuthor[0].split(":")
+            authorsNamesString = a.split(":")
             authorsNamesArray = authorsNamesString[1].split(",")
-            # printing like a string, not a array
-            book_data.authors.append(authorsNamesArray[1].strip() + "," + authorsNamesArray[0].strip())
+            authorsArray.append(authorsNamesArray[1].strip() + " " + authorsNamesArray[0].strip())
+        
+        book_data.authors = authorsArray
 
         book_data.site_slug = "LC"
 
