@@ -25,7 +25,8 @@ def get_book_data(url):
         if(series_info is not None):
             series_info = series_info.text.split("#")
             book_data.series = series_info[0]
-            book_data.vol_number = series_info[1]
+            if(len(series_info) > 1):
+                book_data.vol_number = series_info[1]
 
 
         book_data.authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
@@ -76,7 +77,7 @@ def find_book_matches(book_data):
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
         book_matches.append(search_book_data)
-        #search_book_data.printData()
+        search_book_data.printData()
     return book_matches
 
 
