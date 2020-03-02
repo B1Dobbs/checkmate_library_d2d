@@ -39,7 +39,7 @@ def librariaLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+    for p in soup.find_all('span', class_="prateleiraProduto__informacao__preco"):
         for link in p.find_all('a'):
             links.append(link.get('href'))
 
@@ -52,8 +52,8 @@ def googleLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
-        for link in p.find_all('a'):
+    for span in soup.find_all('div', class_="b8cIId f5NCO"):
+        for link in span.find_all('a'):
             links.append(link.get('href'))
 
     return links

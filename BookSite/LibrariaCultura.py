@@ -17,13 +17,13 @@ including the cover."""
 def find_book_matches(book_data):
     links = []
     if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['authors']))
+        links.extend(librariaLinkSearch(book_data['authors']))
         
     if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['isbn_13']))
+        links.extend(librariaLinkSearch(book_data['isbn_13']))
         
     if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['title']))
+        links.extend(librariaLinkSearch(book_data['title']))
         
     linksNoDuplicates = [] 
     for i in links: 
