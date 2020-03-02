@@ -11,7 +11,7 @@ class BookData:
         self.description = None
         self.series = None
         self.vol_number = None
-        self.authors = None
+        self.authors = []
         self.ready_for_sale = None
         self.site_slug = None
         self.parse_status = None

@@ -29,7 +29,12 @@ def get_book_data(url):
                 book_data.vol_number = series_info[1]
 
 
-        book_data.authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
+        authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
+        if(type(authors) == list):
+            book_data.authors += authors
+        else:
+            book_data.authors.append(authors)
+
         book_data.ready_for_sale = True
         book_data.site_slug = "KB"
 
@@ -55,8 +60,8 @@ including the cover."""
 def find_book_matches(book_data):
 
     links = []
-    if book_data.authors != None: # If an author is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.authors)
+    #if book_data.authors != None: # If an author is sent in to search by, record link matches
+    #    links += koboLinkSearch(book_data.authors)
         
     if book_data.isbn != None: # If an isbn is sent in to search by, record link matches
         links += koboLinkSearch(book_data.isbn)
