@@ -36,7 +36,7 @@ def get_book_data(url):
         book_data.book_id = book_id.split("/")[-1]
 
         book_data.url = "https://www.kobo.com/us/en/ebook/" + book_data.book_id
-        book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span").text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
+        book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span")[0].text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
         book_data.content = queryHtml(root, "/html")
 
     except:
@@ -52,8 +52,33 @@ of a match it is (1.0 is an exact match).
 This should take into account all the info we have about a book, 
 including the cover.""" 
 def find_book_matches(book_data):
-    # type: (SiteBookData) -> List[Tuple[SiteBookData, float]] 
-    print("Find book matches function from Kobo")
+
+    links = []
+    if book_data.authors != None: # If an author is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.authors)
+        
+    if book_data.isbn != None: # If an isbn is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.isbn)
+        
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.title)
+    
+    if book_data.series != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.series)
+        
+    linksNoDuplicates = [] 
+    for i in links: 
+        if i not in linksNoDuplicates: 
+            linksNoDuplicates.append(i) #removes duplicate links from list
+    # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
+
+    book_matches = []
+    for lnk in linksNoDuplicates:
+        search_book_data = get_book_data(lnk)
+        book_matches.append(search_book_data)
+        #search_book_data.printData()
+    return book_matches
+
 
 
 """Given a book_id, return the direct url for the book.""" 
