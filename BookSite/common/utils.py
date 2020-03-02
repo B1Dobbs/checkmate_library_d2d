@@ -4,8 +4,9 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
-from Levenshtein import ratio
+from Levenshtein import ratio, distance
 import requests, sys, webbrowser, bs4
+import re
 
 
 """From Test Bookstore"""
@@ -36,10 +37,23 @@ def compare_book_data(book1, book2):
     percent = 0
     count = 0
     for attr, value in book1.__dict__.items():
+
         if(value != None and book2.__dict__[attr] != None):
-            percent += ratio(str(book1.__dict__[attr]), str(book2.__dict__[attr])) * 100
-            count += 1
-    return round((percent / count), 2)
+            print(str(value) + " and " + str(book2.__dict__[attr]) + " are not None")
+            pattern =  '[^A-Za-z0-9 ,]+'
+            book2Str = re.sub(pattern, "", str(book2.__dict__[attr]))
+            book1Str = re.sub(pattern, "", str(book1.__dict__[attr]))
+
+            if(book2Str in book1Str or distance(book2Str, book1Str) <= 5):
+                print("Testing against " + book2Str + " and " + book1Str)
+                percent += ratio(book2Str, book1Str) * 100
+                count += 1
+
+    print(str(percent) + " / " + str(count))
+    if(count == 0):
+        return 0.0
+    else:
+        return round((percent / count), 2)
 
 def librariaLinkSearch(searchVar):
     links = []

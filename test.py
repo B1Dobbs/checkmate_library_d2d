@@ -9,8 +9,9 @@ def testBookstore():
     book_data = book_site.get_book_data("http://localhost:8000/library/9781386989752/")
     book_data.printData()
     book_data2 = BookData()
-    book_data2.title = "10 Steps To Hero"
-    book_data2.authors = ['Sacha Black']
+    #book_data2.title = '10 Steps'
+    book_data2.authors = ['Sasha']
+    book_data.authors = ['Sacha Black', 'Ben']
     print(compare_book_data(book_data, book_data2))
 
 def testKobo():
