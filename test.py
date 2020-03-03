@@ -6,7 +6,7 @@ def testBookstore():
     book_site = get_book_site("TB")
     #book_data = book_site.get_book_data("http://localhost:8000/library/1565112531635/")
     #Didn't have that book in my testBookStore
-    book_data = book_site.get_book_data("http://localhost:8000/library/9781386989752/")
+    book_data = book_site.get_book_data("http://localhost:8000/library/9781386820031/")
     book_data.printData()
     book_data2 = BookData()
     #book_data2.title = '10 Steps'

@@ -89,4 +89,3 @@ def find_book_matches(book_data):
 def convert_book_id_to_url(book_id):
     # type: (str) -> str
     return "http://localhost:8000/library/" + book_id + "/"
-    print("Convert book id function from TestBookstore")

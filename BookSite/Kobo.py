@@ -35,7 +35,7 @@ def get_book_data(url):
         book_id = str(queryHtml(root, ".//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("/")[-1]
 
-        book_data.url = "https://www.kobo.com/us/en/ebook/" + book_data.book_id
+        book_data.url = convert_book_id_to_url(book_data.book_id)
         book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span")[0].text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
         book_data.content = queryHtml(root, "/html")
 
@@ -84,4 +84,4 @@ def find_book_matches(book_data):
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
-    print("Convert book id function from Kobo")
+    return "https://www.kobo.com/us/en/ebook/" + book_id
