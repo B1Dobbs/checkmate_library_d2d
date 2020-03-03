@@ -34,7 +34,7 @@ def get_book_data(url):
 
         book_data.site_slug = "TB"
 
-        book_data.url = convert_book_id_to_url(book_data.book_id)
+        book_data.url = "http://localhost:8000/library/" + book_data.book_id + "/"
         book_data.content = queryHtml(root, "/html")
 
         book_data.ready_for_sale = queryHtml(root, ".//i/@class")
@@ -60,14 +60,15 @@ including the cover."""
 def find_book_matches(book_data):
 
     links = []
-    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data['authors'])
-        
-    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data['isbn_13'])
-        
-    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data['title'])
+
+    if book_data.authors != None: # If an author is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data.authors)
+
+    if book_data.isbn_13 != None: # If an isbn is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data.isbn)
+
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data.title)
     
     print(links)
     linksNoDuplicates = [] 
@@ -76,14 +77,16 @@ def find_book_matches(book_data):
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
+    book_matches = []
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
-        search_book_data.printData()
+        book_matches.append(search_book_data)
+        #search_book_data.printData()
+    return book_matches
 
 
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str
-    return "http://localhost:8000/library/" + book_id + "/"
     print("Convert book id function from TestBookstore")
