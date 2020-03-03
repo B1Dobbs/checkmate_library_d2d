@@ -135,9 +135,19 @@ def koboLinkSearch(searchVar):
         for link in p.find_all('a'):
             links.append(link.get('href'))
 
-    aLink = str(soup.find('a', class_="page-link final")) # Find the function by looking for the pattern
-    print(aLink)
+    aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
+    if(aLink): #There's more than one page
+        num_pages = aLink.contents[0]
+        num_pages = int(num_pages) + 1
+        for i in range(2, num_pages):
+            link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
 
+            for p in soup.find_all('p', class_="title product-field"):
+                for link in p.find_all('a'):
+                    links.append(link.get('href'))
 
     return links
 
@@ -165,7 +175,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
@@ -208,7 +218,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
