@@ -103,6 +103,24 @@ def testBookStoreLinkSearch(searchVar):
     for link in soup.find_all('a', class_="book_title"):
         links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
 
+    pattern = re.compile(r'Last')
+    findPageNum = str(soup.find('a', text=pattern))
+
+    if(findPageNum):
+        temp = re.findall(r'\d+', findPageNum) 
+        num_pages = temp[0]
+
+        for i in range(2, int(num_pages)+1):
+            print("Looping")
+            link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status()
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for link in soup.find_all('a', class_="book_title"):
+                links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+
+
     return links
 
 """ Searching Kobo for relevant links """
@@ -116,6 +134,10 @@ def koboLinkSearch(searchVar):
     for p in soup.find_all('p', class_="title product-field"):
         for link in p.find_all('a'):
             links.append(link.get('href'))
+
+    aLink = str(soup.find('a', class_="page-link final")) # Find the function by looking for the pattern
+    print(aLink)
+
 
     return links
 

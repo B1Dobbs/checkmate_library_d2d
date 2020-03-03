@@ -28,6 +28,8 @@ def find_book_matches(book_data):
         if(titleLinkSearch != ""):
             titleLinkSearch += " "
             titleLinkSearch += book_data.title
+        else:
+            titleLinkSearch = book_data.title
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
         links += scribdLinkSearch(book_data.isbn)
