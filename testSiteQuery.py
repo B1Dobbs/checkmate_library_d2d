@@ -17,20 +17,21 @@ def testSiteQuery():
     links = []
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.authors)
+        links += koboLinkSearch(book_data.authors)
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.isbn)
+        links += koboLinkSearch(book_data.isbn)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.title)
+        links += koboLinkSearch(book_data.title)
 
-    print(links)
-    
+
     linksNoDuplicates = [] 
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
+
+    print(linksNoDuplicates)
 
 def testScribd():
 
@@ -52,7 +53,7 @@ def testKobo():
     
     book_site = get_book_site("KB")
     print(book_site.find_book_matches(book_data))
-
+    
 
 if __name__ == "__main__":
     #testSiteQuery()
