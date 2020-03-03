@@ -1,4 +1,5 @@
 from PIL import Image
+import re
 
 class BookData:
 
@@ -11,7 +12,7 @@ class BookData:
         self.description = None
         self.series = None
         self.vol_number = None
-        self.authors = None
+        self.authors = []
         self.ready_for_sale = None
         self.site_slug = None
         self.parse_status = None
@@ -61,3 +62,9 @@ class BookData:
         print(self.url)
         print("Extra", end = ": \t \t")
         print(self.extra)
+        print("Content", end = ": \t")
+        print(self.content)
+
+    def get_authors_as_string(self):
+        pattern =  '[^A-Za-z0-9 ,]+'
+        return re.sub(pattern, "", str(self.authors))

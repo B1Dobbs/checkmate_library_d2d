@@ -25,10 +25,16 @@ def get_book_data(url):
         if(series_info is not None):
             series_info = series_info.text.split("#")
             book_data.series = series_info[0]
-            book_data.vol_number = series_info[1]
+            if(len(series_info) > 1):
+                book_data.vol_number = series_info[1]
 
 
-        book_data.authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
+        authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
+        if(type(authors) == list):
+            book_data.authors += authors
+        else:
+            book_data.authors.append(authors)
+
         book_data.ready_for_sale = True
         book_data.site_slug = "KB"
 
@@ -52,19 +58,25 @@ of a match it is (1.0 is an exact match).
 This should take into account all the info we have about a book, 
 including the cover.""" 
 def find_book_matches(book_data):
-
     links = []
-    if book_data.authors != None: # If an author is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.authors)
-        
-    if book_data.isbn != None: # If an isbn is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.isbn)
-        
-    if book_data.title != None: # If a title is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.title)
+
+    titleLinkSearch = ""
+
+    if book_data.authors != None: # If a title is sent in to search by, record link matches
+        titleLinkSearch += book_data.authors
     
-    if book_data.series != None: # If a title is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.series)
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        if(titleLinkSearch != ""):
+            titleLinkSearch += " "
+            titleLinkSearch += book_data.title
+        else:
+            titleLinkSearch = book_data.title
+
+    if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.isbn)
+
+    if(titleLinkSearch != ""):
+        links += koboLinkSearch(titleLinkSearch)
         
     linksNoDuplicates = [] 
     for i in links: 
@@ -76,7 +88,7 @@ def find_book_matches(book_data):
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
         book_matches.append(search_book_data)
-        #search_book_data.printData()
+        search_book_data.printData()
     return book_matches
 
 
