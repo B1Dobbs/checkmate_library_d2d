@@ -69,14 +69,14 @@ This should take into account all the info we have about a book,
 including the cover.""" 
 def find_book_matches(book_data):
     links = []
-    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['authors']))
-        
-    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['isbn_13']))
-        
-    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(librariaLinkSearch(book_data['title']))
+    if book_data.authors != None: # If a title is sent in to search by, record link matches
+        links += librariaLinkSearch(book_data.authors)
+
+    if book_data.isbn != None: # If a title is sent in to search by, record link matches
+        links += librariaLinkSearch(book_data.isbn)
+
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += librariaLinkSearch(book_data.title)
         
     linksNoDuplicates = [] 
     for i in links: 

@@ -5,6 +5,9 @@ import io
 import requests
 from PIL import Image
 import requests, sys, webbrowser, bs4
+import json
+import re
+import regex # pip install regex
 
 
 def get_image_from_url(url):
@@ -69,7 +72,7 @@ def librariaLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+    for p in soup.find_all('span', class_="prateleiraProduto__informacao__preco"):
         for link in p.find_all('a'):
             links.append(link.get('href'))
 
@@ -77,15 +80,12 @@ def librariaLinkSearch(searchVar):
 
 def googleLinkSearch(searchVar):
     links = []
-    link = 'https://play.google.com/store/search?q=' + searchVar + '&c=books&hl=en_US'
-    res = requests.get(link)
-    res.raise_for_status()
-    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    link = 'https://www.googleapis.com/books/v1/volumes?q=' + searchVar + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40'
+    apiResponse = requests.get(link)
 
-    for p in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
-        for link in p.find_all('a'):
-            links.append(link.get('href'))
-
+    for item in apiResponse.json()['items']:
+        links.append(item['volumeInfo']['infoLink'])
+       
     return links
 
 """ Search test Book Store for relevant links """
@@ -114,6 +114,98 @@ def koboLinkSearch(searchVar):
             links.append(link.get('href'))
 
     return links
+
+def scribdLinkSearch(searchVar):
+    links = []
+    link = 'https://www.scribd.com/search?content_type=books&page=1&query=' + searchVar + '&language=1'
+    res = requests.get(link)
+
+    # The following code gets a json blob from inside a specific javascript function call.  
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+    string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+    pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                    # This code selects actual json code
+
+    newString = pattern.findall(string)
+
+    parsed_json = json.loads(newString[1]) # parse the json
+
+    if(parsed_json['result_count'] != '0'): # If there are any results
+        results = parsed_json['results']  
+        for book in results['books']['content']['documents']:
+            links.append(book['book_preview_url'])
+
+        num_pages = parsed_json['page_count']
+
+        for i in range(2, num_pages):
+            link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
+            res = requests.get(link)
+
+            # The following code gets a json blob from inside a specific javascript function call.  
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+            pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+            string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+            pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                            # This code selects actual json code
+
+            newString = pattern.findall(string)
+
+            parsed_json = json.loads(newString[1]) # parse the json
+            results = parsed_json['results']
+            
+            for book in results['books']['content']['documents']:
+                links.append(book['book_preview_url'])
+
+
+    link = 'https://www.scribd.com/search?content_type=audiobooks&page=1&query=' + searchVar + '&language=1'
+    res = requests.get(link)
+
+    # The following code gets a json blob from inside a specific javascript function call.  
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+    string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+    pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                    # This code selects actual json code
+
+    newString = pattern.findall(string)
+
+    parsed_json = json.loads(newString[1]) # parse the json
+
+    if(parsed_json['result_count'] != '0'): # If there are any results
+        results = parsed_json['results']
+        for audiobook in results['audiobooks']['content']['documents']:
+            links.append(audiobook['book_preview_url'])
+
+        num_pages = parsed_json['page_count']
+
+        for i in range(2, num_pages):
+            link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
+            res = requests.get(link)
+
+            # The following code gets a json blob from inside a specific javascript function call.  
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+            pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+            string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+            pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                            # This code selects actual json code
+
+            newString = pattern.findall(string)
+
+            parsed_json = json.loads(newString[1]) # parse the json
+            results = parsed_json['results']
+            
+            for book in results['audiobooks']['content']['documents']:
+                links.append(book['book_preview_url'])
+
+    
+    return links
+
+
 
 
 

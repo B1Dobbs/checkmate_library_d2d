@@ -1,11 +1,6 @@
 from BookData import BookData
-from lxml import etree
-import io
-import requests, sys, webbrowser, bs4
-from PIL import Image
-from BookSite.common.utils import *
 from Checkmate import *
-    
+
 def testSiteQuery():
 
     book_data = {'authors': 'vergara'}
@@ -27,15 +22,30 @@ def testSiteQuery():
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
     for lnk in linksNoDuplicates:
         print(lnk)
+    
+def testScribd():
 
+    book_data = BookData()
+
+    book_data.authors = ""
+
+    book_data.title = "harry potter"
+
+    book_data.isbn_13 = None
+
+    book_site = get_book_site("SB")
+    print(book_site.find_book_matches(book_data))
+
+    
 def testKobo():
     book_data = BookData()
     book_data.title = "Zombie"
     
     book_site = get_book_site("KB")
     print(book_site.find_book_matches(book_data))
-    
+
 
 if __name__ == "__main__":
     #testSiteQuery()
-    testKobo()
+    testScribd()
+    #testKobo()
