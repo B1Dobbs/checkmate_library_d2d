@@ -33,23 +33,36 @@ def queryHtml(root, expr):
 
     return result
 
+
 def compare_book_data(book1, book2):
+    """ Calculates the perecent match between two book_data objects using the Levenshtein Formula
+
+    Args:
+        book1 (book_data): The book data used for the 1st book in the comparison
+        book2 (book_data): The book data used for the 2nd book in the comparison
+
+    Returns:
+        float: the percent match between the two book_data objects
+    """
     percent = 0
     count = 0
     for attr, value in book1.__dict__.items():
 
+        # Testing if both values of a certain attribute are none for both book_data objects
         if(value != None and book2.__dict__[attr] != None):
-            print(str(value) + " and " + str(book2.__dict__[attr]) + " are not None")
+
+            # Creating a regex pattern that will filter out all special characters from the values
             pattern =  '[^A-Za-z0-9 ,]+'
             book2Str = re.sub(pattern, "", str(book2.__dict__[attr]))
             book1Str = re.sub(pattern, "", str(book1.__dict__[attr]))
 
+            # Testing if book2's value is a substring of book1's value
+            # or if the distance (number of edits) are less than or equal to 5
             if(book2Str in book1Str or distance(book2Str, book1Str) <= 5):
-                print("Testing against " + book2Str + " and " + book1Str)
                 percent += ratio(book2Str, book1Str) * 100
                 count += 1
 
-    print(str(percent) + " / " + str(count))
+    # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
     if(count == 0):
         return 0.0
     else:
