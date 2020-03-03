@@ -8,6 +8,7 @@ import re
 def get_book_data(url):
     # type: (str) -> SiteBookData 
     print("Get book data function from Scribd")
+    return 0
 
 
 """Given a SiteBookData, search for the book at the `book_site` site
@@ -16,17 +17,24 @@ of a match it is (1.0 is an exact match).
 This should take into account all the info we have about a book, 
 including the cover.""" 
 def find_book_matches(book_data):
-        links = []
+    links = []
+
+    titleLinkSearch = ""
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += scribdLinkSearch(book_data.authors)
+        titleLinkSearch += book_data.authors
+    
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        if(titleLinkSearch != ""):
+            titleLinkSearch += " "
+            titleLinkSearch += book_data.title
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
         links += scribdLinkSearch(book_data.isbn)
 
-    if book_data.title != None: # If a title is sent in to search by, record link matches
-        links += scribdLinkSearch(book_data.title)
-    
+    if(titleLinkSearch != ""):
+        links += scribdLinkSearch(titleLinkSearch)
+
     print(links)
     linksNoDuplicates = [] 
     for i in links: 
