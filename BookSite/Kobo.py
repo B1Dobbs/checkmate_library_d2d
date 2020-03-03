@@ -54,17 +54,14 @@ including the cover."""
 def find_book_matches(book_data):
 
     links = []
-    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.extend(koboLinkSearch(book_data['authors']))
-        
-    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.extend(koboLinkSearch(book_data['isbn_13']))
-        
-    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.extend(koboLinkSearch(book_data['title']))
-    
-    if 'series' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.extend(koboLinkSearch(book_data['series']))
+    if book_data.authors != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.authors)
+
+    if book_data.isbn != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.isbn)
+
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += koboLinkSearch(book_data.title)
         
     linksNoDuplicates = [] 
     for i in links: 

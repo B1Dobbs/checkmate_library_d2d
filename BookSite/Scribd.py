@@ -1,3 +1,8 @@
+from BookData import BookData
+from lxml import etree
+from BookSite.common.utils import *
+import sys
+import re
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
