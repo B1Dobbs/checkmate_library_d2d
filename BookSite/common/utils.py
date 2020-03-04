@@ -77,6 +77,7 @@ def librariaLinkSearch(searchVar):
         for a in div.find_all('a'):
             links.append(a.get('href'))
 
+    #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
     # First get the number of books
     storageSpan = soup.find('span', class_="resultado-busca-numero")
     numBooksSpan = storageSpan.find('span', class_="value")
@@ -87,16 +88,19 @@ def librariaLinkSearch(searchVar):
     
     numPages = numBooks/booksPerPages
 
+    
     if(numPages > 1):
         for i in range(2, int(numPages)):
             link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+            print(link)
             res = requests.get(link)
             res.raise_for_status()
             soup = bs4.BeautifulSoup(res.text, "html.parser")
 
             for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
-                for link in div.find_all('a'):
+                for a in div.find_all('a'):                 
                     links.append(a.get('href'))
+
 
     return links
 
