@@ -19,7 +19,7 @@ def get_book_data(url):
 
         book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.isbn = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
+        book_data.isbn_13 = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
         book_data.description = queryHtml(root, ".//div[@class='synopsis-description']/descendant::*/text()")
         series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
         if(series_info is not None):
@@ -63,7 +63,7 @@ def find_book_matches(book_data):
     titleLinkSearch = ""
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        titleLinkSearch += book_data.authors
+        titleLinkSearch += book_data.get_authors_as_string()
     
     if book_data.title != None: # If a title is sent in to search by, record link matches
         if(titleLinkSearch != ""):
@@ -73,7 +73,7 @@ def find_book_matches(book_data):
             titleLinkSearch = book_data.title
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.isbn)
+        links += koboLinkSearch(book_data.isbn_13)
 
     if(titleLinkSearch != ""):
         links += koboLinkSearch(titleLinkSearch)

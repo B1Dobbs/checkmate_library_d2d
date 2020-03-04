@@ -1,6 +1,4 @@
 from Checkmate import *
-from BookSite.common.utils import *
-from BookData import BookData
 
 def testBookstore():
     book_site = get_book_site("TB")
@@ -8,11 +6,6 @@ def testBookstore():
     #Didn't have that book in my testBookStore
     book_data = book_site.get_book_data("http://127.0.0.1:8000/library/9781524243456/")
     book_data.printData()
-    book_data2 = BookData()
-    #book_data2.title = '10 Steps'
-    book_data2.authors = ['Sasha']
-    book_data.authors = ['Sacha Black', 'Ben']
-    print(compare_book_data(book_data, book_data2))
 
 def testKobo():
     book_site = get_book_site("KB")
@@ -24,8 +17,12 @@ def testLivrariaCultura():
     book_data = book_site.get_book_data("https://www3.livrariacultura.com.br/what-if-its-us-2012739487/p")
     book_data.printData()
 
+def testScribd():
+    book_site = get_book_site("SD")
+    book_data = book_site.get_book_data("https://www.scribd.com/book/445929040/The-Mamba-Mentality-How-I-Play")
+    book_data.printData()
 
 if __name__ == "__main__":
-    testBookstore()
-    testKobo()
-    testLivrariaCultura()
+    #testBookstore()
+    #testKobo()
+    testScribd()

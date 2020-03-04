@@ -8,7 +8,7 @@ class BookData:
         self.title = None
         self.image = None
         self.image_url = None
-        self.isbn = None
+        self.isbn_13 = None
         self.description = None
         self.series = None
         self.vol_number = None
@@ -38,8 +38,9 @@ class BookData:
       
         # if(self.image != None):
         #     self.image.show()
+
         print("ISBN", end = ": \t \t")
-        print(self.isbn)
+        print(self.isbn_13)
         print("Description", end = ": \t")
         print(self.description)
         print("Series", end = ": \t")
