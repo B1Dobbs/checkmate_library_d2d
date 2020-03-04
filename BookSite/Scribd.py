@@ -33,7 +33,7 @@ def get_book_data(url):
         for i in roottext:
             l = p.search(i)
             if(l != None):
-                book_data.isbn = l.string
+                book_data.isbn_13 = l.string
                 
         
         book_data.authors = y['author'][0]['name']
