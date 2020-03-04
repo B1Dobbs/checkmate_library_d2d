@@ -1,3 +1,7 @@
+from BookData import BookData
+from lxml import etree
+from BookSite.common.utils import *
+import sys
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
@@ -12,14 +16,15 @@ This should take into account all the info we have about a book,
 including the cover.""" 
 def find_book_matches(book_data):
     links = []
-    if 'authors' in book_data.keys(): # If an author is sent in to search by, record link matches
-        links.append(googleLinkSearch(book_data['authors']))
-        
-    if 'isbn_13' in book_data.keys(): # If an isbn is sent in to search by, record link matches
-        links.append(googleLinkSearch(book_data['isbn_13']))
-        
-    if 'title' in book_data.keys(): # If a title is sent in to search by, record link matches
-        links.append(googleLinkSearch(book_data['title']))
+
+    if book_data.authors != None: # If a title is sent in to search by, record link matches
+        links += googleLinkSearch(book_data.authors)
+
+    if book_data.isbn != None: # If a title is sent in to search by, record link matches
+        links += googleLinkSearch(book_data.isbn)
+
+    if book_data.title != None: # If a title is sent in to search by, record link matches
+        links += googleLinkSearch(book_data.title)
         
     linksNoDuplicates = [] 
     for i in links: 

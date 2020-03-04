@@ -6,11 +6,12 @@ def testBookstore():
     book_site = get_book_site("TB")
     #book_data = book_site.get_book_data("http://localhost:8000/library/1565112531635/")
     #Didn't have that book in my testBookStore
-    book_data = book_site.get_book_data("http://localhost:8000/library/9781386989752/")
+    book_data = book_site.get_book_data("http://127.0.0.1:8000/library/9781524243456/")
     book_data.printData()
     book_data2 = BookData()
-    book_data2.title = "10 Steps To Hero"
-    book_data2.authors = ['Sacha Black']
+    #book_data2.title = '10 Steps'
+    book_data2.authors = ['Sasha']
+    book_data.authors = ['Sacha Black', 'Ben']
     print(compare_book_data(book_data, book_data2))
 
 def testKobo():
@@ -18,7 +19,13 @@ def testKobo():
     book_data = book_site.get_book_data("https://www.kobo.com/us/en/ebook/the-target-3")
     book_data.printData()
 
+def testLivrariaCultura():
+    book_site = get_book_site("LC")
+    book_data = book_site.get_book_data("https://www3.livrariacultura.com.br/what-if-its-us-2012739487/p")
+    book_data.printData()
+
 
 if __name__ == "__main__":
-    #testBookstore()
+    testBookstore()
     testKobo()
+    testLivrariaCultura()
