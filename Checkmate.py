@@ -13,7 +13,7 @@ def get_book_site(slug):
         return GoogleBooks
     elif slug == "KB":
         return Kobo
-    elif slug == "LB":
+    elif slug == "LC":
         return LibrariaCultura
     elif slug == "SD":
         return Scribd
