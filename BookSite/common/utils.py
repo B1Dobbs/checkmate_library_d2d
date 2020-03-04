@@ -4,10 +4,12 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
+from Levenshtein import ratio, distance
 import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
+from isbnlib import *
 import math
 
 
@@ -66,6 +68,40 @@ def queryHtml(root, expr):
     return result
 
 
+def compare_book_data(book1, book2):
+    """ Calculates the perecent match between two book_data objects using the Levenshtein Formula
+
+    Args:
+        book1 (book_data): The book data used for the 1st book in the comparison
+        book2 (book_data): The book data used for the 2nd book in the comparison
+
+    Returns:
+        float: the percent match between the two book_data objects
+    """
+    percent = 0
+    count = 0
+    for attr, value in book1.__dict__.items():
+
+        # Testing if both values of a certain attribute are none for both book_data objects
+        if(value != None and book2.__dict__[attr] != None):
+
+            # Creating a regex pattern that will filter out all special characters from the values
+            pattern =  '[^A-Za-z0-9 ,]+'
+            book2Str = re.sub(pattern, "", str(book2.__dict__[attr]))
+            book1Str = re.sub(pattern, "", str(book1.__dict__[attr]))
+
+            # Testing if book2's value is a substring of book1's value
+            # or if the distance (number of edits) are less than or equal to 5
+            if(book2Str in book1Str or distance(book2Str, book1Str) <= 5):
+                percent += ratio(book2Str, book1Str) * 100
+                count += 1
+
+    # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
+    if(count == 0):
+        return 0.0
+    else:
+        return round((percent / count), 2)
+
 def librariaLinkSearch(searchVar):
     links = []
     link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar
@@ -77,6 +113,7 @@ def librariaLinkSearch(searchVar):
         for a in div.find_all('a'):
             links.append(a.get('href'))
 
+    #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
     # First get the number of books
     """
     storageSpan = soup.find('span', class_="resultado-busca-numero")
@@ -88,17 +125,20 @@ def librariaLinkSearch(searchVar):
     
     numPages = numBooks/booksPerPages
 
+    
     if(numPages > 1):
         for i in range(2, int(numPages)):
             link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+            print(link)
             res = requests.get(link)
             res.raise_for_status()
             soup = bs4.BeautifulSoup(res.text, "html.parser")
 
             for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
-                for link in div.find_all('a'):
+                for a in div.find_all('a'):                 
                     links.append(a.get('href'))
-    """
+"""
+
     return links
 
 def googleLinkSearch(searchVar):
@@ -266,3 +306,6 @@ def scribdLinkSearch(searchVar):
 
 
 
+"""ISBN 10 to ISBN 13 conversion """
+def isbn10to13(isbn10):
+    return to_isbn13(isbn10)

@@ -63,4 +63,6 @@ def testKobo():
     
 
 if __name__ == "__main__":
-    testSiteQuery()
+    #testSiteQuery()
+    testScribd()
+    #testKobo()
