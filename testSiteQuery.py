@@ -51,7 +51,7 @@ def testScribd():
     
 def testKobo():
     book_data = BookData()
-    book_data.title = "Zombie"
+    book_data.authors = ["vergara"]
     
     book_site = get_book_site("KB")
     print(book_site.find_book_matches(book_data))
@@ -59,5 +59,5 @@ def testKobo():
 
 if __name__ == "__main__":
     #testSiteQuery()
-    testScribd()
-    #testKobo()
+    #testScribd()
+    testKobo()
