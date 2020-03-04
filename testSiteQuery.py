@@ -8,6 +8,8 @@ from Checkmate import *
 
 def testSiteQuery():
 
+    book_site = get_book_site("LC")
+
     book_data = BookData()
 
     book_data.authors = "vergara"
@@ -26,12 +28,15 @@ def testSiteQuery():
         links += librariaLinkSearch(book_data.title)
 
 
-    print(links)
+    #print(links)
 
     linksNoDuplicates = [] 
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
+
+    for lnk in linksNoDuplicates:
+        book_site.get_book_data(lnk)
 
     
 

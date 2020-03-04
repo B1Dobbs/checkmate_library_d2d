@@ -78,6 +78,7 @@ def librariaLinkSearch(searchVar):
             links.append(a.get('href'))
 
     # First get the number of books
+    """
     storageSpan = soup.find('span', class_="resultado-busca-numero")
     numBooksSpan = storageSpan.find('span', class_="value")
     numBooks = int(numBooksSpan.contents[0])
@@ -97,7 +98,7 @@ def librariaLinkSearch(searchVar):
             for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
                 for link in div.find_all('a'):
                     links.append(a.get('href'))
-
+    """
     return links
 
 def googleLinkSearch(searchVar):

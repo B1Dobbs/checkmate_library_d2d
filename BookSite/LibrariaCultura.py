@@ -60,6 +60,7 @@ def get_book_data(url):
         print("ERROR: Processing book at " + url)
         print(sys.exc_info()[0])
 
+    book_data.printData()
     return book_data
 
 """Given a SiteBookData, search for the book at the `book_site` site
@@ -84,7 +85,7 @@ def find_book_matches(book_data):
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
     for lnk in linksNoDuplicates:
-        print(lnk)
+        get_book_data(lnk)
 
 
 """Given a book_id, return the direct url for the book.""" 
