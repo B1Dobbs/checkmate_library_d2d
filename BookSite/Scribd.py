@@ -22,7 +22,7 @@ def find_book_matches(book_data):
     titleLinkSearch = ""
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        titleLinkSearch += book_data.authors
+        titleLinkSearch += book_data.get_authors_as_string()
     
     if book_data.title != None: # If a title is sent in to search by, record link matches
         if(titleLinkSearch != ""):

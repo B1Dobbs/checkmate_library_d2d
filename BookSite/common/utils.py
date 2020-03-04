@@ -8,6 +8,7 @@ import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
+import math
 
 
 def get_image_from_url(url):
@@ -72,9 +73,30 @@ def librariaLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('span', class_="prateleiraProduto__informacao__preco"):
-        for link in p.find_all('a'):
-            links.append(link.get('href'))
+    for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        for a in div.find_all('a'):
+            links.append(a.get('href'))
+
+    # First get the number of books
+    storageSpan = soup.find('span', class_="resultado-busca-numero")
+    numBooksSpan = storageSpan.find('span', class_="value")
+    numBooks = int(numBooksSpan.contents[0])
+
+    booksPerPagesOption = soup.find('option', attrs={"selected" : "selected"})
+    booksPerPages = int(booksPerPagesOption.contents[0])
+    
+    numPages = numBooks/booksPerPages
+
+    if(numPages > 1):
+        for i in range(2, int(numPages)):
+            link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+            res = requests.get(link)
+            res.raise_for_status()
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+                for link in div.find_all('a'):
+                    links.append(a.get('href'))
 
     return links
 
