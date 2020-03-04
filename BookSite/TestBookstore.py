@@ -28,8 +28,7 @@ def get_book_data(url):
         book_data.series = str.strip(queryHtml(root, ".//span[@id='series']").text)
         book_data.vol_number = str.strip(queryHtml(root, ".//span[@id='volume_number']").text)
         
-        authorsUnstripped = queryHtml(root, ".//span[@id='author']").text
-        book_data.authors = str.strip(authorsUnstripped)
+        book_data.authors = str.strip(queryHtml(root, ".//span[@id='author']/text()")).split(", ")
         
         book_data.book_id = book_data.isbn
 
@@ -45,7 +44,7 @@ def get_book_data(url):
             book_data.ready_for_sale = True
 
         book_data.extra = {"price" : queryHtml(root, ".//span[@id='price']").text, "releaseDate" : queryHtml(root, ".//span[@id='release_date']").text}
-    
+
     except:
         print("ERROR: Processing book at " + url)
         print(sys.exc_info()[0])

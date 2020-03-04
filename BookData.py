@@ -20,6 +20,7 @@ class BookData:
         self.url = None
         self.content = None
         self.extra = None
+        self.content = None
 
     def __str__(self):
         print("Relative infomation about the book")
