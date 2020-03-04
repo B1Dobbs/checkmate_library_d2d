@@ -81,20 +81,22 @@ def compare_book_data(book1, book2):
     percent = 0
     count = 0
     for attr, value in book1.__dict__.items():
+        isEmptyList = value == [] or book2.__dict__[attr] == []
 
         # Testing if both values of a certain attribute are none for both book_data objects
-        if(value != None and book2.__dict__[attr] != None):
+        if(value != None and book2.__dict__[attr] != None and not isEmptyList):
 
             # Creating a regex pattern that will filter out all special characters from the values
             pattern =  '[^A-Za-z0-9 ,]+'
-            book2Str = re.sub(pattern, "", str(book2.__dict__[attr]))
-            book1Str = re.sub(pattern, "", str(book1.__dict__[attr]))
+            book2Str = str.lower(re.sub(pattern, "", str(book2.__dict__[attr])))
+            book1Str = str.lower(re.sub(pattern, "", str(book1.__dict__[attr])))
 
             # Testing if book2's value is a substring of book1's value
             # or if the distance (number of edits) are less than or equal to 5
-            if(book2Str in book1Str or distance(book2Str, book1Str) <= 5):
-                percent += ratio(book2Str, book1Str) * 100
-                count += 1
+            isSubstring = book2Str in book1Str or book1Str in book2Str
+            if(isSubstring or distance(book2Str, book1Str) <= 5):
+                percent += ratio(book2Str, book1Str)
+            count += 1
 
     # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
     if(count == 0):
