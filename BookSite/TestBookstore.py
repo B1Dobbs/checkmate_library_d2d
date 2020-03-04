@@ -62,10 +62,10 @@ def find_book_matches(book_data):
     links = []
 
     if book_data.authors != None: # If an author is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.authors)
+        links += testBookStoreLinkSearch(book_data.get_authors_as_string())
 
     if book_data.isbn_13 != None: # If an isbn is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.isbn)
+        links += testBookStoreLinkSearch(book_data.isbn_13)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += testBookStoreLinkSearch(book_data.title)

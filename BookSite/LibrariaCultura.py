@@ -70,7 +70,7 @@ including the cover."""
 def find_book_matches(book_data):
     links = []
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.authors)
+        links += librariaLinkSearch(book_data.get_authors_as_string())
 
     if book_data.isbn != None: # If a title is sent in to search by, record link matches
         links += librariaLinkSearch(book_data.isbn)
