@@ -9,6 +9,7 @@ import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
+from isbnlib import *
 
 
 def get_image_from_url(url):
@@ -278,3 +279,6 @@ def scribdLinkSearch(searchVar):
 
 
 
+"""ISBN 10 to ISBN 13 conversion """
+def isbn10to13(isbn10):
+    return to_isbn13(isbn10)

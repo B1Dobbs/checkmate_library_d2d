@@ -38,6 +38,7 @@ class BookData:
       
         # if(self.image != None):
         #     self.image.show()
+
         print("ISBN", end = ": \t \t")
         print(self.isbn)
         print("Description", end = ": \t")
