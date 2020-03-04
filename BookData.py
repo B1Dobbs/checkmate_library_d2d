@@ -33,8 +33,8 @@ class BookData:
         print("Image URL", end = ": \t")
         print(self.image_url)
       
-        if(self.image != None):
-            self.image.show()
+       # if(self.image != None):
+       #    self.image.show()
 
         print("ISBN", end = ": \t \t")
         print(self.isbn)

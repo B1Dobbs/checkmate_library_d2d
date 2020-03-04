@@ -15,7 +15,7 @@ def get_book_site(slug):
         return Kobo
     elif slug == "LB":
         return LibrariaCultura
-    elif slug == "SB":
+    elif slug == "SD":
         return Scribd
     elif slug == "TB":
         return TestBookstore
