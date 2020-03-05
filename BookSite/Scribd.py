@@ -14,6 +14,7 @@ def get_book_data(url):
     root = get_root_from_url(url)
     #print(queryHtml(root, "//div/section/dl/dd[2]"))
     try:
+        #Get ISBN
         j = queryHtml(root, "//script[@type = 'application/ld+json']")[1].text
         y = json.loads(j)
         
@@ -33,24 +34,30 @@ def get_book_data(url):
             l = p.search(i)
             if(l != None):
                 book_data.isbn_13 = l.string
-        
+#Get Author List
         authors = []
         for i in range (0, len(y['author'])):
             authors.append(y['author'][i]['name'])
             print(y['author'][i]['name'])
         print(authors)
-        ## CHANGE TO? ##     
-        #authors = y['author'][0]['name']
+ 
         author_list = []
         if(type(authors) == list):
             author_list += authors
         else:
             author_list.append(authors)
         print("AUTHORS: ", author_list) 
-        ## CHANGE TO? ##
+
         book_data.authors = author_list
- 
-        book_data.book_id = book_data.isbn_13
+
+#Get Book ID From URL
+        url = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
+        url = url.split('/')
+        url.pop(0)
+        url.pop(0)
+        url.pop(0)
+    
+        book_data.book_id = url[0]+'/'+url[1]+'/'+url[2]
         book_data.content = queryHtml(root, "/html")
         book_data.site_slug = "SD"
 
