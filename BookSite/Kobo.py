@@ -8,6 +8,8 @@ def get_book_data(url):
     book_data = BookData()
     root = get_root_from_url(url)
 
+    book_data.format = "Digital"
+
     try:
         title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
         if ":" in title:
@@ -25,7 +27,13 @@ def get_book_data(url):
 
         book_data.image = get_image_from_url(book_data.image_url)
         book_data.isbn_13 = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
-        book_data.description = queryHtml(root, ".//div[@class='synopsis-description']/descendant::*/text()")
+
+        book_data.description = " "
+        description = queryHtml(root, ".//div[@class='synopsis-description']/descendant-or-self::*/text()")
+        if description != None:
+            for string in description:   
+                book_data.description += string
+
         series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
         if(series_info is not None):
             series_info = series_info.text.split("#")
@@ -35,10 +43,11 @@ def get_book_data(url):
 
 
         authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
-        if(type(authors) == list):
-            book_data.authors += authors
-        else:
-            book_data.authors.append(authors)
+        if authors != None:
+            if(type(authors) == list):
+                book_data.authors += authors
+            else:
+                book_data.authors.append(authors)
 
         book_data.ready_for_sale = True
         book_data.site_slug = "KB"
@@ -99,6 +108,8 @@ def find_book_matches(book_data):
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
         match_value = compare_book_data(search_book_data, book_data)
+        #search_book_data.printData()
+        #print("MATCH: ", match_value)
         if(match_value != 0.0):
             book_matches.append((match_value, search_book_data))
         
