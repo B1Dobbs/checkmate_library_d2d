@@ -34,6 +34,12 @@ def testSiteQuery():
             linksNoDuplicates.append(i) #removes duplicate links from list
 
     
+def generalTest(book_site):
+    book_data = BookData()
+    book_data.authors = ["vergara"]
+
+    print(book_site.find_book_matches(book_data))
+
 
 def testScribd():
 
@@ -55,9 +61,11 @@ def testKobo():
     
     book_site = get_book_site("KB")
     print(book_site.find_book_matches(book_data))
+
     
 
 if __name__ == "__main__":
     #testSiteQuery()
-    testScribd()
+    #testScribd()
     #testKobo()
+    generalTest(get_book_site("GB"))

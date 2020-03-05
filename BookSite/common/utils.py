@@ -67,6 +67,19 @@ def queryHtml(root, expr):
 
     return result
 
+def get_matches_from_links(get_book_data, linkList, book_data):
+     # For each link, get the book data and compare it with the passed in book_data
+    book_matches = []
+    for lnk in linkList:
+        search_book_data = get_book_data(lnk)
+        match_value = compare_book_data(search_book_data, book_data)
+        search_book_data.printData()
+        print("MATCH: ", match_value)
+        if(match_value != 0.0):
+            book_matches.append((match_value, search_book_data))
+
+    return book_matches
+
 
 def compare_book_data(book1, book2):
     """ Calculates the perecent match between two book_data objects using the Levenshtein Formula

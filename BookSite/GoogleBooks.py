@@ -1,7 +1,7 @@
 from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
-import sys
+import sys, traceback
 
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
@@ -17,7 +17,7 @@ def get_book_data(url):
 
         book_data.image_url = queryHtml(root, "//meta[@property='og:image']/@content")
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.isbn = queryHtml(root, "//div[@class='IQ1z0d']/span")[3].text
+        book_data.isbn_13 = queryHtml(root, "//div[@class='IQ1z0d']/span")[3].text
         book_data.description = queryHtml(root, "//meta[@itemprop='description']/@content")[1]
         series_info = queryHtml(root, "//div[@class='sIskre']/h2")
         if(series_info is not None):
@@ -35,7 +35,7 @@ def get_book_data(url):
 
     except:
         print("ERROR: Processing book at " + url)
-        print(sys.exc_info()[0])
+        traceback.print_exc()
 
     return book_data
 
@@ -51,7 +51,7 @@ def find_book_matches(book_data):
         links += googleLinkSearch(book_data.get_authors_as_string())
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += googleLinkSearch(book_data.isbn)
+        links += googleLinkSearch(book_data.isbn_13)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += googleLinkSearch(book_data.title)
@@ -61,8 +61,8 @@ def find_book_matches(book_data):
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
-    for lnk in linksNoDuplicates:
-        print(lnk)
+    
+    return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
 
 """Given a book_id, return the direct url for the book.""" 
