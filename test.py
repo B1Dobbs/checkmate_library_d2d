@@ -30,7 +30,7 @@ def testScribd():
 
 def testGoogle():
     book_site = get_book_site("GB")
-    book_data = book_site.get_book_data("https://books.google.com/books?id=5iTebBW-w7QC")
+    book_data = book_site.get_book_data("https://play.google.com/store/books/details/?id=FN5wMOZKTYMC")
     book_data.printData()
 
 
