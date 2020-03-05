@@ -39,7 +39,7 @@ def get_book_data(url):
         for i in range (0, len(y['author'])):
             authors.append(y['author'][i]['name'])
             #print(y['author'][i]['name'])
-        #print(authors)
+        #print(authors) 
 
         book_data.authors = authors
 
