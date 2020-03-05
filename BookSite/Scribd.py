@@ -51,13 +51,9 @@ def get_book_data(url):
         book_data.authors = author_list
 
 #Get Book ID From URL
-        url = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
-        url = url.split('/')
-        url.pop(0)
-        url.pop(0)
-        url.pop(0)
-    
-        book_data.book_id = url[0]+'/'+url[1]+'/'+url[2]
+        bookID = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
+        book_data.book_id = url.replace('https://www.scribd.com/', '')
+        
         book_data.content = queryHtml(root, "/html")
         book_data.site_slug = "SD"
 

@@ -25,7 +25,7 @@ def testLivrariaCultura():
 
 def testScribd():
     book_site = get_book_site("SD")
-    book_data = book_site.get_book_data("https://www.scribd.com/book/293485159/It")
+    book_data = book_site.get_book_data("https://www.scribd.com/book/310560108/Never-Split-the-Difference-Negotiating-As-If-Your-Life-Depended-On-It")
     book_data.printData()
 
 if __name__ == "__main__":
