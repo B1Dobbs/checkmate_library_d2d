@@ -1,7 +1,7 @@
 from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
-import requests, sys, webbrowser, bs4
+import requests, sys, webbrowser, bs4, traceback
 import io
 import json
 import re 
@@ -10,11 +10,11 @@ import re
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
     # type: (str) -> SiteBookData 
-    print("Get book data function from Scribd")
     book_data = BookData()
     root = get_root_from_url(url)
-    print(queryHtml(root, "//div/section/dl/dd[2]"))
+    #print(queryHtml(root, "//div/section/dl/dd[2]"))
     try:
+        #Get ISBN
         j = queryHtml(root, "//script[@type = 'application/ld+json']")[1].text
         y = json.loads(j)
         
@@ -24,7 +24,7 @@ def get_book_data(url):
 
         book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.description = queryHtml(root, "//div[@style='overflow-wrap: break-word;']")
+        book_data.description = queryHtml(root, ".//meta[@property='og:description']/@content")
     
         roottext = etree.tostring(root, encoding = "unicode")
         roottext = roottext.split('"')
@@ -34,11 +34,23 @@ def get_book_data(url):
             l = p.search(i)
             if(l != None):
                 book_data.isbn_13 = l.string
-                
-        
-        book_data.authors = y['author'][0]['name']
-        
-        book_data.book_id = book_data.isbn
+#Get Author List
+        authors = []
+        for i in range (0, len(y['author'])):
+            authors.append(y['author'][i]['name'])
+            print(y['author'][i]['name'])
+        print(authors)
+
+        book_data.authors = authors
+
+#Get Book ID From URL
+        url = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
+        url = url.split('/')
+        url.pop(0)
+        url.pop(0)
+        url.pop(0)
+    
+        book_data.book_id = url[0]+'/'+url[1]+'/'+url[2]
         book_data.content = queryHtml(root, "/html")
         book_data.site_slug = "SD"
 
@@ -47,10 +59,10 @@ def get_book_data(url):
         book_data.ready_for_sale = True
 
        # book_data.extra = {"price" : queryHtml(root, ".//span[@id='price']").text, "releaseDate" : queryHtml(root, ".//span[@id='release_date']").text}
-        print(etree.tostring(root, encoding = "unicode"))
+        #print(etree.tostring(root, encoding = "unicode"))
     except:
         print("ERROR: Processing book at " + url)
-        print(sys.exc_info()[0])
+        traceback.print_exc()
 
     return book_data
 
@@ -80,22 +92,24 @@ def find_book_matches(book_data):
     if(titleLinkSearch != ""):
         links += scribdLinkSearch(titleLinkSearch)
 
-    print(links)
     linksNoDuplicates = [] 
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
+   # For each link, get the book data and compare it with the passed in book_data
     book_matches = []
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
-        book_matches.append(search_book_data)
-        #search_book_data.printData()
+        match_value = compare_book_data(search_book_data, book_data)
+        if(match_value != 0.0):
+            book_matches.append((match_value, search_book_data))
+
     return book_matches
 
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
-    print("Convert book id function from Scribd")
+    return "https://www.scribd.com/" + book_id
