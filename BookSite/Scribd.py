@@ -33,10 +33,19 @@ def get_book_data(url):
             l = p.search(i)
             if(l != None):
                 book_data.isbn_13 = l.string
-                
-        
+
+        ## CHANGE TO? ##     
+        authors = queryHtml(root, ".//a[@class='contributor']/text()")
+        author_list = []
+        if(type(authors) == list):
+            author_list += authors
+        else:
+            author_list.append(authors)
+        print("AUTHORS: ", author_list) 
+        ## CHANGE TO? ##
+
         book_data.authors = y['author'][0]['name']
-        
+ 
         book_data.book_id = book_data.isbn_13
         book_data.content = queryHtml(root, "/html")
         book_data.site_slug = "SD"
