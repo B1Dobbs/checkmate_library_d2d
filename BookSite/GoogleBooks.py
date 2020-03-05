@@ -1,4 +1,3 @@
-
 from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
@@ -8,35 +7,29 @@ import sys
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
     book_data = BookData()
-    root = get_image_from_url(url)
+    root = get_root_from_url(url)
     
     try:
-        title = str.strip(queryHtml(root, ".//h1[@class='booktitle']").text)
-        if ":" in title:
-            title_array = title.split(":")
-            book_data.title = title_array[0]
-            book_data.subtitle = str.strip(title_array[1])
-        else:
-            book_data.title = title
+        title = str.strip(queryHtml(root, "//h1[@class='AHFaub']/span").text)
+        book_data.title = title        
 
-        book_data.image_url = queryHtml(root, ".//div[@class='bookcover']//img/@src")[0]
-        book_data.image = get_image_from_url(book_data.image_url)
+        # book_data.image_url = queryHtml(root, "//div[@class='hkhL9e']/img/@src")[0]
+        # book_data.image = get_image_from_url(book_data.image_url)
         # Need help with the isbn
         # book_data.isbn = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
-        book_data.description = queryHtml(root, ".//div[@id='synopsis-window']")
-        series_info = queryHtml(root, ".//td[@class='metadata_value']/a[@class='primary']/i")
+        book_data.description = queryHtml(root, "//div[@class='DWPxHb']/span")
+        series_info = queryHtml(root, "//div[@class='sIskre']/h2")
         if(series_info is not None):
-            series_info = series_info.text.split("of")
-            book_data.series = series_info[1]
-            book_data.vol_number = series_info[0]
+            book_data.series = queryHtml(root, "//div[@class='sIskre']/h2")
+            book_data.vol_number = queryHtml(root, "//div[@class='j15tgb']")
 
 
-        book_data.authors = queryHtml(root, ".//div[@class='bookinfo_sectionwrap']/div[1]").text
+        book_data.authors = queryHtml(root, "//div[@class='WRRASc']").text
         book_data.ready_for_sale = True
         book_data.site_slug = "GB"
 
-        book_id = str(queryHtml(root, ".//link[@rel='canonical']/@href"))
-        book_data.book_id = book_id.split("/")[1]
+        book_id = str(queryHtml(root, "//div[@class='wXUyZd']/@href"))
+        book_data.book_id = book_id.split("?")[1]
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
         # book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span").text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
@@ -61,5 +54,5 @@ def find_book_matches(book_data):
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
-    return "https://www.books.google.com/books?" + book_id
+    return "https://www.play.google.com/store/books/details/" + book_id
     print("Convert book id function from Google")
