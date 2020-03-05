@@ -45,7 +45,7 @@ def testScribd():
 
     book_data.isbn_13 = None
 
-    book_site = get_book_site("SB")
+    book_site = get_book_site("SD")
     print(book_site.find_book_matches(book_data))
 
     
@@ -59,5 +59,5 @@ def testKobo():
 
 if __name__ == "__main__":
     #testSiteQuery()
-    #testScribd()
-    testKobo()
+    testScribd()
+    #testKobo()
