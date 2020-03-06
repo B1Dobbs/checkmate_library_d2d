@@ -12,12 +12,16 @@ def get_book_data(url):
 
     try:
         title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
+        subtitle = queryHtml(root, ".//span[@class='subtitle product-field']")
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
-            book_data.subtitle = str.strip(title_array[1])
+            book_data.subtitle = title_array[1]
+        elif subtitle != None:
+            book_data.subtitle = str.strip(subtitle.text)
         else:
             book_data.title = title
+        
 
         image_url = queryHtml(root, ".//div[@class='item-image']//img/@src")
         if(type(image_url) == list):
@@ -58,7 +62,7 @@ def get_book_data(url):
         book_data.url = "https://www.kobo.com/us/en/ebook/" + book_data.book_id
 
         try:
-            price = queryHtml(root, ".//div[@class='price-wrapper']/span")[0].text
+            price = queryHtml(root, ".//div[@class='active-price']//span[@class='price']")[0].text
         except:
             price = 0.0
         book_data.extra = {"Price" : price, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
@@ -104,16 +108,7 @@ def find_book_matches(book_data):
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
     # For each link, get the book data and compare it with the passed in book_data
-    book_matches = []
-    for lnk in linksNoDuplicates:
-        search_book_data = get_book_data(lnk)
-        match_value = compare_book_data(search_book_data, book_data)
-        #search_book_data.printData()
-        #print("MATCH: ", match_value)
-        if(match_value != 0.0):
-            book_matches.append((match_value, search_book_data))
-        
-    return book_matches
+    return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
 
 
