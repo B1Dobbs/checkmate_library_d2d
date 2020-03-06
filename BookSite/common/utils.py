@@ -9,6 +9,8 @@ import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
+from isbnlib import *
+import math
 
 
 def get_image_from_url(url):
@@ -79,20 +81,22 @@ def compare_book_data(book1, book2):
     percent = 0
     count = 0
     for attr, value in book1.__dict__.items():
+        isEmptyList = value == [] or book2.__dict__[attr] == []
 
         # Testing if both values of a certain attribute are none for both book_data objects
-        if(value != None and book2.__dict__[attr] != None):
+        if(value != None and book2.__dict__[attr] != None and not isEmptyList):
 
             # Creating a regex pattern that will filter out all special characters from the values
             pattern =  '[^A-Za-z0-9 ,]+'
-            book2Str = re.sub(pattern, "", str(book2.__dict__[attr]))
-            book1Str = re.sub(pattern, "", str(book1.__dict__[attr]))
+            book2Str = str.lower(re.sub(pattern, "", str(book2.__dict__[attr])))
+            book1Str = str.lower(re.sub(pattern, "", str(book1.__dict__[attr])))
 
             # Testing if book2's value is a substring of book1's value
             # or if the distance (number of edits) are less than or equal to 5
-            if(book2Str in book1Str or distance(book2Str, book1Str) <= 5):
-                percent += ratio(book2Str, book1Str) * 100
-                count += 1
+            isSubstring = book2Str in book1Str or book1Str in book2Str
+            if(isSubstring or distance(book2Str, book1Str) <= 5):
+                percent += ratio(book2Str, book1Str)
+            count += 1
 
     # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
     if(count == 0):
@@ -107,9 +111,34 @@ def librariaLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('span', class_="prateleiraProduto__informacao__preco"):
-        for link in p.find_all('a'):
-            links.append(link.get('href'))
+    for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        for a in div.find_all('a'):
+            links.append(a.get('href'))
+
+    #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
+    # First get the number of books
+    storageSpan = soup.find('span', class_="resultado-busca-numero")
+    numBooksSpan = storageSpan.find('span', class_="value")
+    numBooks = int(numBooksSpan.contents[0])
+
+    booksPerPagesOption = soup.find('option', attrs={"selected" : "selected"})
+    booksPerPages = int(booksPerPagesOption.contents[0])
+    
+    numPages = numBooks/booksPerPages
+
+    
+    if(numPages > 1):
+        for i in range(2, int(numPages)):
+            link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+            print(link)
+            res = requests.get(link)
+            res.raise_for_status()
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+                for a in div.find_all('a'):                 
+                    links.append(a.get('href'))
+
 
     return links
 
@@ -166,9 +195,19 @@ def koboLinkSearch(searchVar):
         for link in p.find_all('a'):
             links.append(link.get('href'))
 
-    aLink = str(soup.find('a', class_="page-link final")) # Find the function by looking for the pattern
-    print(aLink)
+    aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
+    if(aLink): #There's more than one page
+        num_pages = aLink.contents[0]
+        num_pages = int(num_pages) + 1
+        for i in range(2, num_pages):
+            link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
 
+            for p in soup.find_all('p', class_="title product-field"):
+                for link in p.find_all('a'):
+                    links.append(link.get('href'))
 
     return links
 
@@ -196,7 +235,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
@@ -239,7 +278,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
@@ -268,3 +307,6 @@ def scribdLinkSearch(searchVar):
 
 
 
+"""ISBN 10 to ISBN 13 conversion """
+def isbn10to13(isbn10):
+    return to_isbn13(isbn10)

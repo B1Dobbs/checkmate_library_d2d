@@ -22,7 +22,7 @@ def get_book_data(url):
         book_data.image_url = str(imageUrl)
         book_data.image = get_image_from_url(book_data.image_url)
 
-        book_data.isbn = queryHtml(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
+        book_data.isbn_13 = queryHtml(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
         book_data.description = str(queryHtml(root, ".//meta[@property='og:title']/following-sibling::meta[@property='og:description']/@content"))
 
         #Series and Volume Number are not available on site
@@ -70,10 +70,10 @@ including the cover."""
 def find_book_matches(book_data):
     links = []
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.authors)
+        links += librariaLinkSearch(book_data.get_authors_as_string())
 
-    if book_data.isbn != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.isbn)
+    if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
+        links += librariaLinkSearch(book_data.isbn_13)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += librariaLinkSearch(book_data.title)

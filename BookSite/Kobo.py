@@ -1,7 +1,7 @@
 from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
-import sys
+import sys, traceback
 
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
@@ -17,9 +17,14 @@ def get_book_data(url):
         else:
             book_data.title = title
 
-        book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
+        image_url = queryHtml(root, ".//div[@class='item-image']//img/@src")
+        if(type(image_url) == list):
+            book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
+        else:
+            book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")
+
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.isbn = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
+        book_data.isbn_13 = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
         book_data.description = queryHtml(root, ".//div[@class='synopsis-description']/descendant::*/text()")
         series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
         if(series_info is not None):
@@ -42,12 +47,17 @@ def get_book_data(url):
         book_data.book_id = book_id.split("/")[-1]
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
-        book_data.extra = {"Price" : queryHtml(root, ".//div[@class='price-wrapper']/span")[0].text, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
+
+        try:
+            price = queryHtml(root, ".//div[@class='price-wrapper']/span")[0].text
+        except:
+            price = 0.0
+        book_data.extra = {"Price" : price, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
         book_data.content = queryHtml(root, "/html")
 
     except:
         print("ERROR: Processing book at " + url)
-        print(sys.exc_info()[0])
+        traceback.print_exc()
 
     return book_data
 
@@ -63,7 +73,7 @@ def find_book_matches(book_data):
     titleLinkSearch = ""
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        titleLinkSearch += book_data.authors
+        titleLinkSearch += book_data.get_authors_as_string()
     
     if book_data.title != None: # If a title is sent in to search by, record link matches
         if(titleLinkSearch != ""):
@@ -73,7 +83,7 @@ def find_book_matches(book_data):
             titleLinkSearch = book_data.title
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += koboLinkSearch(book_data.isbn)
+        links += koboLinkSearch(book_data.isbn_13)
 
     if(titleLinkSearch != ""):
         links += koboLinkSearch(titleLinkSearch)
@@ -84,11 +94,14 @@ def find_book_matches(book_data):
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
+    # For each link, get the book data and compare it with the passed in book_data
     book_matches = []
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
-        book_matches.append(search_book_data)
-        search_book_data.printData()
+        match_value = compare_book_data(search_book_data, book_data)
+        if(match_value != 0.0):
+            book_matches.append((match_value, search_book_data))
+        
     return book_matches
 
 
