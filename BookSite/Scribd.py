@@ -38,17 +38,10 @@ def get_book_data(url):
         authors = []
         for i in range (0, len(y['author'])):
             authors.append(y['author'][i]['name'])
-            print(y['author'][i]['name'])
-        print(authors)
- 
-        author_list = []
-        if(type(authors) == list):
-            author_list += authors
-        else:
-            author_list.append(authors)
-        print("AUTHORS: ", author_list) 
+            #print(y['author'][i]['name'])
+        #print(authors) 
 
-        book_data.authors = author_list
+        book_data.authors = authors
 
 #Get Book ID From URL
         bookID = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
