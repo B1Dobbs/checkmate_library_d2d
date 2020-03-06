@@ -19,7 +19,12 @@ def get_book_data(url):
         y = json.loads(j)
         
         title = queryHtml(root, "//h1[@class='document_title']").text
-        book_data.title = title
+        if(':' in title):
+            title = title.split(': ')
+            book_data.title = title[0]
+            book_data.subtitle = title[1]
+        else:    
+            book_data.title = title
         book_data.format = y['@type']
 
         book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
@@ -39,15 +44,13 @@ def get_book_data(url):
         for i in range (0, len(y['author'])):
             authors.append(y['author'][i]['name'])
             print(y['author'][i]['name'])
-        print(authors)
- 
+
         author_list = []
         if(type(authors) == list):
             author_list += authors
         else:
             author_list.append(authors)
-        print("AUTHORS: ", author_list) 
-
+            
         book_data.authors = author_list
 
 #Get Book ID From URL
@@ -62,11 +65,8 @@ def get_book_data(url):
         book_data.site_slug = "SD"
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
-
         book_data.ready_for_sale = True
 
-       # book_data.extra = {"price" : queryHtml(root, ".//span[@id='price']").text, "releaseDate" : queryHtml(root, ".//span[@id='release_date']").text}
-        #print(etree.tostring(root, encoding = "unicode"))
     except:
         print("ERROR: Processing book at " + url)
         traceback.print_exc()
