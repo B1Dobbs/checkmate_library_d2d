@@ -10,20 +10,20 @@ def testSiteQuery():
 
     book_data = BookData()
 
-    book_data.authors = "vergara"
+    book_data.authors = "test"
 
     book_data.isbn_13 = None
     
     links = []
 
     if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.get_authors_as_string())
+        links += testBookStoreLinkSearch(book_data.get_authors_as_string())
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.isbn)
+        links += testBookStoreLinkSearch(book_data.isbn)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
-        links += librariaLinkSearch(book_data.title)
+        links += testBookStoreLinkSearch(book_data.title)
 
 
     print(links)

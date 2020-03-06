@@ -72,6 +72,7 @@ def find_book_matches(book_data):
     
     print(links)
     linksNoDuplicates = [] 
+    
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
