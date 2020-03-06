@@ -105,7 +105,9 @@ def find_book_matches(book_data):
     book_matches = []
     for lnk in linksNoDuplicates:
         search_book_data = get_book_data(lnk)
+        #print(search_book_data.printData())
         match_value = compare_book_data(search_book_data, book_data)
+        #print("MATCH: ", match_value)
         if(match_value != 0.0):
             book_matches.append((match_value, search_book_data))
 
