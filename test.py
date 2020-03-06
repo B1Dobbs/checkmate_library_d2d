@@ -25,7 +25,7 @@ def testLivrariaCultura():
 
 def testScribd():
     book_site = get_book_site("SD")
-    book_data = book_site.get_book_data("https://www.scribd.com/book/445929040/The-Mamba-Mentality-How-I-Play")
+    book_data = book_site.get_book_data("https://www.scribd.com/book/357813054/Principles-Life-and-Work")
     book_data.printData()
 
 def testGoogle():
