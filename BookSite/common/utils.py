@@ -178,13 +178,11 @@ def testBookStoreLinkSearch(searchVar):
 
     pattern = re.compile(r'Last')
     findPageNum = str(soup.find('a', text=pattern))
-    
     if findPageNum != "None":
         temp = re.findall(r'\d+', findPageNum)
         num_pages = temp[0]
-
+    
         for i in range(2, int(num_pages)+1):
-            print("Looping")
             link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
             res = requests.get(link)
             res.raise_for_status()
@@ -212,6 +210,7 @@ def koboLinkSearch(searchVar):
     if(aLink != "None"): #There's more than one page
         num_pages = aLink.contents[0]
         num_pages = int(num_pages) + 1
+        print(num_pages)
         for i in range(2, num_pages):
             link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
             res = requests.get(link)
@@ -221,7 +220,8 @@ def koboLinkSearch(searchVar):
             for p in soup.find_all('p', class_="title product-field"):
                 for link in p.find_all('a'):
                     links.append(link.get('href'))
-
+    print("links: ")
+    print(links)
     return links
 
 def scribdLinkSearch(searchVar):

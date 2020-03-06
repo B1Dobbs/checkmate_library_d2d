@@ -35,7 +35,7 @@ def testGoogle():
 
 
 if __name__ == "__main__":
-    #testBookstore()
+    testBookstore()
     #testKobo()
     #testScribd()
-    testGoogle()
+    #testGoogle()
