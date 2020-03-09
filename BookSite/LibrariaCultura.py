@@ -91,4 +91,3 @@ def find_book_matches(book_data):
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
     return "https://www3.livrariacultura.com.br" + book_id
-    print("Convert book id function from Libraria")
