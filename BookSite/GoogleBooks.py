@@ -64,6 +64,16 @@ def find_book_matches(book_data):
     
     return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
+def googleLinkSearch(searchVar):
+    links = []
+    link = 'https://www.googleapis.com/books/v1/volumes?q=' + searchVar + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40'
+    apiResponse = requests.get(link)
+
+    for item in apiResponse.json()['items']:
+        links.append(item['volumeInfo']['infoLink'])
+       
+    return links
+
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):

@@ -110,7 +110,35 @@ def find_book_matches(book_data):
     # For each link, get the book data and compare it with the passed in book_data
     return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
+""" Searching Kobo for relevant links """
+def koboLinkSearch(searchVar):
+    links = []
+    link = 'https://www.kobo.com/us/en/search?query=' + searchVar
+    res = requests.get(link)
+    res.raise_for_status
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
 
+    for p in soup.find_all('p', class_="title product-field"):
+        for link in p.find_all('a'):
+            links.append(link.get('href'))
+
+    aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
+    if(aLink != "None"): #There's more than one page
+        num_pages = aLink.contents[0]
+        num_pages = int(num_pages) + 1
+        print(num_pages)
+        for i in range(2, num_pages):
+            link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for p in soup.find_all('p', class_="title product-field"):
+                for link in p.find_all('a'):
+                    links.append(link.get('href'))
+    print("links: ")
+    print(links)
+    return links
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
