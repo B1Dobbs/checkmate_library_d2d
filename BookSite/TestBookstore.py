@@ -80,6 +80,36 @@ def find_book_matches(book_data):
      # For each link, get the book data and compare it with the passed in book_data
     return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
+""" Search test Book Store for relevant links """
+def testBookStoreLinkSearch(searchVar):
+    links = []
+    link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + searchVar
+    res = requests.get(link)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+    for link in soup.find_all('a', class_="book_title"):
+        links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+
+    pattern = re.compile(r'Last')
+    findPageNum = str(soup.find('a', text=pattern))
+    if findPageNum != "None":
+        temp = re.findall(r'\d+', findPageNum)
+        num_pages = temp[0]
+    
+        for i in range(2, int(num_pages)+1):
+            link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status()
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for link in soup.find_all('a', class_="book_title"):
+                links.append("http://127.0.0.1:8000/testBookstore" + link.get('href')) 
+
+    
+    return links 
+
+
 
 
 """Given a book_id, return the direct url for the book.""" 

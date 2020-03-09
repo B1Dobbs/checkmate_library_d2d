@@ -97,6 +97,96 @@ def find_book_matches(book_data):
     # For each link, get the book data and compare it with the passed in book_data
     return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
+def scribdLinkSearch(searchVar):
+    links = []
+    link = 'https://www.scribd.com/search?content_type=books&page=1&query=' + searchVar + '&language=1'
+    res = requests.get(link)
+
+    # The following code gets a json blob from inside a specific javascript function call.  
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+    string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+    pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                    # This code selects actual json code
+
+    newString = pattern.findall(string)
+
+    parsed_json = json.loads(newString[1]) # parse the json
+
+    if(parsed_json['result_count'] != '0'): # If there are any results
+        results = parsed_json['results']  
+        for book in results['books']['content']['documents']:
+            links.append(book['book_preview_url'])
+
+        num_pages = parsed_json['page_count']
+
+        for i in range(2, num_pages + 1):
+            link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
+            res = requests.get(link)
+
+            # The following code gets a json blob from inside a specific javascript function call.  
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+            pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+            string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+            pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                            # This code selects actual json code
+
+            newString = pattern.findall(string)
+
+            parsed_json = json.loads(newString[1]) # parse the json
+            results = parsed_json['results']
+            
+            for book in results['books']['content']['documents']:
+                links.append(book['book_preview_url'])
+
+
+    link = 'https://www.scribd.com/search?content_type=audiobooks&page=1&query=' + searchVar + '&language=1'
+    res = requests.get(link)
+
+    # The following code gets a json blob from inside a specific javascript function call.  
+    soup = bs4.BeautifulSoup(res.text, "html.parser")
+    pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+    string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+    pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                    # This code selects actual json code
+
+    newString = pattern.findall(string)
+
+    parsed_json = json.loads(newString[1]) # parse the json
+
+    if(parsed_json['result_count'] != '0'): # If there are any results
+        results = parsed_json['results']
+        for audiobook in results['audiobooks']['content']['documents']:
+            links.append(audiobook['book_preview_url'])
+
+        num_pages = parsed_json['page_count']
+
+        for i in range(2, num_pages + 1):
+            link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
+            res = requests.get(link)
+
+            # The following code gets a json blob from inside a specific javascript function call.  
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+            pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
+            string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
+
+            pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
+                                                            # This code selects actual json code
+
+            newString = pattern.findall(string)
+
+            parsed_json = json.loads(newString[1]) # parse the json
+            results = parsed_json['results']
+            
+            for book in results['audiobooks']['content']['documents']:
+                links.append(book['book_preview_url'])
+
+    
+    return links
+
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
