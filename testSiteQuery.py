@@ -68,4 +68,5 @@ if __name__ == "__main__":
     #testSiteQuery()
     #testScribd()
     #testKobo()
+    generalTest(get_book_site("KB"))
     generalTest(get_book_site("GB"))
