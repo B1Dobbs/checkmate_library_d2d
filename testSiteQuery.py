@@ -51,15 +51,15 @@ def testScribd():
 
     book_data.isbn_13 = None
 
-    book_site = get_book_site("SD")
+    book_site = get_book_site("")
     print(book_site.find_book_matches(book_data))
 
     
 def testKobo():
     book_data = BookData()
-    book_data.authors = ["vergara"]
+    book_data.authors = ["test"]
     
-    book_site = get_book_site("KB")
+    book_site = get_book_site("")
     print(book_site.find_book_matches(book_data))
 
     
