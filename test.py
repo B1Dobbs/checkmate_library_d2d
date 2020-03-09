@@ -31,5 +31,6 @@ def testScribd():
 
 if __name__ == "__main__":
     #testBookstore()
-    testKobo()
+    #testKobo()
     #testScribd()
+    testLivrariaCultura()
