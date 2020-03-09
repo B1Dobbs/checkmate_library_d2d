@@ -30,8 +30,9 @@ def find_book_matches(book_data):
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
-    for lnk in linksNoDuplicates:
-        print(lnk)
+
+    # For each link, get the book data and compare it with the passed in book_data
+    return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
 
 """Given a book_id, return the direct url for the book.""" 

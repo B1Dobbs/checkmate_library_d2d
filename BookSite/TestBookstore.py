@@ -71,19 +71,14 @@ def find_book_matches(book_data):
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += testBookStoreLinkSearch(book_data.title)
     
-    print(links)
     linksNoDuplicates = [] 
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
     # FINISH -> LINKS HAS ALL LINKS WITH ANY MATCHING
 
-    book_matches = []
-    for lnk in linksNoDuplicates:
-        search_book_data = get_book_data(lnk)
-        book_matches.append(search_book_data)
-        #search_book_data.printData()
-    return book_matches
+     # For each link, get the book data and compare it with the passed in book_data
+    return get_matches_from_links(get_book_data, linksNoDuplicates, book_data)
 
 
 

@@ -8,6 +8,7 @@ import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
+from Levenshtein import distance, ratio
 
 
 def get_image_from_url(url):
@@ -68,6 +69,56 @@ def queryHtml(root, expr):
 
     return result
 
+def get_matches_from_links(get_book_data, linkList, book_data):
+     # For each link, get the book data and compare it with the passed in book_data
+    book_matches = []
+    for lnk in linkList:
+        search_book_data = get_book_data(lnk)
+        search_book_data.printData()
+        match_value = compare_book_data(search_book_data, book_data)
+        search_book_data.printData()
+        print("MATCH: ", match_value)
+        if(match_value != 0.0):
+            book_matches.append((match_value, search_book_data))
+
+    return book_matches
+
+
+def compare_book_data(book1, book2):
+    """ Calculates the perecent match between two book_data objects using the Levenshtein Formula
+
+    Args:
+        book1 (book_data): The book data used for the 1st book in the comparison
+        book2 (book_data): The book data used for the 2nd book in the comparison
+
+    Returns:
+        float: the percent match between the two book_data objects
+    """
+    percent = 0
+    count = 0
+    for attr, value in book1.__dict__.items():
+        isEmptyList = value == [] or book2.__dict__[attr] == []
+
+        # Testing if both values of a certain attribute are none for both book_data objects
+        if(value != None and book2.__dict__[attr] != None and not isEmptyList):
+
+            # Creating a regex pattern that will filter out all special characters from the values
+            pattern =  '[^A-Za-z0-9 ,]+'
+            book2Str = str.lower(re.sub(pattern, "", str(book2.__dict__[attr])))
+            book1Str = str.lower(re.sub(pattern, "", str(book1.__dict__[attr])))
+
+            # Testing if book2's value is a substring of book1's value
+            # or if the distance (number of edits) are less than or equal to 5
+            isSubstring = book2Str in book1Str or book1Str in book2Str
+            if(isSubstring or distance(book2Str, book1Str) <= 5):
+                percent += ratio(book2Str, book1Str)
+            count += 1
+
+    # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
+    if(count == 0):
+        return 0.0
+    else:
+        return round((percent / count), 2)
 
 def librariaLinkSearch(searchVar):
     links = []
