@@ -44,9 +44,9 @@ def get_book_data(url):
         book_data.site_slug = "LC"
 
         bookURL = str(queryHtml(root, ".//meta[@itemprop='url']/@content"))
-        book_data.url = bookURL
-
         bookID = bookURL.split('.br')
+        book_data.url = convert_book_id_to_url(bookID[1])
+
         book_data.book_id = bookID[1]
 
         book_data.content = queryHtml(root, "/html")
@@ -129,4 +129,4 @@ def librariaLinkSearch(searchVar):
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
     # type: (str) -> str 
-    print("Convert book id function from Libraria")
+    return "https://www3.livrariacultura.com.br" + book_id
