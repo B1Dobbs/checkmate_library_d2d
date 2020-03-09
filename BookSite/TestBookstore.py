@@ -22,16 +22,15 @@ def get_book_data(url):
         #book_data.image_url = root.xpath(".//img/@src")[0]
         #book_data.image = get_image_from_url(book_data.image_url)
 
-        book_data.isbn = str.strip(queryHtml(root, ".//span[@id='isbn']").text)
+        book_data.isbn_13 = str.strip(queryHtml(root, ".//span[@id='isbn']").text)
         book_data.description = queryHtml(root, "//script[@type='text/javascript']/text()").split("\"")[19]
 
         book_data.series = str.strip(queryHtml(root, ".//span[@id='series']").text)
         book_data.vol_number = str.strip(queryHtml(root, ".//span[@id='volume_number']").text)
         
-        authorsUnstripped = queryHtml(root, ".//span[@id='author']").text
-        book_data.authors = str.strip(authorsUnstripped)
+        book_data.authors = str.strip(queryHtml(root, ".//span[@id='author']/text()")).split(", ")
         
-        book_data.book_id = book_data.isbn
+        book_data.book_id = book_data.isbn_13
 
         book_data.site_slug = "TB"
 
@@ -62,16 +61,17 @@ def find_book_matches(book_data):
 
     links = []
 
-    if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.authors)
+    if book_data.authors != None: # If an author is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data.get_authors_as_string())
 
-    if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.isbn)
+    if book_data.isbn_13 != None: # If an isbn is sent in to search by, record link matches
+        links += testBookStoreLinkSearch(book_data.isbn_13)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += testBookStoreLinkSearch(book_data.title)
     
     linksNoDuplicates = [] 
+    
     for i in links: 
         if i not in linksNoDuplicates: 
             linksNoDuplicates.append(i) #removes duplicate links from list
@@ -86,4 +86,3 @@ def find_book_matches(book_data):
 def convert_book_id_to_url(book_id):
     # type: (str) -> str
     return "http://localhost:8000/library/" + book_id + "/"
-    print("Convert book id function from TestBookstore")

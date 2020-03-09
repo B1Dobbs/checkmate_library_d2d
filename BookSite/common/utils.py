@@ -4,11 +4,14 @@ from lxml import etree
 import io
 import requests
 from PIL import Image
+from Levenshtein import ratio, distance
 import requests, sys, webbrowser, bs4
 import json
 import re
 import regex # pip install regex
 from Levenshtein import distance, ratio
+from isbnlib import *
+import math
 
 
 def get_image_from_url(url):
@@ -60,10 +63,6 @@ def queryHtml(root, expr):
             result = result[0]
         elif len(result) == 0:
             result = None
-            raise LookupError
-
-    except LookupError:
-        print("WARNING: No data found for " + expr)
     except:
         print("WARNING: Could not retrieve data for " + expr)
 
@@ -74,7 +73,6 @@ def get_matches_from_links(get_book_data, linkList, book_data):
     book_matches = []
     for lnk in linkList:
         search_book_data = get_book_data(lnk)
-        search_book_data.printData()
         match_value = compare_book_data(search_book_data, book_data)
         search_book_data.printData()
         print("MATCH: ", match_value)
@@ -127,9 +125,34 @@ def librariaLinkSearch(searchVar):
     res.raise_for_status()
     soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-    for p in soup.find_all('span', class_="prateleiraProduto__informacao__preco"):
-        for link in p.find_all('a'):
-            links.append(link.get('href'))
+    for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        for a in div.find_all('a'):
+            links.append(a.get('href'))
+
+    #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
+    # First get the number of books
+    storageSpan = soup.find('span', class_="resultado-busca-numero")
+    numBooksSpan = storageSpan.find('span', class_="value")
+    numBooks = int(numBooksSpan.contents[0])
+
+    booksPerPagesOption = soup.find('option', attrs={"selected" : "selected"})
+    booksPerPages = int(booksPerPagesOption.contents[0])
+    
+    numPages = numBooks/booksPerPages
+
+    
+    if(numPages > 1):
+        for i in range(2, int(numPages)):
+            link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+            print(link)
+            res = requests.get(link)
+            res.raise_for_status()
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
+
+            for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+                for a in div.find_all('a'):                 
+                    links.append(a.get('href'))
+
 
     return links
 
@@ -156,23 +179,21 @@ def testBookStoreLinkSearch(searchVar):
 
     pattern = re.compile(r'Last')
     findPageNum = str(soup.find('a', text=pattern))
-
-    if(findPageNum):
-        temp = re.findall(r'\d+', findPageNum) 
+    if findPageNum != "None":
+        temp = re.findall(r'\d+', findPageNum)
         num_pages = temp[0]
-
+    
         for i in range(2, int(num_pages)+1):
-            print("Looping")
             link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
             res = requests.get(link)
             res.raise_for_status()
             soup = bs4.BeautifulSoup(res.text, "html.parser")
 
             for link in soup.find_all('a', class_="book_title"):
-                links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
+                links.append("http://127.0.0.1:8000/testBookstore" + link.get('href')) 
 
-
-    return links
+    
+    return links 
 
 """ Searching Kobo for relevant links """
 def koboLinkSearch(searchVar):
@@ -186,10 +207,22 @@ def koboLinkSearch(searchVar):
         for link in p.find_all('a'):
             links.append(link.get('href'))
 
-    aLink = str(soup.find('a', class_="page-link final")) # Find the function by looking for the pattern
-    print(aLink)
+    aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
+    if(aLink != "None"): #There's more than one page
+        num_pages = aLink.contents[0]
+        num_pages = int(num_pages) + 1
+        print(num_pages)
+        for i in range(2, num_pages):
+            link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
+            res = requests.get(link)
+            res.raise_for_status
+            soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-
+            for p in soup.find_all('p', class_="title product-field"):
+                for link in p.find_all('a'):
+                    links.append(link.get('href'))
+    print("links: ")
+    print(links)
     return links
 
 def scribdLinkSearch(searchVar):
@@ -216,7 +249,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
@@ -259,7 +292,7 @@ def scribdLinkSearch(searchVar):
 
         num_pages = parsed_json['page_count']
 
-        for i in range(2, num_pages):
+        for i in range(2, num_pages + 1):
             link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
             res = requests.get(link)
 
@@ -288,3 +321,6 @@ def scribdLinkSearch(searchVar):
 
 
 
+"""ISBN 10 to ISBN 13 conversion """
+def isbn10to13(isbn10):
+    return to_isbn13(isbn10)
