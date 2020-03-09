@@ -20,7 +20,7 @@ def testSiteQuery():
         links += testBookStoreLinkSearch(book_data.get_authors_as_string())
 
     if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.isbn)
+        links += testBookStoreLinkSearch(book_data.isbn_13)
 
     if book_data.title != None: # If a title is sent in to search by, record link matches
         links += testBookStoreLinkSearch(book_data.title)
