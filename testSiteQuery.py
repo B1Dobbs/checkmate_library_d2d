@@ -6,67 +6,41 @@ from PIL import Image
 from BookSite.common.utils import *
 from Checkmate import *
 
-def testSiteQuery():
-
-    book_data = BookData()
-
-    book_data.authors = "test"
-
-    book_data.isbn_13 = None
     
-    links = []
-
-    if book_data.authors != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.get_authors_as_string())
-
-    if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.isbn)
-
-    if book_data.title != None: # If a title is sent in to search by, record link matches
-        links += testBookStoreLinkSearch(book_data.title)
-
-
-    print(links)
-
-    linksNoDuplicates = [] 
-    for i in links: 
-        if i not in linksNoDuplicates: 
-            linksNoDuplicates.append(i) #removes duplicate links from list
-
-    
-def generalTest(book_site):
+def testSiteQuery(book_site):
     book_data = BookData()
     book_data.authors = ["vergara"]
-
     print(book_site.find_book_matches(book_data))
-
-
-def testScribd():
-
-    book_data = BookData()
-
-    #book_data.authors = ""
-
-    book_data.title = "harry potter and the sorcerer's stone"
-
-    book_data.isbn_13 = None
-
-    book_site = get_book_site("")
-    print(book_site.find_book_matches(book_data))
-
-    
-def testKobo():
-    book_data = BookData()
-    book_data.authors = ["test"]
-    
-    book_site = get_book_site("")
-    print(book_site.find_book_matches(book_data))
-
     
 
 if __name__ == "__main__":
-    #testSiteQuery()
-    #testScribd()
-    #testKobo()
-    generalTest(get_book_site("KB"))
-    generalTest(get_book_site("GB"))
+
+    if sys.argv[1] != None and sys.argv[1] not in siteSlugs:
+        print("Site slug not found.")
+    else:
+        testToRun = sys.argv[1]
+
+        """ Site Query Test for Scribd """
+        if testToRun == "SD" or testToRun == None:
+            print("Starting test for Scribd.")
+            testSiteQuery(get_book_site("SD"))
+
+        """ Site Query Test for Kobo """
+        if testToRun == "KB" or testToRun == None:
+            print("Starting test for Kobo.")
+            testSiteQuery(get_book_site("KB"))
+
+        """ Site Query Test for Google """
+        if testToRun == "GB" or testToRun == None:
+            print("Starting test for Google Books.")
+            testSiteQuery(get_book_site("GB"))
+
+        """ Site Query Test for Livraria Cultura """
+        if testToRun == "LC" or testToRun == None:
+            print("Starting test for Kobo.")
+            testSiteQuery(get_book_site("KB"))
+
+        """ Site Query Test for Test Bookstore """
+        if testToRun == "TB" or testToRun == None:
+            print("Starting test for Test Bookstore.")
+            testSiteQuery(get_book_site("TB"))
