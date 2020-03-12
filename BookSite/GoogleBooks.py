@@ -12,25 +12,52 @@ def get_book_data(url):
     
     try:
         title = str.strip(queryHtml(root, "//h1[@class='AHFaub']/span").text)
-        book_data.title = title  
+        if ":" in title:
+            title_array = title.split(":")
+            book_data.title = title_array[0]
+            book_data.subtitle = title_array[1]
+        else:
+            book_data.title=title
+
+
         book_data.format = "E-Book"     
 
         book_data.image_url = queryHtml(root, "//meta[@property='og:image']/@content")
         book_data.image = get_image_from_url(book_data.image_url)
         book_data.isbn_13 = queryHtml(root, "//div[@class='IQ1z0d']/span")[3].text
-        book_data.description = queryHtml(root, "//meta[@itemprop='description']/@content")[1]
+
+        book_description =  queryHtml(root, "//meta[@itemprop='description']/@content")
+        if(type(book_description)==list):
+            book_data.description = book_description[1]
         series_info = queryHtml(root, "//div[@class='sIskre']/h2")
         if(series_info is not None):
             book_data.series = queryHtml(root, "//div[@class='sIskre']/h2").text
             book_data.vol_number = queryHtml(root, "//div[@class='j15tgb']").text
 
-        book_data.authors = queryHtml(root, "//span[@itemprop='author']/a").text
+
+
+        authors = queryHtml(root, "//span[@itemprop='author']/a/text()")
+        if authors != None:
+            if(type(authors)==list):
+                book_data.authors += authors
+            else:
+                book_data.authors.append(authors)
+        else:
+            book_data.authors = None
+
+
+
         book_data.ready_for_sale = True
         book_data.site_slug = "GB"
         book_id = str(queryHtml(root, "//link[@rel='canonical']/@href"))
-        book_data.book_id = book_id.split("?")[1]
+        book_data.book_id = book_id.split("=")[1]
         book_data.url = convert_book_id_to_url(book_data.book_id)
-        book_data.extra = {"Price" : queryHtml(root, "//meta[@itemprop='price']/@content")[1]}
+        try:
+            price = queryHtml(root, "//meta[@itemprop='price']/@content")
+        except:
+            price = 0.0
+
+        book_data.extra = {"Price" : price}
         book_data.content = queryHtml(root, "/html")
 
     except:
@@ -77,5 +104,4 @@ def googleLinkSearch(searchVar):
 
 """Given a book_id, return the direct url for the book.""" 
 def convert_book_id_to_url(book_id):
-    # type: (str) -> str 
-    return "https://www.play.google.com/store/books/details/?" + book_id
+    return "https://play.google.com/store/books/details/?id=" + book_id
