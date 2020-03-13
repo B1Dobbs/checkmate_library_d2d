@@ -46,7 +46,7 @@ def get_book_data(url):
         book_id = str(queryHtml(root, "//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("=")[1]
         try:
-            price = queryHtml(root, "//meta[@itemprop='price']/@content")
+            price = queryHtml(root, "//meta[@itemprop='price']/@content")[0]
         except:
             price = 0.0
 
