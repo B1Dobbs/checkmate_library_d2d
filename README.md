@@ -37,8 +37,8 @@ checkmate_library \
 	|---Livraria Cultura.py
 	|---Scribd.py
 	|---TestBookstore.py
-    |---BookData.py		    - BookData Class
-    |---Checkmate.py	    - Library entry with get_book_site
-    |---testBookData.py	    - Tests for one page scrapers
+    |---BookData.py		- BookData Class
+    |---Checkmate.py	    	- Library entry with get_book_site
+    |---testBookData.py	   	- Tests for one page scrapers
     |---testSiteQuery.py 	- Tests for gathering matches
 ```
