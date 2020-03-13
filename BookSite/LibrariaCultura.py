@@ -9,6 +9,9 @@ def get_book_data(url):
 
     book_data.url = url
     book_data.site_slug = "LC"
+    book_data.ready_for_sale = True
+    book_data.format = "Digital"
+    book_data.parse_status = "Successful"
 
     try:
         root = get_root_from_url(url)

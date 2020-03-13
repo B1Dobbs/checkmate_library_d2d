@@ -24,8 +24,13 @@ def testScribd():
 
 def testGoogle():
     book_site = get_book_site("GB")
-    book_data = book_site.get_book_data("https://play.google.com/store/books/details/?id=FN5wMOZKTYMC")
-    book_data.printData()
+
+    book_data_2 = book_site.get_book_data("https://play.google.com/store/books/details?id=-lRoDwAAQBAJ&source=gbs_api")
+    #book_data = book_site.get_book_data("https://play.google.com/store/books/details/?id=FN5wMOZKTYMC")
+    book_data = BookData()
+    book_data.authors = ["vergara"]
+    print("MATCH: ", compare_book_data(book_data, book_data_2))
+    book_data_2.printData()
 
 
 if __name__ == "__main__":

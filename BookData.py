@@ -4,7 +4,7 @@ import re
 class BookData:
 
     def __init__(self):
-        self.format = "Digital"
+        self.format = None
         self.title = None
         self.image = None
         self.image_url = None
@@ -13,9 +13,9 @@ class BookData:
         self.series = None
         self.vol_number = None
         self.authors = []
-        self.ready_for_sale = True
+        self.ready_for_sale = None
         self.site_slug = None
-        self.parse_status = "SUCCESSFUL"
+        self.parse_status = None
         self.subtitle = None
         self.book_id = None
         self.url = None
