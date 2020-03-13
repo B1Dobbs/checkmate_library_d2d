@@ -11,9 +11,12 @@ import re
 def get_book_data(url):
     # type: (str) -> SiteBookData 
     book_data = BookData()
-    root = get_root_from_url(url)
-    #print(queryHtml(root, "//div/section/dl/dd[2]"))
+    
+    book_data.site_slug = "SD"
+    book_data.ready_for_sale = True
+
     try:
+        root = get_root_from_url(url)
         #Get ISBN
         j = queryHtml(root, "//script[@type = 'application/ld+json']")[1].text
         y = json.loads(j)
@@ -25,7 +28,6 @@ def get_book_data(url):
             book_data.subtitle = title[1]
         else:    
             book_data.title = title
-        book_data.format = y['@type']
 
         book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
         book_data.image = get_image_from_url(book_data.image_url)
@@ -39,7 +41,7 @@ def get_book_data(url):
             l = p.search(i)
             if(l != None):
                 book_data.isbn_13 = l.string
-#Get Author List
+        #Get Author List
         authors = []
         for i in range (0, len(y['author'])):
             authors.append(y['author'][i]['name'])
@@ -53,16 +55,16 @@ def get_book_data(url):
             
         book_data.authors = author_list
 
-#Get Book ID From URL
+        #Get Book ID From URL
         bookID = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
         book_data.book_id = url.replace('https://www.scribd.com/', '')
         
         book_data.content = queryHtml(root, "/html")
-        book_data.site_slug = "SD"
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
-        book_data.ready_for_sale = True
-
+    except requests.exceptions.ConnectionError:
+        print("ERROR: Could not connect to url ", url)
+        book_data.parse_status = "UNSUCCESSFUL"
     except:
         print("ERROR: Processing book at " + url)
         traceback.print_exc()

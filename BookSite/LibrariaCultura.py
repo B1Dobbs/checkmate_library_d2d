@@ -6,11 +6,12 @@ import requests, sys, webbrowser, bs4
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
     book_data = BookData()
-    root = get_root_from_url(url)
 
+    book_data.url = url
+    book_data.site_slug = "LC"
 
     try:
-        book_data.format = "Digital"
+        root = get_root_from_url(url)
         title = queryHtml(root, ".//meta[@property='og:title']/@content")
         book_data.title = str(title)
 
@@ -41,21 +42,16 @@ def get_book_data(url):
         
         book_data.authors = authorsArray
 
-        book_data.site_slug = "LC"
-
         bookURL = str(queryHtml(root, ".//meta[@itemprop='url']/@content"))
         bookID = bookURL.split('.br')
-        book_data.url = convert_book_id_to_url(bookID[1])
-
         book_data.book_id = bookID[1]
-
         book_data.content = queryHtml(root, "/html")
-
-        book_data.ready_for_sale = True
 
         #Price is gathered as extra data
         book_data.extra = {"price" : str(queryHtml(root, ".//meta[@property='product:price:amount']/@content"))}
-
+    except requests.exceptions.ConnectionError:
+        print("ERROR: Could not connect to url ", url)
+        book_data.parse_status = "UNSUCCESSFUL"
     except:
         print("ERROR: Processing book at " + url)
         print(sys.exc_info()[0])

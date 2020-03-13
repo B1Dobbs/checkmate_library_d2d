@@ -8,19 +8,19 @@ import sys, traceback
 def get_book_data(url):
     # type: (str) -> SiteBookData 
     book_data = BookData()
-    root = get_root_from_url(url)
+    book_data.url = url
+    book_data.site_slug = "GB"
     
     try:
+        root = get_root_from_url(url)
+
         title = str.strip(queryHtml(root, "//h1[@class='AHFaub']/span").text)
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
             book_data.subtitle = title_array[1]
         else:
-            book_data.title=title
-
-
-        book_data.format = "E-Book"     
+            book_data.title=title   
 
         book_data.image_url = queryHtml(root, "//meta[@property='og:image']/@content")
         book_data.image = get_image_from_url(book_data.image_url)
@@ -34,8 +34,6 @@ def get_book_data(url):
             book_data.series = queryHtml(root, "//div[@class='sIskre']/h2").text
             book_data.vol_number = queryHtml(root, "//div[@class='j15tgb']").text
 
-
-
         authors = queryHtml(root, "//span[@itemprop='author']/a/text()")
         if authors != None:
             if(type(authors)==list):
@@ -45,13 +43,8 @@ def get_book_data(url):
         else:
             book_data.authors = None
 
-
-
-        book_data.ready_for_sale = True
-        book_data.site_slug = "GB"
         book_id = str(queryHtml(root, "//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("=")[1]
-        book_data.url = convert_book_id_to_url(book_data.book_id)
         try:
             price = queryHtml(root, "//meta[@itemprop='price']/@content")
         except:
@@ -60,6 +53,9 @@ def get_book_data(url):
         book_data.extra = {"Price" : price}
         book_data.content = queryHtml(root, "/html")
 
+    except requests.exceptions.ConnectionError:
+        print("ERROR: Could not connect to url ", url)
+        book_data.parse_status = "UNSUCCESSFUL"
     except:
         print("ERROR: Processing book at " + url)
         traceback.print_exc()

@@ -6,11 +6,13 @@ import sys, traceback
 """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
 def get_book_data(url):
     book_data = BookData()
-    root = get_root_from_url(url)
 
-    book_data.format = "Digital"
+    book_data.url = url
+    book_data.site_slug = "KB"
 
     try:
+        root = get_root_from_url(url)
+
         title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
         subtitle = queryHtml(root, ".//span[@class='subtitle product-field']")
         if ":" in title:
@@ -22,7 +24,6 @@ def get_book_data(url):
         else:
             book_data.title = title
         
-
         image_url = queryHtml(root, ".//div[@class='item-image']//img/@src")
         if(type(image_url) == list):
             book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
@@ -53,13 +54,8 @@ def get_book_data(url):
             else:
                 book_data.authors.append(authors)
 
-        book_data.ready_for_sale = True
-        book_data.site_slug = "KB"
-
         book_id = str(queryHtml(root, ".//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("/")[-1]
-
-        book_data.url = convert_book_id_to_url(book_data.book_id)
 
         try:
             price = queryHtml(root, ".//div[@class='active-price']//span[@class='price']")[0].text
@@ -68,6 +64,9 @@ def get_book_data(url):
         book_data.extra = {"Price" : price, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
         book_data.content = queryHtml(root, "/html")
 
+    except requests.exceptions.ConnectionError:
+        print("ERROR: Could not connect to url ", url)
+        book_data.parse_status = "UNSUCCESSFUL"
     except:
         print("ERROR: Processing book at " + url)
         traceback.print_exc()
