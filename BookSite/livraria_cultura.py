@@ -10,23 +10,23 @@ class LivrariaCultura(book_site.BookSite):
     def get_site_specific_data(self, root, book_data):
         book_data.site_slug = "LC"
 
-        title = queryHtml(root, ".//meta[@property='og:title']/@content")
+        title = query_html(root, ".//meta[@property='og:title']/@content")
         book_data.title = str(title)
 
-        subtitle = queryHtml(root, ".//th[contains(text(), 'Subtitulo')]/following-sibling::td")
+        subtitle = query_html(root, ".//th[contains(text(), 'Subtitulo')]/following-sibling::td")
         if subtitle is not None:
             book_data.subtitle = subtitle.text
 
-        imageUrl = queryHtml(root, ".//meta[@itemprop='image']/@content")
+        imageUrl = query_html(root, ".//meta[@itemprop='image']/@content")
         book_data.image_url = str(imageUrl)
         book_data.image = get_image_from_url(book_data.image_url)
 
-        book_data.isbn_13 = queryHtml(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
-        book_data.description = str(queryHtml(root, ".//meta[@property='og:title']/following-sibling::meta[@property='og:description']/@content"))
+        book_data.isbn_13 = query_html(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
+        book_data.description = str(query_html(root, ".//meta[@property='og:title']/following-sibling::meta[@property='og:description']/@content"))
 
         #Series and Volume Number are not available on site
 
-        authorsTag = queryHtml(root, ".//th[contains(text(), 'Colaborado')]/following-sibling::td").text
+        authorsTag = query_html(root, ".//th[contains(text(), 'Colaborado')]/following-sibling::td").text
 
         #Parsing Author Name
         collaborators = authorsTag.split("|")
@@ -40,13 +40,13 @@ class LivrariaCultura(book_site.BookSite):
         
         book_data.authors = authorsArray
 
-        bookURL = str(queryHtml(root, ".//meta[@itemprop='url']/@content"))
+        bookURL = str(query_html(root, ".//meta[@itemprop='url']/@content"))
         bookID = bookURL.split('.br')
         book_data.book_id = bookID[1]
-        book_data.content = queryHtml(root, "/html")
+        book_data.content = query_html(root, "/html")
 
         #Price is gathered as extra data
-        book_data.extra = {"price" : str(queryHtml(root, ".//meta[@property='product:price:amount']/@content"))}
+        book_data.extra = {"price" : str(query_html(root, ".//meta[@property='product:price:amount']/@content"))}
 
         return book_data
 
@@ -58,19 +58,19 @@ class LivrariaCultura(book_site.BookSite):
     def get_site_links(self, book_data):
         links = []
         if book_data.authors != None: # If a title is sent in to search by, record link matches
-            links += livrariaLinkSearch(book_data.get_authors_as_string())
+            links += get_links_for_search(book_data.get_authors_as_string())
 
         if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += livrariaLinkSearch(book_data.isbn_13)
+            links += get_links_for_search(book_data.isbn_13)
 
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += livrariaLinkSearch(book_data.title)
+            links += get_links_for_search(book_data.title)
             
         return links
 
-    def livrariaLinkSearch(self, searchVar):
+    def get_links_for_search(self, search_str):
         links = []
-        link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar
+        link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str
         res = requests.get(link)
         res.raise_for_status()
         soup = bs4.BeautifulSoup(res.text, "html.parser")
@@ -81,19 +81,19 @@ class LivrariaCultura(book_site.BookSite):
 
         #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
         # First get the number of books
-        storageSpan = soup.find('span', class_="resultado-busca-numero")
-        numBooksSpan = storageSpan.find('span', class_="value")
-        numBooks = int(numBooksSpan.contents[0])
+        storage_span = soup.find('span', class_="resultado-busca-numero")
+        num_books_span = storage_span.find('span', class_="value")
+        num_books = int(num_books_span.contents[0])
 
-        booksPerPagesOption = soup.find('option', attrs={"selected" : "selected"})
-        booksPerPages = int(booksPerPagesOption.contents[0])
+        books_per_pages_option = soup.find('option', attrs={"selected" : "selected"})
+        books_per_pages = int(books_per_pages_option.contents[0])
         
-        numPages = numBooks/booksPerPages
+        num_pages = num_books/books_per_pages
 
         
-        if numPages > 1:
-            for i in range(2, int(numPages)):
-                link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
+        if num_pages > 1:
+            for i in range(2, int(num_pages)):
+                link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str + '#' + str(i)
                 print(link)
                 res = requests.get(link)
                 res.raise_for_status()

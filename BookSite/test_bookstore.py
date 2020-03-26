@@ -11,8 +11,8 @@ class TestBookstore(book_site.BookSite):
     def get_site_specific_data(self, root, book_data):
         book_data.site_slug = "TB"
 
-        book_data.format = queryHtml(root, ".//p[@class='details']").text
-        title = queryHtml(root, ".//p[@id='title']/strong").text
+        book_data.format = query_html(root, ".//p[@class='details']").text
+        title = query_html(root, ".//p[@id='title']/strong").text
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
@@ -24,24 +24,24 @@ class TestBookstore(book_site.BookSite):
         #book_data.image_url = root.xpath(".//img/@src")[0]
         #book_data.image = get_image_from_url(book_data.image_url)
 
-        book_data.isbn_13 = str.strip(queryHtml(root, ".//span[@id='isbn']").text)
-        book_data.description = queryHtml(root, "//script[@type='text/javascript']/text()").split("\"")[19]
+        book_data.isbn_13 = str.strip(query_html(root, ".//span[@id='isbn']").text)
+        book_data.description = query_html(root, "//script[@type='text/javascript']/text()").split("\"")[19]
 
-        book_data.series = str.strip(queryHtml(root, ".//span[@id='series']").text)
-        book_data.vol_number = str.strip(queryHtml(root, ".//span[@id='volume_number']").text)
+        book_data.series = str.strip(query_html(root, ".//span[@id='series']").text)
+        book_data.vol_number = str.strip(query_html(root, ".//span[@id='volume_number']").text)
         
-        book_data.authors = str.strip(queryHtml(root, ".//span[@id='author']/text()")).split(", ")
+        book_data.authors = str.strip(query_html(root, ".//span[@id='author']/text()")).split(", ")
         
         book_data.book_id = book_data.isbn_13
-        book_data.content = queryHtml(root, "/html")
+        book_data.content = query_html(root, "/html")
 
-        book_data.ready_for_sale = queryHtml(root, ".//i/@class")
+        book_data.ready_for_sale = query_html(root, ".//i/@class")
         if book_data.ready_for_sale == "fa fa-times-circle x-mark":
             book_data.ready_for_sale = False
         else: 
             book_data.ready_for_sale = True
 
-        book_data.extra = {"price" : queryHtml(root, ".//span[@id='price']").text, "releaseDate" : queryHtml(root, ".//span[@id='release_date']").text}
+        book_data.extra = {"price" : query_html(root, ".//span[@id='price']").text, "releaseDate" : query_html(root, ".//span[@id='release_date']").text}
 
         return book_data
 
@@ -56,21 +56,21 @@ class TestBookstore(book_site.BookSite):
         links = []
 
         if book_data.authors != None: # If an author is sent in to search by, record link matches
-            links += self.testBookStoreLinkSearch(book_data.get_authors_as_string())
+            links += self.get_links_for_search(book_data.get_authors_as_string())
 
         if book_data.isbn_13 != None: # If an isbn is sent in to search by, record link matches
-            links += self.testBookStoreLinkSearch(book_data.isbn_13)
+            links += self.get_links_for_search(book_data.isbn_13)
 
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += self.testBookStoreLinkSearch(book_data.title)
+            links += self.get_links_for_search(book_data.title)
 
         # For each link, get the book data and compare it with the passed in book_data
         return links
 
     """ Search test Book Store for relevant links """
-    def testBookStoreLinkSearch(self, searchVar):
+    def get_links_for_search(self, search_str):
         links = []
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + searchVar
+        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + search_str
         res = requests.get(link)
         res.raise_for_status()
         soup = bs4.BeautifulSoup(res.text, "html.parser")
@@ -79,9 +79,9 @@ class TestBookstore(book_site.BookSite):
             links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
 
         pattern = re.compile(r'Last')
-        findPageNum = str(soup.find('a', text=pattern))
-        if findPageNum != "None":
-            temp = re.findall(r'\d+', findPageNum)
+        find_page_num = str(soup.find('a', text=pattern))
+        if find_page_num != "None":
+            temp = re.findall(r'\d+', find_page_num)
             num_pages = temp[0]
         
             for i in range(2, int(num_pages)+1):

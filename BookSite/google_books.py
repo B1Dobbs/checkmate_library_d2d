@@ -8,7 +8,7 @@ class GoogleBooks(book_site.BookSite):
     
     """Given a direct link to a book page at a site, parse it and return the BookData of the info"""
     def get_site_specific_data(self, root, book_data):
-        title = str.strip(queryHtml(root, "//h1[@class='AHFaub']/span").text)
+        title = str.strip(query_html(root, "//h1[@class='AHFaub']/span").text)
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
@@ -16,19 +16,19 @@ class GoogleBooks(book_site.BookSite):
         else:
             book_data.title=title   
 
-        book_data.image_url = queryHtml(root, "//meta[@property='og:image']/@content")
+        book_data.image_url = query_html(root, "//meta[@property='og:image']/@content")
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.isbn_13 = queryHtml(root, "//div[@class='IQ1z0d']/span")[3].text
+        book_data.isbn_13 = query_html(root, "//div[@class='IQ1z0d']/span")[3].text
 
-        book_description =  queryHtml(root, "//meta[@itemprop='description']/@content")
+        book_description =  query_html(root, "//meta[@itemprop='description']/@content")
         if type(book_description)==list:
             book_data.description = book_description[1]
-        series_info = queryHtml(root, "//div[@class='sIskre']/h2")
+        series_info = query_html(root, "//div[@class='sIskre']/h2")
         if series_info is not None:
-            book_data.series = queryHtml(root, "//div[@class='sIskre']/h2").text
-            book_data.vol_number = queryHtml(root, "//div[@class='j15tgb']").text
+            book_data.series = query_html(root, "//div[@class='sIskre']/h2").text
+            book_data.vol_number = query_html(root, "//div[@class='j15tgb']").text
 
-        authors = queryHtml(root, "//span[@itemprop='author']/a/text()")
+        authors = query_html(root, "//span[@itemprop='author']/a/text()")
         if authors != None:
             if type(authors)==list:
                 book_data.authors += authors
@@ -37,15 +37,15 @@ class GoogleBooks(book_site.BookSite):
         else:
             book_data.authors = None
 
-        book_id = str(queryHtml(root, "//link[@rel='canonical']/@href"))
+        book_id = str(query_html(root, "//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("=")[1]
         try:
-            price = queryHtml(root, "//meta[@itemprop='price']/@content")[1]
+            price = query_html(root, "//meta[@itemprop='price']/@content")[1]
         except:
             price = 0.0
 
         book_data.extra = {"Price" : price}
-        book_data.content = queryHtml(root, "/html")
+        book_data.content = query_html(root, "/html")
 
         return book_data
 
@@ -53,22 +53,22 @@ class GoogleBooks(book_site.BookSite):
         links = []
 
         if book_data.authors != None: # If a title is sent in to search by, record link matches
-            links += self.googleLinkSearch(book_data.get_authors_as_string())
+            links += self.get_links_for_search(book_data.get_authors_as_string())
 
         if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += self.googleLinkSearch(book_data.isbn_13)
+            links += self.get_links_for_search(book_data.isbn_13)
 
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += self.googleLinkSearch(book_data.title)
+            links += self.get_links_for_search(book_data.title)
             
         return links
 
-    def googleLinkSearch(self, searchVar):
+    def get_links_for_search(self, search_str):
         links = []
-        link = 'https://www.googleapis.com/books/v1/volumes?q=' + searchVar + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40'
-        apiResponse = requests.get(link)
+        link = 'https://www.googleapis.com/books/v1/volumes?q=' + search_str + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40'
+        api_response = requests.get(link)
 
-        for item in apiResponse.json()['items']:
+        for item in api_response.json()['items']:
             links.append(item['volumeInfo']['infoLink'])
             if self.found_enough_matches(links):
                 break

@@ -5,22 +5,22 @@ from BookData import BookData
 def testBookstore():
     book_site = get_book_site("TB")
     book_data = book_site.get_book_data("http://127.0.0.1:8000/library/9781524243456/")
-    book_data.printData()
+    book_data.print_data()
 
 def testKobo():
     book_site = get_book_site("KB")
     book_data = book_site.get_book_data("https://www.kobo.com/us/en/ebook/snow-white-before-the-hea-2")
-    book_data.printData()
+    book_data.print_data()
 
 def testLivrariaCultura():
     book_site = get_book_site("LC")
     book_data = book_site.get_book_data("https://www3.livrariacultura.com.br/what-if-its-us-2012739487/p")
-    book_data.printData()
+    book_data.print_data()
 
 def testScribd():
     book_site = get_book_site("SD")
     book_data = book_site.get_book_data("https://www.scribd.com/book/357813054/Principles-Life-and-Work")
-    book_data.printData()
+    book_data.print_data()
 
 def testGoogle():
     book_site = get_book_site("GB")
@@ -30,7 +30,7 @@ def testGoogle():
     book_data = BookData()
     book_data.authors = ["vergara"]
     print("MATCH: ", compare_book_data(book_data, book_data_2))
-    book_data_2.printData()
+    book_data_2.print_data()
 
 
 if __name__ == "__main__":

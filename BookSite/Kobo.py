@@ -8,8 +8,8 @@ class Kobo(book_site.BookSite):
 
     """Given a direct link to a book page at a site, parse it and return the BookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        title = str.strip(queryHtml(root, ".//span[@class='title product-field']").text)
-        subtitle = queryHtml(root, ".//span[@class='subtitle product-field']")
+        title = str.strip(query_html(root, ".//span[@class='title product-field']").text)
+        subtitle = query_html(root, ".//span[@class='subtitle product-field']")
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
@@ -19,22 +19,22 @@ class Kobo(book_site.BookSite):
         else:
             book_data.title = title
         
-        image_url = queryHtml(root, ".//div[@class='item-image']//img/@src")
+        image_url = query_html(root, ".//div[@class='item-image']//img/@src")
         if type(image_url) == list:
-            book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
+            book_data.image_url = "https:" + query_html(root, ".//div[@class='item-image']//img/@src")[0]
         else:
-            book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")
+            book_data.image_url = "https:" + query_html(root, ".//div[@class='item-image']//img/@src")
 
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.isbn_13 = queryHtml(root, ".//li[contains(text(), 'ISBN')]/span").text
+        book_data.isbn_13 = query_html(root, ".//li[contains(text(), 'ISBN')]/span").text
 
         book_data.description = " "
-        description = queryHtml(root, ".//div[@class='synopsis-description']/descendant-or-self::*/text()")
+        description = query_html(root, ".//div[@class='synopsis-description']/descendant-or-self::*/text()")
         if description != None:
             for string in description:   
                 book_data.description += string
 
-        series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
+        series_info = query_html(root, ".//span[@class='product-sequence-field']/a[1]")
         if series_info is not None:
             series_info = series_info.text.split("#")
             book_data.series = series_info[0]
@@ -42,22 +42,22 @@ class Kobo(book_site.BookSite):
                 book_data.vol_number = series_info[1]
 
 
-        authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
+        authors = query_html(root, ".//a[@class='contributor-name']/text()")
         if authors != None:
             if type(authors) == list:
                 book_data.authors += authors
             else:
                 book_data.authors.append(authors)
 
-        book_id = str(queryHtml(root, ".//link[@rel='canonical']/@href"))
+        book_id = str(query_html(root, ".//link[@rel='canonical']/@href"))
         book_data.book_id = book_id.split("/")[-1]
 
         try:
-            price = queryHtml(root, ".//div[@class='active-price']//span[@class='price']")[0].text
+            price = query_html(root, ".//div[@class='active-price']//span[@class='price']")[0].text
         except:
             price = 0.0
-        book_data.extra = {"Price" : price, "Release Date" : queryHtml(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
-        book_data.content = queryHtml(root, "/html")
+        book_data.extra = {"Price" : price, "Release Date" : query_html(root, ".//div[@class='bookitem-secondary-metadata']/ul[1]/li[2]/span[1]").text}
+        book_data.content = query_html(root, "/html")
 
         return book_data
 
@@ -69,30 +69,29 @@ class Kobo(book_site.BookSite):
     def get_site_links(self, book_data):
         links = []
 
-        titleLinkSearch = ""
+        query_string = ""
 
-        if book_data.authors != None: # If a title is sent in to search by, record link matches
-            titleLinkSearch += book_data.get_authors_as_string()
+        if book_data.authors != None: # Add authors to query string if provided
+            query_string += book_data.get_authors_as_string()
         
-        if book_data.title != None: # If a title is sent in to search by, record link matches
-            if titleLinkSearch != "":
-                titleLinkSearch += " "
-                titleLinkSearch += book_data.title
+        if book_data.title != None: # Add title to query string if provided
+            if query_string != "":
+                query_string += " " + book_data.title
             else:
-                titleLinkSearch = book_data.title
+                query_string = book_data.title
 
-        if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += self.koboLinkSearch(book_data.isbn_13)
-
-        if titleLinkSearch != "":
-            links += self.koboLinkSearch(titleLinkSearch)
+        if book_data.isbn_13 != None: # Search by ISBN if provided
+            links += self.get_links_for_search(book_data.isbn_13)
+        
+        if query_string != "": # Search with everything in the query string
+            links += self.get_links_for_search(query_string)
             
         return links
 
     """ Searching Kobo for relevant links """
-    def koboLinkSearch(self, searchVar):
+    def get_links_for_search(self, search_str):
         links = []
-        link = 'https://www.kobo.com/us/en/search?query=' + searchVar
+        link = 'https://www.kobo.com/us/en/search?query=' + search_str
         res = requests.get(link)
         res.raise_for_status
         soup = bs4.BeautifulSoup(res.text, "html.parser")
@@ -107,7 +106,7 @@ class Kobo(book_site.BookSite):
             num_pages = int(num_pages) + 1
             print(num_pages)
             for i in range(2, num_pages):
-                link = 'https://www.kobo.com/us/en/search?query=' + searchVar + '&pageNumber=' + str(i)
+                link = 'https://www.kobo.com/us/en/search?query=' + search_str + '&pageNumber=' + str(i)
                 res = requests.get(link)
                 res.raise_for_status
                 soup = bs4.BeautifulSoup(res.text, "html.parser")

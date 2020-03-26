@@ -44,7 +44,7 @@ def get_root_from_url(url):
     root = tree.getroot()
     return root
 
-def queryHtml(root, expr):
+def query_html(root, expr):
     """
     Wrapper for node.xpath() to prevent IndexOutOfBounds Exception
 
@@ -68,13 +68,13 @@ def queryHtml(root, expr):
 
     return result
 
-def get_matches_from_links(get_book_data, linkList, book_data):
+def get_matches_from_links(get_book_data, link_list, book_data):
      # For each link, get the book data and compare it with the passed in book_data
     book_matches = []
-    for lnk in linkList:
+    for lnk in link_list:
         search_book_data = get_book_data(lnk)
         match_value = compare_book_data(search_book_data, book_data)
-        search_book_data.printData()
+        search_book_data.print_data()
         print("MATCH: ", match_value)
         if match_value != 0.0 :
             book_matches.append((match_value, search_book_data))
@@ -120,5 +120,5 @@ def compare_book_data(book1, book2):
 
 
 """ISBN 10 to ISBN 13 conversion """
-def isbn10to13(isbn10):
+def isbn10_to_isbn13(isbn10):
     return to_isbn13(isbn10)

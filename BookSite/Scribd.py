@@ -14,10 +14,10 @@ class Scribd(book_site.BookSite):
         # type: (str) -> SiteBookData  
         book_data.site_slug = "SD"
         #Get ISBN
-        j = queryHtml(root, "//script[@type = 'application/ld+json']")[1].text
+        j = query_html(root, "//script[@type = 'application/ld+json']")[1].text
         y = json.loads(j)
         
-        title = queryHtml(root, "//h1[@class='document_title']").text
+        title = query_html(root, "//h1[@class='document_title']").text
         if ':' in title:
             title = title.split(': ')
             book_data.title = title[0]
@@ -27,7 +27,7 @@ class Scribd(book_site.BookSite):
 
         book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
         book_data.image = get_image_from_url(book_data.image_url)
-        book_data.description = queryHtml(root, ".//meta[@property='og:description']/@content")
+        book_data.description = query_html(root, ".//meta[@property='og:description']/@content")
     
         roottext = etree.tostring(root, encoding = "unicode")
         roottext = roottext.split('"')
@@ -52,10 +52,10 @@ class Scribd(book_site.BookSite):
         book_data.authors = author_list
 
         #Get Book ID From URL
-        bookID = queryHtml(root, "//link[@rel = 'alternate'][1]/@href")
+        bookID = query_html(root, "//link[@rel = 'alternate'][1]/@href")
         book_data.book_id = book_data.url.replace('https://www.scribd.com/', '')
         
-        book_data.content = queryHtml(root, "/html")
+        book_data.content = query_html(root, "/html")
 
         book_data.url = convert_book_id_to_url(book_data.book_id)
 
@@ -69,30 +69,29 @@ class Scribd(book_site.BookSite):
     def get_site_links(self, book_data):
         links = []
 
-        titleLinkSearch = ""
+        query_string = ""
 
         if book_data.authors != None: # If a title is sent in to search by, record link matches
-            titleLinkSearch += book_data.get_authors_as_string()
+            query_string += book_data.get_authors_as_string()
         #parenthesis
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            if titleLinkSearch != "":
-                titleLinkSearch += " "
-                titleLinkSearch += book_data.title
+            if query_string != "":
+                query_string += " " + book_data.title
             else:
-                titleLinkSearch = book_data.title
+                query_string = book_data.title
 
         if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += self.scribdLinkSearch(book_data.isbn)
+            links += self.get_links_for_search(book_data.isbn)
 
-        if titleLinkSearch != "":
-            links += self.scribdLinkSearch(titleLinkSearch)
+        if query_string != "":
+            links += self.get_links_for_search(query_string)
 
         # For each link, get the book data and compare it with the passed in book_data
         return links
 
-    def scribdLinkSearch(self, searchVar):
+    def get_links_for_search(self, search_str):
         links = []
-        link = 'https://www.scribd.com/search?content_type=books&page=1&query=' + searchVar + '&language=1'
+        link = 'https://www.scribd.com/search?content_type=books&page=1&query=' + search_str + '&language=1'
         res = requests.get(link)
 
         # The following code gets a json blob from inside a specific javascript function call.  
@@ -103,9 +102,9 @@ class Scribd(book_site.BookSite):
         pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
                                                         # This code selects actual json code
 
-        newString = pattern.findall(string)
+        new_string = pattern.findall(string)
 
-        parsed_json = json.loads(newString[1]) # parse the json
+        parsed_json = json.loads(new_string[1]) # parse the json
 
         if parsed_json['result_count'] != '0': # If there are any results
             results = parsed_json['results']  
@@ -115,7 +114,7 @@ class Scribd(book_site.BookSite):
             num_pages = parsed_json['page_count']
 
             for i in range(2, num_pages + 1):
-                link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + searchVar + '&language=1'
+                link = 'https://www.scribd.com/search?content_type=books&page=' + str(i) + '&query=' + search_str + '&language=1'
                 res = requests.get(link)
 
                 # The following code gets a json blob from inside a specific javascript function call.  
@@ -126,16 +125,16 @@ class Scribd(book_site.BookSite):
                 pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
                                                                 # This code selects actual json code
 
-                newString = pattern.findall(string)
+                new_string = pattern.findall(string)
 
-                parsed_json = json.loads(newString[1]) # parse the json
+                parsed_json = json.loads(new_string[1]) # parse the json
                 results = parsed_json['results']
                 
                 for book in results['books']['content']['documents']:
                     links.append(book['book_preview_url'])
 
 
-        link = 'https://www.scribd.com/search?content_type=audiobooks&page=1&query=' + searchVar + '&language=1'
+        link = 'https://www.scribd.com/search?content_type=audiobooks&page=1&query=' + search_str + '&language=1'
         res = requests.get(link)
 
         # The following code gets a json blob from inside a specific javascript function call.  
@@ -146,9 +145,9 @@ class Scribd(book_site.BookSite):
         pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
                                                         # This code selects actual json code
 
-        newString = pattern.findall(string)
+        new_string = pattern.findall(string)
 
-        parsed_json = json.loads(newString[1]) # parse the json
+        parsed_json = json.loads(new_string[1]) # parse the json
 
         if parsed_json['result_count'] != '0': # If there are any results
             results = parsed_json['results']
@@ -158,7 +157,7 @@ class Scribd(book_site.BookSite):
             num_pages = parsed_json['page_count']
 
             for i in range(2, num_pages + 1):
-                link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + searchVar + '&language=1'
+                link = 'https://www.scribd.com/search?content_type=audiobooks&page=' + str(i) + '&query=' + search_str + '&language=1'
                 res = requests.get(link)
 
                 # The following code gets a json blob from inside a specific javascript function call.  
@@ -169,9 +168,9 @@ class Scribd(book_site.BookSite):
                 pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
                                                                 # This code selects actual json code
 
-                newString = pattern.findall(string)
+                new_string = pattern.findall(string)
 
-                parsed_json = json.loads(newString[1]) # parse the json
+                parsed_json = json.loads(new_string[1]) # parse the json
                 results = parsed_json['results']
                 
                 for book in results['audiobooks']['content']['documents']:

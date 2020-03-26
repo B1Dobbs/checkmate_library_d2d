@@ -26,7 +26,7 @@ class BookData:
     def __str__(self):
         print("Relative infomation about the book")
 
-    def printData(self):
+    def print_data(self):
         print("Book")
         print("================")
         print("Format", end = ": \t")
