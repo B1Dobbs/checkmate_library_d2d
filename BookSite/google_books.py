@@ -5,9 +5,12 @@ import sys, traceback
 from BookSite import book_site
 
 class GoogleBooks(book_site.BookSite):
+
+    SLUG = "GB"
     
     """Given a direct link to a book page at a site, parse it and return the BookData of the info"""
     def get_site_specific_data(self, root, book_data):
+        book_data.site_slug = SLUG
         title = str.strip(query_html(root, "//h1[@class='AHFaub']/span").text)
         if ":" in title:
             title_array = title.split(":")

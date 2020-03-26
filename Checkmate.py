@@ -11,20 +11,18 @@ SD - Scribd
 LC - LibrariaCultura
  """
 
-""" Needed for test clases """
-siteSlugs = ["GB", "KB", "LC", "SD", "TB"]
 
 def get_book_site(slug):
     """Will return one of the BookSite modules"""
-    if slug == "GB":
+    if slug == GoogleBooks.SLUG:
         return GoogleBooks()
-    elif slug == "KB":
+    elif slug == Kobo.SLUG:
         return Kobo()
-    elif slug == "LC":
+    elif slug == LivrariaCultura.SLUG:
         return LivrariaCultura()
-    elif slug == "SD":
+    elif slug == Scribd.SLUG:
         return Scribd()
-    elif slug == "TB":
+    elif slug == TestBookstore.SLUG:
         return TestBookstore()
     else:
         print("Site Slug not found.")

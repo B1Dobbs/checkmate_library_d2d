@@ -15,32 +15,29 @@ def testSiteQuery(book_site):
 
 if __name__ == "__main__":
 
-    if sys.argv[1] != None and sys.argv[1] not in siteSlugs:
-        print("Site slug not found.")
-    else:
-        testToRun = sys.argv[1]
+    testToRun = sys.argv[1]
 
-        """ Site Query Test for Scribd """
-        if testToRun == "SD" or testToRun == None:
-            print("Starting test for Scribd.")
-            testSiteQuery(get_book_site("SD"))
+    """ Site Query Test for Scribd """
+    if testToRun == Scribd.SLUG or testToRun == None:
+        print("Starting test for Scribd.")
+        testSiteQuery(get_book_site("SD"))
 
-        """ Site Query Test for Kobo """
-        if testToRun == "KB" or testToRun == None:
-            print("Starting test for Kobo.")
-            testSiteQuery(get_book_site("KB"))
+    """ Site Query Test for Kobo """
+    if testToRun == Kobo.SLUG or testToRun == None:
+        print("Starting test for Kobo.")
+        testSiteQuery(get_book_site("KB"))
 
-        """ Site Query Test for Google """
-        if testToRun == "GB" or testToRun == None:
-            print("Starting test for Google Books.")
-            testSiteQuery(get_book_site("GB"))
+    """ Site Query Test for Google """
+    if testToRun == GoogleBooks.SLUG or testToRun == None:
+        print("Starting test for Google Books.")
+        testSiteQuery(get_book_site("GB"))
 
-        """ Site Query Test for Livraria Cultura """
-        if testToRun == "LC" or testToRun == None:
-            print("Starting test for Livraria Cultura.")
-            testSiteQuery(get_book_site("KB"))
+    """ Site Query Test for Livraria Cultura """
+    if testToRun == LivrariaCultura.SLUG or testToRun == None:
+        print("Starting test for Livraria Cultura.")
+        testSiteQuery(get_book_site("KB"))
 
-        """ Site Query Test for Test Bookstore """
-        if testToRun == "TB" or testToRun == None:
-            print("Starting test for Test Bookstore.")
-            testSiteQuery(get_book_site("TB"))
+    """ Site Query Test for Test Bookstore """
+    if testToRun == TestBookstore.SLUG or testToRun == None:
+        print("Starting test for Test Bookstore.")
+        testSiteQuery(get_book_site("TB"))

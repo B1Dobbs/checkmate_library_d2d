@@ -5,14 +5,16 @@ import requests, sys, webbrowser, bs4, traceback
 import io
 import json
 import re 
-
 from BookSite import book_site
 
 class Scribd(book_site.BookSite):
+
+    SLUG = "SD"
+
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
         # type: (str) -> SiteBookData  
-        book_data.site_slug = "SD"
+        book_data.site_slug = SLUG
         #Get ISBN
         j = query_html(root, "//script[@type = 'application/ld+json']")[1].text
         y = json.loads(j)

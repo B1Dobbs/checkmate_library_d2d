@@ -6,8 +6,11 @@ from BookSite import book_site
 
 class Kobo(book_site.BookSite):
 
+    SLUG = "KB"
+
     """Given a direct link to a book page at a site, parse it and return the BookData of the info""" 
     def get_site_specific_data(self, root, book_data):
+        book_data.site_slug = SLUG
         title = str.strip(query_html(root, ".//span[@class='title product-field']").text)
         subtitle = query_html(root, ".//span[@class='subtitle product-field']")
         if ":" in title:

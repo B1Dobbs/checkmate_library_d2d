@@ -5,10 +5,12 @@ import requests, sys, webbrowser, bs4
 from BookSite import book_site
 
 class LivrariaCultura(book_site.BookSite):
+
+    SLUG = "LC"
     
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        book_data.site_slug = "LC"
+        book_data.site_slug = SLUG
 
         title = query_html(root, ".//meta[@property='og:title']/@content")
         book_data.title = str(title)
