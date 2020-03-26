@@ -10,7 +10,7 @@ from Checkmate import *
 def testSiteQuery(book_site):
     book_data = BookData()
     book_data.authors = ["vergara"]
-    print(book_site.find_book_matches(book_data))
+    book_site.find_book_matches(book_data)
     
 
 if __name__ == "__main__":
