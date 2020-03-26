@@ -36,7 +36,7 @@ class TestBookstore(book_site.BookSite):
         book_data.content = queryHtml(root, "/html")
 
         book_data.ready_for_sale = queryHtml(root, ".//i/@class")
-        if(book_data.ready_for_sale == "fa fa-times-circle x-mark"):
+        if book_data.ready_for_sale == "fa fa-times-circle x-mark":
             book_data.ready_for_sale = False
         else: 
             book_data.ready_for_sale = True

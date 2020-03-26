@@ -20,7 +20,7 @@ class Kobo(book_site.BookSite):
             book_data.title = title
         
         image_url = queryHtml(root, ".//div[@class='item-image']//img/@src")
-        if(type(image_url) == list):
+        if type(image_url) == list:
             book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")[0]
         else:
             book_data.image_url = "https:" + queryHtml(root, ".//div[@class='item-image']//img/@src")
@@ -35,16 +35,16 @@ class Kobo(book_site.BookSite):
                 book_data.description += string
 
         series_info = queryHtml(root, ".//span[@class='product-sequence-field']/a[1]")
-        if(series_info is not None):
+        if series_info is not None:
             series_info = series_info.text.split("#")
             book_data.series = series_info[0]
-            if(len(series_info) > 1):
+            if len(series_info) > 1:
                 book_data.vol_number = series_info[1]
 
 
         authors = queryHtml(root, ".//a[@class='contributor-name']/text()")
         if authors != None:
-            if(type(authors) == list):
+            if type(authors) == list:
                 book_data.authors += authors
             else:
                 book_data.authors.append(authors)
@@ -75,7 +75,7 @@ class Kobo(book_site.BookSite):
             titleLinkSearch += book_data.get_authors_as_string()
         
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            if(titleLinkSearch != ""):
+            if titleLinkSearch != "":
                 titleLinkSearch += " "
                 titleLinkSearch += book_data.title
             else:
@@ -84,7 +84,7 @@ class Kobo(book_site.BookSite):
         if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
             links += self.koboLinkSearch(book_data.isbn_13)
 
-        if(titleLinkSearch != ""):
+        if titleLinkSearch != "":
             links += self.koboLinkSearch(titleLinkSearch)
             
         return links
@@ -102,7 +102,7 @@ class Kobo(book_site.BookSite):
                 links.append(link.get('href'))
 
         aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
-        if(aLink != "None"): #There's more than one page
+        if aLink != "None": #There's more than one page
             num_pages = aLink.contents[0]
             num_pages = int(num_pages) + 1
             print(num_pages)

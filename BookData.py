@@ -36,7 +36,7 @@ class BookData:
         print("Image URL", end = ": \t")
         print(self.image_url)
       
-        # if(self.image != None):
+        # if self.image != None:
         #     self.image.show()
 
         print("ISBN", end = ": \t \t")

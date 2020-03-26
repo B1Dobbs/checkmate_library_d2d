@@ -21,16 +21,16 @@ class GoogleBooks(book_site.BookSite):
         book_data.isbn_13 = queryHtml(root, "//div[@class='IQ1z0d']/span")[3].text
 
         book_description =  queryHtml(root, "//meta[@itemprop='description']/@content")
-        if(type(book_description)==list):
+        if type(book_description)==list:
             book_data.description = book_description[1]
         series_info = queryHtml(root, "//div[@class='sIskre']/h2")
-        if(series_info is not None):
+        if series_info is not None:
             book_data.series = queryHtml(root, "//div[@class='sIskre']/h2").text
             book_data.vol_number = queryHtml(root, "//div[@class='j15tgb']").text
 
         authors = queryHtml(root, "//span[@itemprop='author']/a/text()")
         if authors != None:
-            if(type(authors)==list):
+            if type(authors)==list:
                 book_data.authors += authors
             else:
                 book_data.authors.append(authors)

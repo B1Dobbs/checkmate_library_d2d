@@ -14,7 +14,7 @@ class LivrariaCultura(book_site.BookSite):
         book_data.title = str(title)
 
         subtitle = queryHtml(root, ".//th[contains(text(), 'Subtitulo')]/following-sibling::td")
-        if(subtitle is not None):
+        if subtitle is not None:
             book_data.subtitle = subtitle.text
 
         imageUrl = queryHtml(root, ".//meta[@itemprop='image']/@content")
@@ -91,7 +91,7 @@ class LivrariaCultura(book_site.BookSite):
         numPages = numBooks/booksPerPages
 
         
-        if(numPages > 1):
+        if numPages > 1:
             for i in range(2, int(numPages)):
                 link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + searchVar + '#' + str(i)
                 print(link)

@@ -76,7 +76,7 @@ def get_matches_from_links(get_book_data, linkList, book_data):
         match_value = compare_book_data(search_book_data, book_data)
         search_book_data.printData()
         print("MATCH: ", match_value)
-        if(match_value != 0.0):
+        if match_value != 0.0 :
             book_matches.append((match_value, search_book_data))
 
     return book_matches
@@ -98,7 +98,7 @@ def compare_book_data(book1, book2):
         isEmptyList = value == [] or book2.__dict__[attr] == []
 
         # Testing if both values of a certain attribute are none for both book_data objects
-        if(value != None and book2.__dict__[attr] != None and not isEmptyList):
+        if value != None and book2.__dict__[attr] != None and not isEmptyList :
 
             # Creating a regex pattern that will filter out all special characters from the values
             pattern =  '[^A-Za-z0-9 ,]+'
@@ -113,7 +113,7 @@ def compare_book_data(book1, book2):
             count += 1
 
     # Testing if there were 0 matches else return the percent match rounded to the 2nd decimal place
-    if(count == 0):
+    if count == 0 :
         return 0.0
     else:
         return round((percent / count), 2)

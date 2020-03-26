@@ -18,7 +18,7 @@ class Scribd(book_site.BookSite):
         y = json.loads(j)
         
         title = queryHtml(root, "//h1[@class='document_title']").text
-        if(':' in title):
+        if ':' in title:
             title = title.split(': ')
             book_data.title = title[0]
             book_data.subtitle = title[1]
@@ -35,7 +35,7 @@ class Scribd(book_site.BookSite):
 
         for i in roottext:
             l = p.search(i)
-            if(l != None):
+            if l != None:
                 book_data.isbn_13 = l.string
         #Get Author List
         authors = []
@@ -44,7 +44,7 @@ class Scribd(book_site.BookSite):
             #print(y['author'][i]['name'])
 
         author_list = []
-        if(type(authors) == list):
+        if type(authors) == list:
             author_list += authors
         else:
             author_list.append(authors)
@@ -73,9 +73,9 @@ class Scribd(book_site.BookSite):
 
         if book_data.authors != None: # If a title is sent in to search by, record link matches
             titleLinkSearch += book_data.get_authors_as_string()
-        
+        #parenthesis
         if book_data.title != None: # If a title is sent in to search by, record link matches
-            if(titleLinkSearch != ""):
+            if titleLinkSearch != "":
                 titleLinkSearch += " "
                 titleLinkSearch += book_data.title
             else:
@@ -84,7 +84,7 @@ class Scribd(book_site.BookSite):
         if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
             links += self.scribdLinkSearch(book_data.isbn)
 
-        if(titleLinkSearch != ""):
+        if titleLinkSearch != "":
             links += self.scribdLinkSearch(titleLinkSearch)
 
         # For each link, get the book data and compare it with the passed in book_data
@@ -107,7 +107,7 @@ class Scribd(book_site.BookSite):
 
         parsed_json = json.loads(newString[1]) # parse the json
 
-        if(parsed_json['result_count'] != '0'): # If there are any results
+        if parsed_json['result_count'] != '0': # If there are any results
             results = parsed_json['results']  
             for book in results['books']['content']['documents']:
                 links.append(book['book_preview_url'])
@@ -150,7 +150,7 @@ class Scribd(book_site.BookSite):
 
         parsed_json = json.loads(newString[1]) # parse the json
 
-        if(parsed_json['result_count'] != '0'): # If there are any results
+        if parsed_json['result_count'] != '0': # If there are any results
             results = parsed_json['results']
             for audiobook in results['audiobooks']['content']['documents']:
                 links.append(audiobook['book_preview_url'])

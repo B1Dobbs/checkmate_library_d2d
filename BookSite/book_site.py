@@ -50,7 +50,7 @@ class BookSite:
     def found_enough_matches(self, matches):
         hasGoodMatch = False
         for match in matches:
-            if(match[0] > 0.7):
+            if match[0] > 0.7 :
                 hasGoodMatch = True
                 break
         
