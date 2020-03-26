@@ -1,5 +1,8 @@
-from BookSite import GoogleBooks, Kobo, LibrariaCultura, Scribd, TestBookstore
-
+from BookSite.google_books import GoogleBooks
+from BookSite.kobo import Kobo
+from BookSite.livraria_cultura import LivrariaCultura
+from BookSite.scribd import Scribd
+from BookSite.test_bookstore import TestBookstore
 """
 TB - TestBookstore
 KB - Kobo
@@ -14,15 +17,15 @@ siteSlugs = ["GB", "KB", "LC", "SD", "TB"]
 def get_book_site(slug):
     """Will return one of the BookSite modules"""
     if slug == "GB":
-        return GoogleBooks
+        return GoogleBooks()
     elif slug == "KB":
-        return Kobo
+        return Kobo()
     elif slug == "LC":
-        return LibrariaCultura
+        return LivrariaCultura()
     elif slug == "SD":
-        return Scribd
+        return Scribd()
     elif slug == "TB":
-        return TestBookstore
+        return TestBookstore()
     else:
         print("Site Slug not found.")
     

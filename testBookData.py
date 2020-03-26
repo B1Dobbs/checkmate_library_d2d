@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
         """ Site Query Test for Livraria Cultura """
         if testToRun == "LC" or testToRun == None:
-            print("Starting test for Kobo.")
+            print("Starting test for Livraria Cultura.")
             testLivrariaCultura()
 
         """ Site Query Test for Test Bookstore """
