@@ -1,7 +1,6 @@
 from BookData import BookData
-from lxml import etree
-from BookSite.common.utils import *
-import requests, sys, webbrowser, bs4
+from BookSite.common.utils import query_html
+import requests, bs4
 from BookSite import base_parser
 
 class LivrariaCultura(base_parser.BookSite):
@@ -19,8 +18,6 @@ class LivrariaCultura(base_parser.BookSite):
 
         imageUrl = query_html(root, ".//meta[@itemprop='image']/@content")
         book_data.image_url = str(imageUrl)
-        book_data.image = get_image_from_url(book_data.image_url)
-
         book_data.isbn_13 = query_html(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
         book_data.description = str(query_html(root, ".//meta[@property='og:title']/following-sibling::meta[@property='og:description']/@content"))
 

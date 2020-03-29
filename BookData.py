@@ -1,4 +1,5 @@
 from Levenshtein import distance, ratio
+import re
 
 class ParseStatus:
     UNSUCCESSFUL = "UNSUCCESSFUL"
@@ -56,7 +57,7 @@ class BookData:
         pattern =  '[^A-Za-z0-9 ,]+'
         return re.sub(pattern, "", str(self.authors))
 
-    def compare_book_data(self, book2):
+    def compare(self, book2):
         """ Calculates the perecent match between two book_data objects using the Levenshtein Formula
 
         Args:

@@ -1,11 +1,11 @@
 from BookData import BookData
 from lxml import etree
-from BookSite.common.utils import *
-import requests, sys, webbrowser, bs4, traceback
-import io
+from BookSite.common.utils import query_html
+import requests, bs4
 import json
 import re 
 from BookSite import base_parser
+import regex
 
 class Scribd(base_parser.BookSite):
 
@@ -27,7 +27,6 @@ class Scribd(base_parser.BookSite):
             book_data.title = title
 
         book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
-        book_data.image = get_image_from_url(book_data.image_url)
         book_data.description = query_html(root, ".//meta[@property='og:description']/@content")
     
         roottext = etree.tostring(root, encoding = "unicode")

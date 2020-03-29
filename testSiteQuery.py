@@ -1,10 +1,6 @@
 from BookData import BookData
-from lxml import etree
-import io
-import requests, sys, webbrowser, bs4
-from PIL import Image
-from BookSite.common.utils import *
-from Checkmate import *
+import sys
+from Checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo
 
     
 def testSiteQuery(book_site):

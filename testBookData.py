@@ -1,6 +1,6 @@
-from Checkmate import *
-from BookSite.common.utils import *
+from Checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo
 from BookData import BookData, Format, ParseStatus
+import sys
 
 def testBookstore():
     book_site = get_book_site("TB")
@@ -24,13 +24,8 @@ def testScribd():
 
 def testGoogle():
     book_site = get_book_site("GB")
-
-    book_data_2 = book_site.get_book_data("https://play.google.com/store/books/details?id=-lRoDwAAQBAJ&source=gbs_api")
-    #book_data = book_site.get_book_data("https://play.google.com/store/books/details/?id=FN5wMOZKTYMC")
-    book_data = BookData()
-    book_data.authors = ["vergara"]
-    print("MATCH: ", compare_book_data(book_data, book_data_2))
-    book_data_2.print_data()
+    book_data = book_site.get_book_data("https://play.google.com/store/books/details?id=-lRoDwAAQBAJ&source=gbs_api")
+    book_data.print_data()
 
 
 if __name__ == "__main__":

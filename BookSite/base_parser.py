@@ -1,7 +1,7 @@
-from BookSite.common.utils import *
-from BookData import *
-from lxml import etree
+from BookSite.common.utils import get_image_from_url, get_root_from_url
+from BookData import BookData
 import sys, traceback
+import requests
 
 class BookSite:
 
@@ -28,6 +28,8 @@ class BookSite:
         try:
             root = get_root_from_url(url)
             book_data = self.get_site_specific_data(root, book_data)
+            if book_data.image_url != None:
+                book_data.image = get_image_from_url(book_data.image_url)
             
         except requests.exceptions.ConnectionError:
             print("ERROR: Could not connect to url ", url)
@@ -41,7 +43,20 @@ class BookSite:
     def find_book_matches(self, book_data): 
         links = set(self.get_site_links(book_data))
         print(links)
-        return get_matches_from_links(self.get_book_data, links, book_data)
+        return get_matches_from_links(links, book_data)
+
+    def get_matches_from_links(self, link_list, book_data):
+        # For each link, get the book data and compare it with the passed in book_data
+        book_matches = []
+        for lnk in link_list:
+            search_book_data = self.get_book_data(lnk)
+            match_value = search_book_data.compare(book_data)
+            search_book_data.print_data()
+            print("MATCH: ", match_value)
+            if match_value != 0.0 :
+                book_matches.append((match_value, search_book_data))
+
+        return book_matches
 
 
     def found_enough_matches(self, matches):

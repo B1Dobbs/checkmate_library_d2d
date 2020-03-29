@@ -1,8 +1,7 @@
 from BookData import BookData
-from lxml import etree
-from BookSite.common.utils import *
-import sys, traceback
+from BookSite.common.utils import query_html
 from BookSite import base_parser
+import requests, bs4
 
 class Kobo(base_parser.BookSite):
 
@@ -27,7 +26,6 @@ class Kobo(base_parser.BookSite):
         else:
             book_data.image_url = "https:" + query_html(root, ".//div[@class='item-image']//img/@src")
 
-        book_data.image = get_image_from_url(book_data.image_url)
         book_data.isbn_13 = query_html(root, ".//li[contains(text(), 'ISBN')]/span").text
 
         book_data.description = " "

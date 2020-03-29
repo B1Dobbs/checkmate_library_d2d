@@ -1,11 +1,10 @@
 from BookData import BookData
-from lxml import etree
-from BookSite.common.utils import *
-import requests, sys, webbrowser, bs4
+from BookSite.common.utils import query_html
+import requests, bs4
+import re 
+from BookSite import base_parser
 
-from BookSite import book_site
-
-class TestBookstore(book_site.BookSite):
+class TestBookstore(base_parser.BookSite):
 
     SLUG = "TB"
         
@@ -22,7 +21,6 @@ class TestBookstore(book_site.BookSite):
 
         """Will work if you add an image to testbook store description page """
         #book_data.image_url = root.xpath(".//img/@src")[0]
-        #book_data.image = get_image_from_url(book_data.image_url)
 
         book_data.isbn_13 = str.strip(query_html(root, ".//span[@id='isbn']").text)
         book_data.description = query_html(root, "//script[@type='text/javascript']/text()").split("\"")[19]

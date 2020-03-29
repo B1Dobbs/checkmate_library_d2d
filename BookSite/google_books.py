@@ -1,8 +1,7 @@
 from BookData import BookData
-from lxml import etree
-from BookSite.common.utils import *
-import sys, traceback
+from BookSite.common.utils import query_html
 from BookSite import base_parser
+import requests
 
 class GoogleBooks(base_parser.BookSite):
 
@@ -19,7 +18,6 @@ class GoogleBooks(base_parser.BookSite):
             book_data.title=title   
 
         book_data.image_url = query_html(root, "//meta[@property='og:image']/@content")
-        book_data.image = get_image_from_url(book_data.image_url)
         book_data.isbn_13 = query_html(root, "//div[@class='IQ1z0d']/span")[3].text
 
         book_description =  query_html(root, "//meta[@itemprop='description']/@content")
