@@ -2,15 +2,14 @@ from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
 import sys, traceback
-from BookSite import book_site
+from BookSite import base_parser
 
-class GoogleBooks(book_site.BookSite):
+class GoogleBooks(base_parser.BookSite):
 
     SLUG = "GB"
     
     """Given a direct link to a book page at a site, parse it and return the BookData of the info"""
     def get_site_specific_data(self, root, book_data):
-        book_data.site_slug = SLUG
         title = str.strip(query_html(root, "//h1[@class='AHFaub']/span").text)
         if ":" in title:
             title_array = title.split(":")

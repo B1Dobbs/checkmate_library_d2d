@@ -1,6 +1,6 @@
 from Checkmate import *
 from BookSite.common.utils import *
-from BookData import BookData
+from BookData import BookData, Format, ParseStatus
 
 def testBookstore():
     book_site = get_book_site("TB")

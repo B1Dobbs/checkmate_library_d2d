@@ -11,8 +11,6 @@ class TestBookstore(book_site.BookSite):
         
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        book_data.site_slug = SLUG
-
         book_data.format = query_html(root, ".//p[@class='details']").text
         title = query_html(root, ".//p[@id='title']/strong").text
         if ":" in title:

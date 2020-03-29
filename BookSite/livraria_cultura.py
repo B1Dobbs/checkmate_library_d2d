@@ -2,16 +2,14 @@ from BookData import BookData
 from lxml import etree
 from BookSite.common.utils import *
 import requests, sys, webbrowser, bs4
-from BookSite import book_site
+from BookSite import base_parser
 
-class LivrariaCultura(book_site.BookSite):
+class LivrariaCultura(base_parser.BookSite):
 
     SLUG = "LC"
     
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        book_data.site_slug = SLUG
-
         title = query_html(root, ".//meta[@property='og:title']/@content")
         book_data.title = str(title)
 

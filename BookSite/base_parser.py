@@ -1,5 +1,5 @@
 from BookSite.common.utils import *
-from BookData import BookData
+from BookData import *
 from lxml import etree
 import sys, traceback
 
@@ -11,9 +11,9 @@ class BookSite:
         pass
     def get_site_links(self):
         pass
-    def convert_book_id_to_url(self, book_id):
-        pass
     def get_links_for_search(self, search_str):
+        pass
+    def convert_book_id_to_url(self, book_id):
         pass
 
     def get_book_data(self, url):
@@ -23,6 +23,7 @@ class BookSite:
         book_data.ready_for_sale = True
         book_data.format = "Digital"
         book_data.parse_status = "Successful"
+        book_data.site_slug = self.SLUG
         
         try:
             root = get_root_from_url(url)
