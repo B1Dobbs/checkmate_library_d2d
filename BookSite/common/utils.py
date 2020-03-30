@@ -37,7 +37,7 @@ def get_root_from_url(url):
     root = tree.getroot()
     return root
 
-def query_html(root, expr):
+def query_html(root, expr, get_list=False):
     """
     Wrapper for node.xpath() to prevent IndexOutOfBounds Exception
 
@@ -52,7 +52,7 @@ def query_html(root, expr):
     """
     try:
         result = root.xpath(expr)
-        if len(result) == 1:
+        if len(result) == 1 and not get_list:
             result = result[0]
         elif len(result) == 0:
             result = None

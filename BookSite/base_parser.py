@@ -1,5 +1,5 @@
-from BookSite.common.utils import get_image_from_url, get_root_from_url
-from BookData import BookData
+from BookSite.common.utils import get_image_from_url, get_root_from_url, query_html
+from BookData import BookData, Format, ParseStatus
 import sys, traceback
 import requests
 
@@ -21,19 +21,23 @@ class BookSite:
         book_data = BookData()
         book_data.url = url
         book_data.ready_for_sale = True
-        book_data.format = "Digital"
-        book_data.parse_status = "Successful"
+        book_data.format = Format.DIGITAL
         book_data.site_slug = self.SLUG
         
         try:
             root = get_root_from_url(url)
+            book_data.content = query_html(root, "/html")
+
             book_data = self.get_site_specific_data(root, book_data)
+            
             if book_data.image_url != None:
                 book_data.image = get_image_from_url(book_data.image_url)
+
+            book_data.parse_status = ParseStatus.FULLY_PARSED
             
         except requests.exceptions.ConnectionError:
             print("ERROR: Could not connect to url ", url)
-            book_data.parse_status = "UNSUCCESSFUL"
+            book_data.parse_status = ParseStatus.UNSUCCESSFUL
         except:
             print("ERROR: Processing book at " + url)
             traceback.print_exc()

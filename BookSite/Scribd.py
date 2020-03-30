@@ -1,4 +1,4 @@
-from BookData import BookData
+from BookData import BookData, Format
 from lxml import etree
 from BookSite.common.utils import query_html
 import requests, bs4
@@ -13,11 +13,9 @@ class Scribd(base_parser.BookSite):
 
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        # type: (str) -> SiteBookData  
-        #Get ISBN
-        j = query_html(root, "//script[@type = 'application/ld+json']")[1].text
-        y = json.loads(j)
+        # type: (str) -> BookData  
         
+        #Get the Title and Subtitle
         title = query_html(root, "//h1[@class='document_title']").text
         if ':' in title:
             title = title.split(': ')
@@ -26,38 +24,26 @@ class Scribd(base_parser.BookSite):
         else:    
             book_data.title = title
 
-        book_data.image_url = root.xpath(".//div[@class='document_cell']//img/@src")[0]
+        #Get the format, default digital
+        book_format = query_html(root, "//dd[@class='meta_description format']").text
+        if book_format == "Audiobook":
+            book_data.format = Format.AUDIO_BOOK
+
+        #Get main image url
+        book_data.image_url = query_html(root, ".//div[@class='document_cell']//img/@src")
+
+        #Get description
         book_data.description = query_html(root, ".//meta[@property='og:description']/@content")
-    
-        roottext = etree.tostring(root, encoding = "unicode")
-        roottext = roottext.split('"')
-        p = re.compile('^(97(8|9))?\d{9}(\d|X)$')
 
-        for i in roottext:
-            l = p.search(i)
-            if l != None:
-                book_data.isbn_13 = l.string
+        #Get ISBN
+        book_data.isbn_13 = query_html(root, "//dd[@class='meta_description isbn']").text
+
         #Get Author List
-        authors = []
-        for i in range (0, len(y['author'])):
-            authors.append(y['author'][i]['name'])
-            #print(y['author'][i]['name'])
-
-        author_list = []
-        if type(authors) == list:
-            author_list += authors
-        else:
-            author_list.append(authors)
-            
-        book_data.authors = author_list
+        book_data.authors += query_html(root, ".//a[@class='contributor']/text()", True)
 
         #Get Book ID From URL
         bookID = query_html(root, "//link[@rel = 'alternate'][1]/@href")
         book_data.book_id = book_data.url.replace('https://www.scribd.com/', '')
-        
-        book_data.content = query_html(root, "/html")
-
-        book_data.url = convert_book_id_to_url(book_data.book_id)
 
         return book_data
 
