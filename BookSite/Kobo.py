@@ -93,7 +93,7 @@ class Kobo(base_parser.BookSite):
         links = []
         link = 'https://www.kobo.com/us/en/search?query=' + search_str
         res = requests.get(link)
-        res.raise_for_status
+        res.raise_for_status()
         soup = bs4.BeautifulSoup(res.text, "html.parser")
         
         for p in soup.find_all('p', class_="title product-field"):
@@ -108,7 +108,7 @@ class Kobo(base_parser.BookSite):
             for i in range(2, num_pages):
                 link = 'https://www.kobo.com/us/en/search?query=' + search_str + '&pageNumber=' + str(i)
                 res = requests.get(link)
-                res.raise_for_status
+                res.raise_for_status()
                 soup = bs4.BeautifulSoup(res.text, "html.parser")
 
                 for p in soup.find_all('p', class_="title product-field"):
