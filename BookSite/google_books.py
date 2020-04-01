@@ -21,7 +21,7 @@ class GoogleBooks(base_parser.BookSite):
         book_data.isbn_13 = query_html(root, "//div[@class='IQ1z0d']/span")[3].text
 
         book_description =  query_html(root, "//meta[@itemprop='description']/@content")
-        if type(book_description)==list:
+        if isinstance(book_description,list):
             book_data.description = book_description[1]
         series_info = query_html(root, "//div[@class='sIskre']/h2")
         if series_info is not None:
@@ -30,7 +30,7 @@ class GoogleBooks(base_parser.BookSite):
 
         authors = query_html(root, "//span[@itemprop='author']/a/text()")
         if authors != None:
-            if type(authors)==list:
+            if isinstance(authors,list):
                 book_data.authors += authors
             else:
                 book_data.authors.append(authors)

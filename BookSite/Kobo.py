@@ -21,7 +21,7 @@ class Kobo(base_parser.BookSite):
             book_data.title = title
         
         image_url = query_html(root, ".//div[@class='item-image']//img/@src")
-        if type(image_url) == list:
+        if isinstance(image_url,list):
             book_data.image_url = "https:" + query_html(root, ".//div[@class='item-image']//img/@src")[0]
         else:
             book_data.image_url = "https:" + query_html(root, ".//div[@class='item-image']//img/@src")
@@ -44,7 +44,7 @@ class Kobo(base_parser.BookSite):
 
         authors = query_html(root, ".//a[@class='contributor-name']/text()")
         if authors != None:
-            if type(authors) == list:
+            if isinstance(authors,list):
                 book_data.authors += authors
             else:
                 book_data.authors.append(authors)
