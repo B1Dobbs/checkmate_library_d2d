@@ -75,10 +75,9 @@ class BookData:
             isEmptyList = value == [] or book2.data[attr] == []
 
             # Testing if both values of a certain attribute are none for both book_data objects
-            print(value)
-            print(book2.data[attr])
+            # print(value)
+            # print(book2.data[attr])
             if value != None and book2.data[attr] != None and not isEmptyList :
-                print("Adding")
 
                 # Creating a regex pattern that will filter out all special characters from the values
                 pattern =  '[^A-Za-z0-9 ,]+'
