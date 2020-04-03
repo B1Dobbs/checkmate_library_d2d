@@ -1,17 +1,29 @@
 import unittest
 import sys
 from scribd.scribd_book_data import TestScribdBookDataLocal, TestScribdBookDataLive
+from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBookDataLive
+from BookSite.google_books import GoogleBooks
+from BookSite.kobo import Kobo
+from BookSite.livraria_cultura import LivrariaCultura
+from BookSite.scribd import Scribd
+from BookSite.test_bookstore import TestBookstore
 
-def load_scribd_local(loader):
-    return loader.loadTestsFromTestCase(TestScribdBookDataLocal)
-
-def load_scribd_live(loader):
-    return loader.loadTestsFromTestCase(TestScribdBookDataLive)
-
-def load_scribd(loader):
+def load_local_tests(loader, slugs):
     tests = []
-    tests.append(load_scribd_local(loader))
-    tests.append(load_scribd_live(loader))
+
+    if Scribd.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestScribdBookDataLocal)
+    if GoogleBooks.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestGoogleBookDataLocal)
+    return tests
+
+def load_live_tests(loader, slugs):
+    tests = []
+
+    if Scribd.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestScribdBookDataLive)
+    if GoogleBooks.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestGoogleBookDataLive)
     return tests
 
 
@@ -24,7 +36,10 @@ if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite  = unittest.TestSuite()
 
-    suite.addTests(load_scribd(loader))
+    tests = load_live_tests(loader, {GoogleBooks.SLUG})
+    tests += load_local_tests(loader, {GoogleBooks.SLUG})
+
+    suite.addTests(tests)
     
     runner = unittest.TextTestRunner(verbosity=3)
     result = runner.run(suite)

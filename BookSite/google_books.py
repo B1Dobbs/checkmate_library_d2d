@@ -1,7 +1,8 @@
-from BookData import BookData
+from BookData import BookData, Format
 from BookSite.common.utils import query_html
 from BookSite import base_parser
 import requests
+from lxml import etree
 
 class GoogleBooks(base_parser.BookSite):
 
@@ -9,7 +10,9 @@ class GoogleBooks(base_parser.BookSite):
     
     """Given a direct link to a book page at a site, parse it and return the BookData of the info"""
     def get_site_specific_data(self, root, book_data):
-        title = str.strip(query_html(root, "//h1[@class='AHFaub']/span").text)
+        if 'audiobook' in book_data.url:
+            book_data.format = Format.AUDIO_BOOK
+        title = str.strip(query_html(root, "//h1[@class='AHFaub']/span", True).text)
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
@@ -37,10 +40,15 @@ class GoogleBooks(base_parser.BookSite):
         else:
             book_data.authors = None
 
-        book_id = str(query_html(root, "//link[@rel='canonical']/@href"))
-        book_data.book_id = book_id.split("=")[1]
+        book_id = query_html(root, "//link[@rel='canonical']/@href")
+        if book_id != None:
+            book_data.book_id = str(book_id).split("=")[1]
+
         try:
-            price = query_html(root, "//meta[@itemprop='price']/@content")[1]
+            #This accounts for the free sample button
+            price = query_html(root, "//meta[@itemprop='price']/@content")
+            if isinstance(price, list):
+                price = price[1]
         except:
             price = 0.0
 

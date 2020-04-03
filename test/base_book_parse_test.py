@@ -21,7 +21,6 @@ class BaseBookParseTest(unittest.TestCase):
         test_case['description'] = None
 
         self.assertTrue(returned_book.content != None)
-        self.assertTrue(returned_book.image != None)
         self.set_none_fields(returned_book.data, ['description','image', 'content'])
         
         self.assertEqual(returned_book.data, expected_data)
