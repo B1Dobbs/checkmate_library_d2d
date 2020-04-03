@@ -1,4 +1,4 @@
-from BookData import BookData
+from BookData import BookData, Format
 from BookSite.common.utils import query_html
 import requests, bs4
 import re 
@@ -10,12 +10,14 @@ class TestBookstore(base_parser.BookSite):
         
     """Given a direct link to a book page at a site, parse it and return the SiteBookData of the info""" 
     def get_site_specific_data(self, root, book_data):
-        book_data.format = query_html(root, ".//p[@class='details']").text
-        title = query_html(root, ".//p[@id='title']/strong").text
+        format = query_html(root, ".//p[@class='details']").text
+        if 'Audiobook' in format: 
+            book_data.format = Format.AUDIO_BOOK
+        title = str.strip(query_html(root, ".//p[@id='title']/strong").text)
         if ":" in title:
             title_array = title.split(":")
             book_data.title = title_array[0]
-            book_data.subtitle = title_array[1]
+            book_data.subtitle = str.strip(title_array[1])
         else:
             book_data.title = title
 
@@ -25,8 +27,12 @@ class TestBookstore(base_parser.BookSite):
         book_data.isbn_13 = str.strip(query_html(root, ".//span[@id='isbn']").text)
         book_data.description = query_html(root, "//script[@type='text/javascript']/text()").split("\"")[19]
 
-        book_data.series = str.strip(query_html(root, ".//span[@id='series']").text)
-        book_data.vol_number = str.strip(query_html(root, ".//span[@id='volume_number']").text)
+        series = str.strip(query_html(root, ".//span[@id='series']").text)
+        if series != 'None':
+            book_data.series = series
+            vol_number = str.strip(query_html(root, ".//span[@id='volume_number']").text)
+            if vol_number != 'None':
+                book_data.vol_number = vol_number
         
         book_data.authors = str.strip(query_html(root, ".//span[@id='author']/text()")).split(", ")
         
@@ -39,7 +45,7 @@ class TestBookstore(base_parser.BookSite):
         else: 
             book_data.ready_for_sale = True
 
-        book_data.extra = {"price" : query_html(root, ".//span[@id='price']").text, "releaseDate" : query_html(root, ".//span[@id='release_date']").text}
+        book_data.extra = {"Price" : query_html(root, ".//span[@id='price']").text, "ReleaseDate" : query_html(root, ".//span[@id='release_date']").text}
 
         return book_data
 
