@@ -1,4 +1,4 @@
-from BookData import BookData
+from BookData import BookData, Format
 from BookSite.common.utils import query_html
 from BookSite import base_parser
 import requests, bs4
@@ -9,6 +9,9 @@ class Kobo(base_parser.BookSite):
 
     """Given a direct link to a book page at a site, parse it and return the BookData of the info""" 
     def get_site_specific_data(self, root, book_data):
+        format = query_html(root, ".//div[@class='bookitem-secondary-metadata']/h2").text
+        if 'Audiobook' in format:
+            book_data.format = Format.AUDIO_BOOK
         title = str.strip(query_html(root, ".//span[@class='title product-field']").text)
         subtitle = query_html(root, ".//span[@class='subtitle product-field']")
         if ":" in title:
@@ -37,7 +40,7 @@ class Kobo(base_parser.BookSite):
         series_info = query_html(root, ".//span[@class='product-sequence-field']/a[1]")
         if series_info is not None:
             series_info = series_info.text.split("#")
-            book_data.series = series_info[0]
+            book_data.series = str.strip(series_info[0])
             if len(series_info) > 1:
                 book_data.vol_number = series_info[1]
 
