@@ -1,8 +1,8 @@
-from BookData import BookData, Format
-from BookSite.common.utils import query_html
+from book_data import BookData, Format
+from book_site.common.utils import query_html
 import requests, bs4
 import re 
-from BookSite import base_parser
+from book_site import base_parser
 
 class TestBookstore(base_parser.BookSite):
 

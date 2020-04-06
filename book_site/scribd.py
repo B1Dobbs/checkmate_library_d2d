@@ -1,10 +1,10 @@
-from BookData import BookData, Format
+from book_data import BookData, Format
 from lxml import etree
-from BookSite.common.utils import query_html
+from book_site.common.utils import query_html
 import requests, bs4
 import json
 import re 
-from BookSite import base_parser
+from book_site import base_parser
 import regex
 
 class Scribd(base_parser.BookSite):
@@ -25,7 +25,7 @@ class Scribd(base_parser.BookSite):
             book_data.title = title
 
         #Get the format, default digital
-        book_format = query_html(root, "//dd[@class='meta_description format']").text
+        book_format = query_html(root, "//dd[@class='meta_description format']/descendant-or-self::*/text()")
         if book_format == "Audiobook":
             book_data.format = Format.AUDIO_BOOK
 
@@ -39,11 +39,16 @@ class Scribd(base_parser.BookSite):
         book_data.isbn_13 = query_html(root, "//dd[@class='meta_description isbn']").text
 
         #Get Author List
-        book_data.authors += query_html(root, ".//a[@class='contributor']/text()", True)
+        authors = query_html(root, ".//a[@class='contributor']/descendant-or-self::*/text()")
+        if authors != None:
+            if isinstance(authors,list):
+                book_data.authors += authors
+            else:
+                book_data.authors.append(authors)
 
         #Get Book ID From URL
         bookID = query_html(root, "//link[@rel = 'alternate'][1]/@href")
-        book_data.book_id = book_data.url.replace('https://www.scribd.com/', '')
+        book_data.book_id = bookID.replace('https://www.scribd.com/', '')
 
         return book_data
 

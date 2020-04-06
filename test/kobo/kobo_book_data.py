@@ -1,8 +1,8 @@
 import unittest
 import sys
 sys.path.append(".")
-from BookSite.kobo import Kobo
-from Checkmate import get_book_site
+from book_site.kobo import Kobo
+from checkmate import get_book_site
 from base_book_parse_test import BaseBookParseTest
 from kobo.test_cases import KoboTestCases
   

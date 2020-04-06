@@ -1,5 +1,5 @@
-from BookData import BookData, Format, ParseStatus
-from BookSite.google_books import GoogleBooks
+from book_data import BookData, Format, ParseStatus
+from book_site.google_books import GoogleBooks
 
 class GoogleBooksTestCases():
 
@@ -73,7 +73,7 @@ class GoogleBooksTestCases():
         "book_id" : "m75mDwAAQBAJ&hl",
         "url" : "test/google_books/test_pages/neon_prey_sandford.html",
         "content" : None,
-        "extra" : {'Price': '$1.99'}
+        "extra" : {'Price': '$9.99'}
     } 
 
     #These are the items that should have different results from the local test

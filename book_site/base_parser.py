@@ -1,7 +1,8 @@
-from BookSite.common.utils import get_image_from_url, get_root_from_url, query_html
-from BookData import BookData, Format, ParseStatus
+from book_site.common.utils import get_image_from_url, get_root_from_url, query_html
+from book_data import BookData, Format, ParseStatus
 import sys, traceback
 import requests
+from isbnlib import to_isbn13
 
 class BookSite:
 
@@ -23,6 +24,7 @@ class BookSite:
         book_data.ready_for_sale = True
         book_data.format = Format.DIGITAL
         book_data.site_slug = self.SLUG
+        book_data.authors = []
         
         try:
             root = get_root_from_url(url)
@@ -74,3 +76,6 @@ class BookSite:
             return True
         else:
             return False
+
+    def isbn10_to_isbn13(self, isbn10):
+        return to_isbn13(isbn10)

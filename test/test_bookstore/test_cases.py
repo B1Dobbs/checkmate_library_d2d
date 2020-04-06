@@ -1,5 +1,5 @@
-from BookData import BookData, Format, ParseStatus
-from BookSite.test_bookstore import TestBookstore
+from book_data import BookData, Format, ParseStatus
+from book_site.test_bookstore import TestBookstore
 
 class TestBookstoreTestCases():
 

@@ -1,6 +1,6 @@
-from BookData import BookData
+from book_data import BookData
 import sys
-from Checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo
+from checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo
 
     
 def testSiteQuery(book_site):

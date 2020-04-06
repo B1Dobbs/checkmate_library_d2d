@@ -1,8 +1,8 @@
 import unittest
 import sys
 sys.path.append(".")
-from BookSite.test_bookstore import TestBookstore
-from Checkmate import get_book_site
+from book_site.test_bookstore import TestBookstore
+from checkmate import get_book_site
 from base_book_parse_test import BaseBookParseTest
 from test_bookstore.test_cases import TestBookstoreTestCases
   

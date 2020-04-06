@@ -1,5 +1,5 @@
-from BookData import BookData, Format, ParseStatus
-from BookSite.kobo import Kobo
+from book_data import BookData, Format, ParseStatus
+from book_site.kobo import Kobo
 
 class KoboTestCases():
 

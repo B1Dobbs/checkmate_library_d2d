@@ -1,8 +1,8 @@
 import unittest
 import sys
 sys.path.append(".")
-from BookSite.livraria_cultura import LivrariaCultura
-from Checkmate import get_book_site
+from book_site.livraria_cultura import LivrariaCultura
+from checkmate import get_book_site
 from base_book_parse_test import BaseBookParseTest
 from livraria_cultura.test_cases import LivrariaCulturaTestCases
   

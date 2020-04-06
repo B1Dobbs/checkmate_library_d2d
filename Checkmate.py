@@ -1,8 +1,8 @@
-from BookSite.google_books import GoogleBooks
-from BookSite.kobo import Kobo
-from BookSite.livraria_cultura import LivrariaCultura
-from BookSite.scribd import Scribd
-from BookSite.test_bookstore import TestBookstore
+from book_site.google_books import GoogleBooks
+from book_site.kobo import Kobo
+from book_site.livraria_cultura import LivrariaCultura
+from book_site.scribd import Scribd
+from book_site.test_bookstore import TestBookstore
 """
 TB - TestBookstore
 KB - Kobo

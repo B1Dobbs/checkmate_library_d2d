@@ -2,7 +2,7 @@
 import unittest
 import sys
 sys.path.append(".")
-from Checkmate import get_book_site
+from checkmate import get_book_site
   
 
 class BaseBookParseTest(unittest.TestCase): 

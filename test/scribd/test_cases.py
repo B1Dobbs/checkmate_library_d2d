@@ -1,5 +1,5 @@
-from BookData import BookData, Format, ParseStatus
-from BookSite.scribd import Scribd
+from book_data import BookData, Format, ParseStatus
+from book_site.scribd import Scribd
 
 class ScribdTestCases():
 
@@ -8,7 +8,7 @@ class ScribdTestCases():
             "title" : "The Hunger Games", 
             "subtitle" : "Special Edition",
             "image" : None,
-            "image_url" : "./the_hunger_games_by_suzanne_collins_files/1585192037",
+            "image_url" : "https://imgv2-2-f.scribdassets.com/img/audiobook_square_badge/389029058/original/216x216/eeb9d14dfe/1585934067?v=1",
             "isbn_13" : "9781338334906",
             "description" : "Emmy Award-winning actress Tatiana Maslany",
             "series" : None,
@@ -26,7 +26,6 @@ class ScribdTestCases():
     #These are the items that should have different results from the local test
     collins_live =  {
             **collins_local,
-            "image_url" : "https://imgv2-1-f.scribdassets.com/img/audiobook_square_badge/389029058/original/216x216/eeb9d14dfe/1585192037?v=1",
             "url" : "https://www.scribd.com/audiobook/389029058/The-Hunger-Games-Special-Edition",
     } 
 
@@ -35,7 +34,7 @@ class ScribdTestCases():
         "title" : "Principles", 
         "subtitle" : "Life and Work",
         "image" : None,
-        "image_url" : "./principles_by_ray_dalio_files/1585310017",
+        "image_url" : "https://imgv2-2-f.scribdassets.com/img/word_document/357813054/original/216x287/2b5f9477ff/1586017758?v=1",
         "isbn_13" : "9781501124051",
         "description" : "Ray Dalio, one of the world’s most",
         "series" : None,
@@ -53,7 +52,6 @@ class ScribdTestCases():
     #These are the items that should have different results from the local test
     dalio_live =  {
             **dalio_local,
-            "image_url" : "https://imgv2-1-f.scribdassets.com/img/word_document/357813054/original/216x287/2b5f9477ff/1585723454?v=1",
             "url" : "https://www.scribd.com/book/357813054/Principles-Life-and-Work",
     } 
 
@@ -62,7 +60,7 @@ class ScribdTestCases():
         "title" : "The Mamba Mentality", 
         "subtitle" : "How I Play",
         "image" : None,
-        "image_url" : "./the_mamba_mentality_by_kobe_bryant_files/1585413312",
+        "image_url" : "https://imgv2-2-f.scribdassets.com/img/word_document/445929040/original/216x287/3b641d389b/1586081667?v=1",
         "isbn_13" : "9780374719159",
         "description" : "The Mamba Mentality: How I Play is Kobe Bryant’s personal perspective",
         "series" : None,
@@ -80,7 +78,6 @@ class ScribdTestCases():
     #These are the items that should have different results from the local test
     bryant_live =  {
             **bryant_local,
-            "image_url" : "https://imgv2-2-f.scribdassets.com/img/word_document/445929040/original/216x287/3b641d389b/1585700177?v=1",
             "url" : "https://www.scribd.com/book/445929040/The-Mamba-Mentality-How-I-Play",
     } 
 

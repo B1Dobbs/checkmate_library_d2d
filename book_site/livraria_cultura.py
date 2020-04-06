@@ -1,7 +1,7 @@
-from BookData import BookData
-from BookSite.common.utils import query_html
+from book_data import BookData
+from book_site.common.utils import query_html
 import requests, bs4
-from BookSite import base_parser
+from book_site import base_parser
 
 class LivrariaCultura(base_parser.BookSite):
 

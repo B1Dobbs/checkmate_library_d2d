@@ -1,5 +1,5 @@
-from BookData import BookData, Format, ParseStatus
-from BookSite.livraria_cultura import LivrariaCultura
+from book_data import BookData, Format, ParseStatus
+from book_site.livraria_cultura import LivrariaCultura
 
 class LivrariaCulturaTestCases():
 

@@ -5,11 +5,11 @@ from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBoo
 from kobo.kobo_book_data import TestKoboBookDataLocal, TestKoboBookDataLive
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
 from livraria_cultura.livraria_cultura_book_data import TestLivrariaCulturaBookDataLocal, TestLivrariaCulturaBookDataLive
-from BookSite.google_books import GoogleBooks
-from BookSite.kobo import Kobo
-from BookSite.livraria_cultura import LivrariaCultura
-from BookSite.scribd import Scribd
-from BookSite.test_bookstore import TestBookstore
+from book_site.google_books import GoogleBooks
+from book_site.kobo import Kobo
+from book_site.livraria_cultura import LivrariaCultura
+from book_site.scribd import Scribd
+from book_site.test_bookstore import TestBookstore
 
 def load_local_tests(loader, slugs):
     tests = []
@@ -52,8 +52,8 @@ if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite  = unittest.TestSuite()
 
-    tests = load_live_tests(loader, {LivrariaCultura.SLUG})
-    tests += load_local_tests(loader, {LivrariaCultura.SLUG})
+    tests = load_live_tests(loader, {Kobo.SLUG})
+    tests += load_local_tests(loader, {Kobo.SLUG})
 
     suite.addTests(tests)
     
