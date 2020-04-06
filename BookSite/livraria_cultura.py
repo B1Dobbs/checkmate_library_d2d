@@ -18,7 +18,7 @@ class LivrariaCultura(base_parser.BookSite):
 
         imageUrl = query_html(root, ".//meta[@itemprop='image']/@content")
         book_data.image_url = str(imageUrl)
-        book_data.isbn_13 = query_html(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text
+        book_data.isbn_13 = self.isbn10_to_isbn13(query_html(root, ".//th[contains(text(), 'ISBN')]/following-sibling::td").text)
         book_data.description = str(query_html(root, ".//meta[@property='og:title']/following-sibling::meta[@property='og:description']/@content"))
 
         #Series and Volume Number are not available on site
