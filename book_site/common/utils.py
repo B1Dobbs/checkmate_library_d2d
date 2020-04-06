@@ -2,7 +2,7 @@
 Common functions can be grouped in utils.py until there is a need to separate them."""
 from lxml import etree
 import io
-import requests
+import requests, bs4
 from PIL import Image
 from isbnlib import to_isbn13
 
@@ -17,8 +17,13 @@ def get_image_from_url(url):
         Returns:
             A Pillow image
     """
-    image_response = requests.get(url)
-    img = Image.open(io.BytesIO(image_response.content))
+    if 'http' in url:
+        image_response = requests.get(url)
+        image_content = io.BytesIO(image_response.content)
+    else:
+        image_content = "test/scribd/test_pages/the_hunger_games_by_suzanne_collins_files/1585192037"
+
+    img = Image.open(image_content)
     return img
 
 def get_root_from_url(url):
@@ -31,13 +36,26 @@ def get_root_from_url(url):
         Returns:
             An etree root for the page.
     """
-    content = requests.get(url).content
-    parser = etree.HTMLParser(remove_pis=True)
-    tree = etree.parse(io.BytesIO(content), parser)
-    root = tree.getroot()
-    return root
+    if 'http' in url:
+        content = io.BytesIO(requests.get(url).content)
+    else:
+        content = url
 
-def query_html(root, expr, get_list=False):
+    parser = etree.HTMLParser()
+    tree = etree.parse(content, parser)
+    return tree.getroot()
+
+def get_soup_from_url(url):
+
+    # The following code gets a json blob from inside a specific javascript function call.  
+    if 'http' in url:
+        content = requests.get(url).text
+    else: 
+        content = url
+
+    return bs4.BeautifulSoup(content, "html.parser")
+
+def query_html(root, expr, get_first=False):
     """
     Wrapper for node.xpath() to prevent IndexOutOfBounds Exception
 
@@ -52,15 +70,13 @@ def query_html(root, expr, get_list=False):
     """
     try:
         result = root.xpath(expr)
-        if len(result) == 1 and not get_list:
-            result = result[0]
-        elif len(result) == 0:
+        if len(result) == 0:
             result = None
+        elif len(result) == 1 or get_first:
+            result = result[0]
+
     except:
         print("WARNING: Could not retrieve data for " + expr)
 
     return result
 
-"""ISBN 10 to ISBN 13 conversion """
-def isbn10_to_isbn13(isbn10):
-    return to_isbn13(isbn10)
