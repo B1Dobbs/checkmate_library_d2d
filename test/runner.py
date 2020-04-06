@@ -5,11 +5,13 @@ from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBoo
 from kobo.kobo_book_data import TestKoboBookDataLocal, TestKoboBookDataLive
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
 from livraria_cultura.livraria_cultura_book_data import TestLivrariaCulturaBookDataLocal, TestLivrariaCulturaBookDataLive
+from audiobooks.audiobooks_book_data import TestAudiobooksBookDataLocal, TestAudiobooksBookDataLive
 from book_site.google_books import GoogleBooks
 from book_site.kobo import Kobo
 from book_site.livraria_cultura import LivrariaCultura
 from book_site.scribd import Scribd
 from book_site.test_bookstore import TestBookstore
+from book_site.audiobooks import Audiobooks
 
 def load_local_tests(loader, slugs):
     tests = []
@@ -25,6 +27,8 @@ def load_local_tests(loader, slugs):
         tests += loader.loadTestsFromTestCase(TestTestBookstoreBookDataLive)
     if LivrariaCultura.SLUG in slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestLivrariaCulturaBookDataLocal)
+    if Audiobooks.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestAudiobooksBookDataLocal)
     return tests
 
 def load_live_tests(loader, slugs):
@@ -40,6 +44,8 @@ def load_live_tests(loader, slugs):
         tests += loader.loadTestsFromTestCase(TestTestBookstoreBookDataLive)
     if LivrariaCultura.SLUG in slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestLivrariaCulturaBookDataLive)
+    if Audiobooks.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestAudiobooksBookDataLive)
     return tests
 
 
@@ -52,8 +58,8 @@ if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite  = unittest.TestSuite()
 
-    tests = load_live_tests(loader, {Kobo.SLUG})
-    tests += load_local_tests(loader, {Kobo.SLUG})
+    tests = load_live_tests(loader, {Audiobooks.SLUG})
+    tests += load_local_tests(loader, {Audiobooks.SLUG})
 
     suite.addTests(tests)
     

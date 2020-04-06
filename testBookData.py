@@ -1,4 +1,4 @@
-from checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo
+from checkmate import get_book_site, Scribd, LivrariaCultura, GoogleBooks, TestBookstore, Kobo, Audiobooks
 from book_data import BookData, Format, ParseStatus
 import sys
 
@@ -25,6 +25,11 @@ def testScribd():
 def testGoogle():
     book_site = get_book_site("GB")
     book_data = book_site.get_book_data("https://play.google.com/store/books/details?id=-lRoDwAAQBAJ&source=gbs_api")
+    book_data.print_data()
+
+def testAudiobooks():
+    book_site = get_book_site("AB")
+    book_data = book_site.get_book_data("https://www.audiobooks.com/audiobook/chronicles-of-narnia-adult-box-set/347498")
     book_data.print_data()
 
 
@@ -56,3 +61,8 @@ if __name__ == "__main__":
     if testToRun == TestBookstore.SLUG or testToRun == None:
         print("Starting test for Test Bookstore.")
         testBookstore()
+
+    """ Site Query Test for Audiobooks """
+    if testToRun == Audiobooks.SLUG or testToRun == None:
+        print("Starting test for Audiobooks.")
+        testAudiobooks()

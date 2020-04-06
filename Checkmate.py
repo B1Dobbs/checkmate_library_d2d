@@ -3,6 +3,7 @@ from book_site.kobo import Kobo
 from book_site.livraria_cultura import LivrariaCultura
 from book_site.scribd import Scribd
 from book_site.test_bookstore import TestBookstore
+from book_site.audiobooks import Audiobooks
 """
 TB - TestBookstore
 KB - Kobo
@@ -24,6 +25,8 @@ def get_book_site(slug):
         return Scribd()
     elif slug == TestBookstore.SLUG:
         return TestBookstore()
+    elif slug == Audiobooks.SLUG:
+        return Audiobooks()
     else:
         print("Site Slug not found.")
     
