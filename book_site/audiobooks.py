@@ -59,13 +59,30 @@ class Audiobooks(base_parser.BookSite):
     including the cover.""" 
     def get_site_links(self, book_data):
         links = []
+
+        if book_data.authors != None: # If a title is sent in to search by, record link matches
+            links += self.get_links_for_search(book_data.get_authors_as_string())
+
+        if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
+            links += self.get_links_for_search(book_data.isbn_13)
+
+        if book_data.title != None: # If a title is sent in to search by, record link matches
+            links += self.get_links_for_search(book_data.title)
             
         return links
 
     """ Searching Audiobooks for relevant links """
     def get_links_for_search(self, search_str):
         links = []
-    
+        link = 'https://www.audiobooks.com/search/book/' + search_str
+        res = requests.get(link)
+        res.raise_for_status()
+        soup = bs4.BeautifulSoup(res.text, "html.parser")
+        
+        for div in soup.find_all('div', class_="book__details--flex-child"):
+            for link in div.find_all('a'):
+                links.append(link.get('href'))
+
         return links
 
     """Given a book_id, return the direct url for the book.""" 
