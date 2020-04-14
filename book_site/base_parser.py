@@ -16,6 +16,11 @@ class BookSite:
         pass
     def convert_book_id_to_url(self, book_id):
         pass
+    def get_links_for_page(self, url):
+        pass
+
+    _MAX_DISTANCE = 0.2
+    _STOP_SEARCH = False
 
     def get_book_data(self, url):
         # type: (str) -> SiteBookData 
@@ -46,36 +51,83 @@ class BookSite:
 
         return book_data
 
-    def find_book_matches(self, book_data): 
-        links = set(self.get_site_links(book_data))
+    def find_book_matches(self, book_data):
+        search_str = self.get_search_str(book_data)
+
+        matches = []
+        page = 1
+        links = self.get_links_for_page(page, search_str)
         print(links)
-        return get_matches_from_links(links, book_data)
+        while links != [] and not self.found_enough_matches(matches):
+            print("PAGE: ", page)
+            page += 1
+            matches += self.get_matches_from_links(links, book_data)
+            links = self.get_links_for_page(page, search_str)
+            # for match in matches:
+            #     match[1].print_data()
+            #     print("MATCH: ", match[0])
+            # print('ENOUGH: ', self.found_enough_matches(matches))
+
+        return matches
+
+
+    def get_search_str(self, book_data):
+        query_string = ""
+
+        # If authors is included, add to the query
+        if book_data.authors != None: 
+            query_string += book_data.get_authors_as_string()
+        
+        # If a title is included, add to the query
+        if book_data.title != None: 
+            query_string += " " + book_data.title
+        
+        # If an isbn included, only search by isbn
+        if book_data.isbn_13 != None:
+            query_string = book_data.isbn
+        
+        return query_string
 
     def get_matches_from_links(self, link_list, book_data):
         # For each link, get the book data and compare it with the passed in book_data
-        book_matches = []
+        matches = []
+        last_match = 1
+        index = 1
         for lnk in link_list:
             search_book_data = self.get_book_data(lnk)
             match_value = search_book_data.compare(book_data)
-            search_book_data.print_data()
-            print("MATCH: ", match_value)
-            if match_value != 0.0 :
-                book_matches.append((match_value, search_book_data))
+            # search_book_data.print_data()
+            # print("MATCH: ", match_value)
+            # print("\nLAST: ", last_match)
+            # print("INDEX: ", index)
+            if match_value != 0.0 and not self.found_enough_matches(matches):
+                matches.append((match_value, search_book_data))
+                last_match = index
+            elif (last_match / index) < self._MAX_DISTANCE:
+                self._STOP_SEARCH = True
+                break
 
-        return book_matches
+            index += 1
 
+        return matches
 
     def found_enough_matches(self, matches):
         has_good_match = False
+    
         for match in matches:
-            if match[0] > 0.7 :
+            if match[0] >= 0.8 :
                 has_good_match = True
                 break
+
+        # print("GOOD MATCH: ", has_good_match)
+        # print("STOP: ", self._STOP_SEARCH)
+        # print("LENGTH: ", len(matches) >= 20)
         
-        if has_good_match and len(matches >= 30):
+        if (has_good_match and len(matches) >= 20) or self._STOP_SEARCH:
             return True
         else:
             return False
 
+        """ISBN 10 to ISBN 13 conversion """
     def isbn10_to_isbn13(self, isbn10):
         return to_isbn13(isbn10)
