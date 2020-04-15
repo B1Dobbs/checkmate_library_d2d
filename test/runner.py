@@ -5,7 +5,7 @@ from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBoo
 from kobo.kobo_book_data import TestKoboBookDataLocal, TestKoboBookDataLive
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
 from livraria_cultura.livraria_cultura_book_data import TestLivrariaCulturaBookDataLocal, TestLivrariaCulturaBookDataLive
-from audiobooks.audiobooks_book_data import TestAudiobooksBookDataLocal, TestAudiobooksBookDataLive
+from audiobooks.tests import TestAudiobooksBookDataLocal, TestAudiobooksBookDataLive, TestAudiobooksLinksLocal
 from book_site.google_books import GoogleBooks
 from book_site.kobo import Kobo
 from book_site.livraria_cultura import LivrariaCultura
@@ -53,6 +53,8 @@ def load_link_search(loader, slugs):
     tests = []
     if Scribd.SLUG in slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestScribdLinksLocal)
+    if Audiobooks.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestAudiobooksLinksLocal)
     return tests
 
 

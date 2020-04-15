@@ -54,8 +54,7 @@ class BookSite:
 
         matches = []
         links = self.get_links_for_search(search_str, book_data.format)
-        #print(links)
-        print(self.get_links_for_page("test/scribd/test_pages/search_books.html", "books"))
+        print(links)
         if links != []:
             matches += self.get_matches_from_links(links, book_data)
 

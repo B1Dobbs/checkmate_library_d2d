@@ -49,7 +49,9 @@ def get_soup_from_url(url):
 
     # The following code gets a json blob from inside a specific javascript function call.  
     if 'http' in url:
-        content = requests.get(url).text
+        res = requests.get(url)
+        res.raise_for_status()
+        content = res.text
     else: 
         content = open(url, encoding="utf8")
 

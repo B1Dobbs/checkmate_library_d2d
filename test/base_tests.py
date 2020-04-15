@@ -26,11 +26,3 @@ class BaseBookParseTest(unittest.TestCase):
         
         self.assertEqual(returned_book.data, expected_data)
 
-class BaseLinkParseTest(unittest.TestCase):
-    def common_test(self, local_url, test_case, parser, format_string):
-        print(parser)
-        print(dir(parser))
-        # scribd = get_book_site('SD')
-        links = parser.get_links_for_page(local_url, format_string)
-        self.assertEqual(links, test_case)
-

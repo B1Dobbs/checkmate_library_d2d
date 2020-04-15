@@ -37,3 +37,10 @@ class TestAudiobooksBookDataLive(BaseBookParseTest):
         local_url = "https://www.audiobooks.com/audiobook/chronicles-of-narnia-adult-box-set/347498"
         self.common_test(local_url, AudiobooksTestCases.lewis_live, Audiobooks())
 
+class TestAudiobooksLinksLocal(unittest.TestCase): 
+
+    def test_audiobooks(self):  
+        parser = Audiobooks()
+        links = parser.get_links_for_page("test/audiobooks/test_pages/search_audiobooks.html")
+        self.assertEqual(links, AudiobooksTestCases.links_audiobook)
+

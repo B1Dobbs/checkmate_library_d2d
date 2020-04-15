@@ -65,7 +65,7 @@ class Scribd(base_parser.BookSite):
     def format_url(self, format, search_str, page=1):
         return 'https://www.scribd.com/search?content_type=' + format + '&page='+ str(page) +'&query=' + search_str + '&language=1'
 
-    def get_links_for_page(self, url, format):
+    def get_links_for_page(self, url, format='books'):
         links = []
 
         soup = get_soup_from_url(url)

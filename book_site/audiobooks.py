@@ -1,5 +1,5 @@
 from book_data import BookData, Format
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_soup_from_url
 from book_site import base_parser
 import requests, bs4
 import re 
@@ -52,36 +52,18 @@ class Audiobooks(base_parser.BookSite):
 
         return book_data
 
-    """Given a SiteBookData, search for the book at the `book_site` site
-    and provide a list of likely matches paired with how good
-    of a match it is (1.0 is an exact match). 
-    This should take into account all the info we have about a book, 
-    including the cover.""" 
-    def get_site_links(self, book_data):
-        links = []
-
-        if book_data.authors != None: # If a title is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.get_authors_as_string())
-
-        if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.isbn_13)
-
-        if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.title)
-            
-        return links
+    def get_links_for_search(self, search_str, format):
+        '''Only audio books at this site'''
+        return self.get_links_for_page('https://www.audiobooks.com/search/book/' + search_str)
 
     """ Searching Audiobooks for relevant links """
-    def get_links_for_search(self, search_str):
+    def get_links_for_page(self, url):
         links = []
-        link = 'https://www.audiobooks.com/search/book/' + search_str
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+        soup = get_soup_from_url(url)
         
         for div in soup.find_all('div', class_="book__details--flex-child"):
-            for link in div.find_all('a'):
-                links.append(link.get('href'))
+            a_tag = div.find('a')
+            links.append(a_tag.get('href'))
 
         return links
 
