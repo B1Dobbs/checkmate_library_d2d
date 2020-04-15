@@ -1,11 +1,11 @@
 import unittest
 import sys
-from scribd.tests import TestScribdBookDataLocal, TestScribdBookDataLive, TestScribdLinksLocal
+from scribd.tests import TestScribdBookDataLocal, TestScribdBookDataLive, TestScribdLinks
 from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBookDataLive
-from kobo.kobo_book_data import TestKoboBookDataLocal, TestKoboBookDataLive
+from kobo.tests import TestKoboBookDataLocal, TestKoboBookDataLive, TestKoboLinks
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
 from livraria_cultura.livraria_cultura_book_data import TestLivrariaCulturaBookDataLocal, TestLivrariaCulturaBookDataLive
-from audiobooks.tests import TestAudiobooksBookDataLocal, TestAudiobooksBookDataLive, TestAudiobooksLinksLocal
+from audiobooks.tests import TestAudiobooksBookDataLocal, TestAudiobooksBookDataLive, TestAudiobooksLinks
 from book_site.google_books import GoogleBooks
 from book_site.kobo import Kobo
 from book_site.livraria_cultura import LivrariaCultura
@@ -52,9 +52,11 @@ def load_live_tests(loader, slugs):
 def load_link_search(loader, slugs):
     tests = []
     if Scribd.SLUG in slugs or slugs == None:
-        tests += loader.loadTestsFromTestCase(TestScribdLinksLocal)
+        tests += loader.loadTestsFromTestCase(TestScribdLinks)
     if Audiobooks.SLUG in slugs or slugs == None:
-        tests += loader.loadTestsFromTestCase(TestAudiobooksLinksLocal)
+        tests += loader.loadTestsFromTestCase(TestAudiobooksLinks)
+    if Kobo.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestKoboLinks)
     return tests
 
 
@@ -67,7 +69,7 @@ if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite  = unittest.TestSuite()
 
-    tests = load_link_search(loader, {Scribd.SLUG})
+    tests = load_link_search(loader, {Kobo.SLUG})
     #tests += load_link_search(loader, {Scribd.SLUG})
 
     suite.addTests(tests)

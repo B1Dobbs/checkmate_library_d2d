@@ -1,5 +1,5 @@
 from book_data import BookData, Format
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_soup_from_url
 from book_site import base_parser
 import requests, bs4
 
@@ -64,59 +64,41 @@ class Kobo(base_parser.BookSite):
 
         return book_data
 
-    """Given a SiteBookData, search for the book at the `book_site` site
-    and provide a list of likely matches paired with how good
-    of a match it is (1.0 is an exact match). 
-    This should take into account all the info we have about a book, 
-    including the cover.""" 
-    def get_site_links(self, book_data):
-        links = []
+    def get_links_for_search(self, search_str, format):
+        if(format == Format.DIGITAL):
+            return self.get_links_for_page(self.format_url('Book', search_str), 'Book')
+        elif(format == Format.AUDIO_BOOK):
+            return self.get_links_for_page(self.format_url('Audiobook', search_str), 'Audiobook')
+        else:
+            return []
 
-        query_string = ""
+    def format_url(self, format, search_str, page=1):
+        return 'https://www.kobo.com/us/en/search?query=' + search_str + '&fcmedia=' + format + '&pageNumber=' + str(page)
 
-        if book_data.authors != None: # Add authors to query string if provided
-            query_string += book_data.get_authors_as_string()
-        
-        if book_data.title != None: # Add title to query string if provided
-            if query_string != "":
-                query_string += " " + book_data.title
-            else:
-                query_string = book_data.title
-
-        if book_data.isbn_13 != None: # Search by ISBN if provided
-            links += self.get_links_for_search(book_data.isbn_13)
-        
-        if query_string != "": # Search with everything in the query string
-            links += self.get_links_for_search(query_string)
-            
-        return links
 
     """ Searching Kobo for relevant links """
-    def get_links_for_search(self, search_str):
+    def get_links_for_page(self, url, format=""):
         links = []
-        link = 'https://www.kobo.com/us/en/search?query=' + search_str
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+        soup = get_soup_from_url(url)
         
         for p in soup.find_all('p', class_="title product-field"):
             for link in p.find_all('a'):
                 links.append(link.get('href'))
 
-        aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
-        if aLink != "None": #There's more than one page
-            num_pages = aLink.contents[0]
-            num_pages = int(num_pages) + 1
-            print(num_pages)
-            for i in range(2, num_pages):
-                link = 'https://www.kobo.com/us/en/search?query=' + search_str + '&pageNumber=' + str(i)
-                res = requests.get(link)
-                res.raise_for_status()
-                soup = bs4.BeautifulSoup(res.text, "html.parser")
+        # aLink = soup.find('a', class_="page-link final") # Find the function by looking for the pattern
+        # if aLink != "None": #There's more than one page
+        #     num_pages = aLink.contents[0]
+        #     num_pages = int(num_pages) + 1
+        #     print(num_pages)
+        #     for i in range(2, num_pages):
+        #         link = 'https://www.kobo.com/us/en/search?query=' + search_str + '&pageNumber=' + str(i)
+        #         res = requests.get(link)
+        #         res.raise_for_status()
+        #         soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-                for p in soup.find_all('p', class_="title product-field"):
-                    for link in p.find_all('a'):
-                        links.append(link.get('href'))
+        #         for p in soup.find_all('p', class_="title product-field"):
+        #             for link in p.find_all('a'):
+        #                 links.append(link.get('href'))
     
         return links
 

@@ -1,5 +1,5 @@
 from book_data import BookData
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_soup_from_url
 import requests, bs4
 from book_site import base_parser
 
@@ -65,40 +65,42 @@ class LivrariaCultura(base_parser.BookSite):
             
         return links
 
-    def get_links_for_search(self, search_str):
+    def get_links_for_search(self, search_str, format):
+        '''No differentiation between formats'''
+        return self.get_links_for_page('https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str)
+
+
+    def get_links_for_page(self, url):
         links = []
-        link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+        soup = get_soup_from_url(url)
 
         for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
             for a in div.find_all('a'):
                 links.append(a.get('href'))
 
-        #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
-        # First get the number of books
-        storage_span = soup.find('span', class_="resultado-busca-numero")
-        num_books_span = storage_span.find('span', class_="value")
-        num_books = int(num_books_span.contents[0])
+        # #This code is supposed to paginate, but for some reason libraria's pagination links don't work at all.
+        # # First get the number of books
+        # storage_span = soup.find('span', class_="resultado-busca-numero")
+        # num_books_span = storage_span.find('span', class_="value")
+        # num_books = int(num_books_span.contents[0])
 
-        books_per_pages_option = soup.find('option', attrs={"selected" : "selected"})
-        books_per_pages = int(books_per_pages_option.contents[0])
+        # books_per_pages_option = soup.find('option', attrs={"selected" : "selected"})
+        # books_per_pages = int(books_per_pages_option.contents[0])
         
-        num_pages = num_books/books_per_pages
+        # num_pages = num_books/books_per_pages
 
         
-        if num_pages > 1:
-            for i in range(2, int(num_pages)):
-                link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str + '#' + str(i)
-                print(link)
-                res = requests.get(link)
-                res.raise_for_status()
-                soup = bs4.BeautifulSoup(res.text, "html.parser")
+        # if num_pages > 1:
+        #     for i in range(2, int(num_pages)):
+        #         link = 'https://www3.livrariacultura.com.br/ebooks/?ft=' + search_str + '#' + str(i)
+        #         print(link)
+        #         res = requests.get(link)
+        #         res.raise_for_status()
+        #         soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-                for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
-                    for a in div.find_all('a'):                 
-                        links.append(a.get('href'))
+        #         for div in soup.find_all('div', class_="prateleiraProduto__informacao__preco"):
+        #             for a in div.find_all('a'):                 
+        #                 links.append(a.get('href'))
 
 
         return links

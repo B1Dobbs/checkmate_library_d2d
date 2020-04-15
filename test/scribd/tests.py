@@ -35,7 +35,7 @@ class TestScribdBookDataLive(BaseBookParseTest):
         local_url = "https://www.scribd.com/book/445929040/The-Mamba-Mentality-How-I-Play"
         self.common_test(local_url, ScribdTestCases.bryant_live, Scribd())
 
-class TestScribdLinksLocal(unittest.TestCase): 
+class TestScribdLinks(unittest.TestCase): 
   
     def test_books(self):  
         parser = Scribd()

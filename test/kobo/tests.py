@@ -37,3 +37,16 @@ class TestKoboBookDataLive(BaseBookParseTest):
         local_url = "https://www.kobo.com/us/en/ebook/divergent-1"
         self.common_test(local_url, KoboTestCases.roth_live, Kobo())
 
+
+class TestKoboLinks(unittest.TestCase): 
+  
+    def test_books(self):  
+        parser = Kobo()
+        links = parser.get_links_for_page("test/kobo/test_pages/search_books.html", "Book")
+        self.assertEqual(links, KoboTestCases.links_book)
+
+    def test_audiobooks(self):  
+        parser = Kobo()
+        links = parser.get_links_for_page("test/kobo/test_pages/search_audiobooks.html", "Audiobook")
+        self.assertEqual(links, KoboTestCases.links_audiobook)
+

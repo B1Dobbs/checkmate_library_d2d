@@ -80,3 +80,30 @@ class KoboTestCases():
             **roth_local,
             "url" : "https://www.kobo.com/us/en/ebook/divergent-1",
     } 
+
+    links_audiobook = ['https://www.kobo.com/us/en/audiobook/the-hunger-games-special-edition',
+		'https://www.kobo.com/us/en/audiobook/anarchy-23',
+		'https://www.kobo.com/us/en/audiobook/suzanne-collins-2',
+		'https://www.kobo.com/us/en/audiobook/the-dark-fantastic-8',
+		'https://www.kobo.com/us/en/audiobook/finding-god-in-the-hunger-games-1',
+		'https://www.kobo.com/us/en/audiobook/101-amazing-facts-about-the-hunger-games-1',
+		'https://www.kobo.com/us/en/audiobook/jennifer-lawrence-6',
+		'https://www.kobo.com/us/en/audiobook/the-hunger-but-mainly-death-games-1',
+		'https://www.kobo.com/us/en/audiobook/a-hunger-like-no-other-5',
+		'https://www.kobo.com/us/en/audiobook/the-hunger-35',
+		'https://www.kobo.com/us/en/audiobook/wild-hunger-8',
+		'https://www.kobo.com/us/en/audiobook/the-body-book-8']
+
+    links_book = ['https://www.kobo.com/us/en/ebook/the-hunger-games-official-illustrated-movie-companion',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-catching-fire-the-official-illustrated-movie-companion',
+		'https://www.kobo.com/us/en/ebook/mockingjay-the-final-book-of-the-hunger-games',
+		'https://www.kobo.com/us/en/ebook/catching-fire-hunger-games-book-two',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-hunger-games-book-one',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-trilogy',
+		'https://www.kobo.com/us/en/ebook/the-ballad-of-songbirds-and-snakes-a-hunger-games-novel',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-tribute-guide',
+		'https://www.kobo.com/us/en/ebook/the-world-of-the-hunger-games',
+		'https://www.kobo.com/us/en/ebook/the-unofficial-recipes-of-the-hunger-games-187-recipes-inspired-by-the-hunger-games-catching-fire-and-mockingjay-1',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-instructional-guides-for-literature',
+		'https://www.kobo.com/us/en/ebook/the-hunger-games-catching-fire-piano-songbook'
+    ]
