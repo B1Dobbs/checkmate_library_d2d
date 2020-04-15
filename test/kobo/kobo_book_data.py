@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 from book_site.kobo import Kobo
 from checkmate import get_book_site
-from base_book_parse_test import BaseBookParseTest
+from base_tests import BaseBookParseTest
 from kobo.test_cases import KoboTestCases
   
 

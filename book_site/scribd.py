@@ -1,6 +1,6 @@
 from book_data import BookData, Format
 from lxml import etree
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_soup_from_url
 import requests, bs4
 import json
 import re 
@@ -54,22 +54,26 @@ class Scribd(base_parser.BookSite):
 
         return book_data
 
-    def get_links_for_page(self, page, search_str):
-        links = self.get_links_for_page_format('books', page, search_str)
-        #links += self.get_links_for_page_format('audiobooks', page, search_str)
-        return links
+    def get_links_for_search(self, search_str, format, page=1):
+        if(format == Format.DIGITAL):
+            return self.get_links_for_page(self.format_url('books', search_str), 'books')
+        elif(format == Format.AUDIO_BOOK):
+            return self.get_links_for_page(self.format_url('audiobooks', search_str), 'audiobooks')
+        else:
+            return []
 
-    def get_links_for_page_format(self, format, page, search_str):
+    def format_url(self, format, search_str, page=1):
+        return 'https://www.scribd.com/search?content_type=' + format + '&page='+ str(page) +'&query=' + search_str + '&language=1'
+
+    def get_links_for_page(self, url, format):
         links = []
-        link = url = 'https://www.scribd.com/search?content_type=' + format + '&page='+ str(page) +'&query=' + search_str + '&language=1'
-        res = requests.get(link)
 
         soup = get_soup_from_url(url)
         pattern = re.compile(r'function prefetchResource') # Create a python regex to find the function in which the json resides
         string = str(soup.find('script', text=pattern)) # Find the function by looking for the pattern
 
         pattern = regex.compile(r'\{(?:[^{}]|(?R))*\}') # Because python regex is not as powerful, we have to import a more powerful standardized regex
-                                                        # This code selects actual json code
+                                                       # This code selects actual json code
         new_string = pattern.findall(string)
         parsed_json = json.loads(new_string[1]) # parse the json
 
@@ -77,7 +81,7 @@ class Scribd(base_parser.BookSite):
             results = parsed_json['results']  
             for book in results[format]['content']['documents']:
                 links.append(book['book_preview_url'])
-        
+
         return links
 
     """Given a book_id, return the direct url for the book.""" 

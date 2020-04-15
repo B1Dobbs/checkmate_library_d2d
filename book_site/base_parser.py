@@ -10,8 +10,6 @@ class BookSite:
         pass
     def get_site_specific_data(self):
         pass
-    def get_site_links(self):
-        pass
     def get_links_for_search(self, search_str):
         pass
     def convert_book_id_to_url(self, book_id):
@@ -55,15 +53,21 @@ class BookSite:
         search_str = self.get_search_str(book_data)
 
         matches = []
-        page = 1
-        links = self.get_links_for_page(page, search_str)
-        print(links)
-        while links != [] and not self.found_enough_matches(matches):
-            print("PAGE: ", page)
-            page += 1
+        links = self.get_links_for_search(search_str, book_data.format)
+        #print(links)
+        print(self.get_links_for_page("test/scribd/test_pages/search_books.html", "books"))
+        if links != []:
             matches += self.get_matches_from_links(links, book_data)
-            links = self.get_links_for_page(page, search_str)
-            # for match in matches:
+
+        '''This commented out section is for pagnation. It was determined that getting
+        results from more than one page was out of scope because the user should be making
+        searches that would result in the book being found on the first page.'''
+        # while links != [] and not self.found_enough_matches(matches):
+        #     print("PAGE: ", page)
+        #     page += 1
+        #     matches += self.get_matches_from_links(links, book_data)
+        #     links = self.get_links_for_page(page, search_str)
+        #     # for match in matches:
             #     match[1].print_data()
             #     print("MATCH: ", match[0])
             # print('ENOUGH: ', self.found_enough_matches(matches))
@@ -111,6 +115,7 @@ class BookSite:
 
         return matches
 
+    '''Only used when needing to search more than one page for a match.'''
     def found_enough_matches(self, matches):
         has_good_match = False
     

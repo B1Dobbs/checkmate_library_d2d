@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 from book_site.livraria_cultura import LivrariaCultura
 from checkmate import get_book_site
-from base_book_parse_test import BaseBookParseTest
+from base_tests import BaseBookParseTest
 from livraria_cultura.test_cases import LivrariaCulturaTestCases
   
 

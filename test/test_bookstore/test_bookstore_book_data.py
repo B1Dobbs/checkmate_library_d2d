@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 from book_site.test_bookstore import TestBookstore
 from checkmate import get_book_site
-from base_book_parse_test import BaseBookParseTest
+from base_tests import BaseBookParseTest
 from test_bookstore.test_cases import TestBookstoreTestCases
   
 

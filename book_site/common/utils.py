@@ -51,7 +51,7 @@ def get_soup_from_url(url):
     if 'http' in url:
         content = requests.get(url).text
     else: 
-        content = url
+        content = open(url, encoding="utf8")
 
     return bs4.BeautifulSoup(content, "html.parser")
 

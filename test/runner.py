@@ -1,6 +1,6 @@
 import unittest
 import sys
-from scribd.scribd_book_data import TestScribdBookDataLocal, TestScribdBookDataLive
+from scribd.tests import TestScribdBookDataLocal, TestScribdBookDataLive, TestScribdLinksLocal
 from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBookDataLive
 from kobo.kobo_book_data import TestKoboBookDataLocal, TestKoboBookDataLive
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
@@ -48,6 +48,13 @@ def load_live_tests(loader, slugs):
         tests += loader.loadTestsFromTestCase(TestAudiobooksBookDataLive)
     return tests
 
+'''Only conducted locally - Cannot test live dynamically loaded links'''
+def load_link_search(loader, slugs):
+    tests = []
+    if Scribd.SLUG in slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestScribdLinksLocal)
+    return tests
+
 
 #https://stackoverflow.com/questions/5360833/how-to-run-multiple-classes-in-single-test-suite-in-python-unit-testing/16823869
 if __name__ == '__main__':
@@ -58,8 +65,8 @@ if __name__ == '__main__':
     loader = unittest.TestLoader()
     suite  = unittest.TestSuite()
 
-    tests = load_live_tests(loader, {Audiobooks.SLUG})
-    tests += load_local_tests(loader, {Audiobooks.SLUG})
+    tests = load_link_search(loader, {Scribd.SLUG})
+    #tests += load_link_search(loader, {Scribd.SLUG})
 
     suite.addTests(tests)
     

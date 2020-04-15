@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 from book_site.scribd import Scribd
 from checkmate import get_book_site
-from base_book_parse_test import BaseBookParseTest
+from base_tests import BaseBookParseTest, BaseLinkParseTest
 from scribd.test_cases import ScribdTestCases
   
 
@@ -34,5 +34,15 @@ class TestScribdBookDataLive(BaseBookParseTest):
     def test_bryant(self):
         local_url = "https://www.scribd.com/book/445929040/The-Mamba-Mentality-How-I-Play"
         self.common_test(local_url, ScribdTestCases.bryant_live, Scribd())
+
+class TestScribdLinksLocal(BaseLinkParseTest): 
+  
+    def test_books(self):  
+        local_url = "test/scribd/test_pages/search_books.html"
+        self.common_test(local_url, ScribdTestCases.links_book, Scribd(), 'books')
+
+    def test_audiobooks(self):  
+        local_url = "test/scribd/test_pages/search_audiobooks.html"
+        self.common_test(local_url, ScribdTestCases.links_audiobook, Scribd(), 'audiobooks')
 
 
