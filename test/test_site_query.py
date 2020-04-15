@@ -4,14 +4,14 @@ sys.path.append(".")
 from checkmate import get_book_site, Audiobooks, GoogleBooks, Kobo, LivrariaCultura, Scribd, TestBookstore
 from book_data import BookData, Format, ParseStatus
 
-    
+
 def testSiteQuery(book_site):
     book_data = BookData()
     book_data.format = Format.AUDIO_BOOK
     book_data.authors = ["suzanne collins"]
     print(book_site.find_book_matches(book_data))
     
-
+'''Simple test for printing out the matches from a book site'''
 if __name__ == "__main__":
 
     testToRun = sys.argv[1]
