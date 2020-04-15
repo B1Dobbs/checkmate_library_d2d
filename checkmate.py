@@ -1,5 +1,5 @@
 import sys
-sys.path.append("./checkmate_tool")
+sys.path.append(".")
 from book_site.google_books import GoogleBooks
 from book_site.kobo import Kobo
 from book_site.livraria_cultura import LivrariaCultura
