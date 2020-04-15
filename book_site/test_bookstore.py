@@ -1,5 +1,5 @@
 from book_data import BookData, Format
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_soup_from_url
 import requests, bs4
 import re 
 from book_site import base_parser
@@ -49,53 +49,33 @@ class TestBookstore(base_parser.BookSite):
 
         return book_data
 
-
-    """Given a SiteBookData, search for the book at the `book_site` site
-    and provide a list of likely matches paired with how good
-    of a match it is (1.0 is an exact match). 
-    This should take into account all the info we have about a book, 
-    including the cover.""" 
-    def get_site_links(self, book_data):
-
-        links = []
-
-        if book_data.authors != None: # If an author is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.get_authors_as_string())
-
-        if book_data.isbn_13 != None: # If an isbn is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.isbn_13)
-
-        if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += self.get_links_for_search(book_data.title)
-
-        # For each link, get the book data and compare it with the passed in book_data
-        return links
+    def get_links_for_search(self, search_str, format):
+        '''No differentiation between formats'''
+        return self.get_links_for_page('http://127.0.0.1:8000/testBookstore/library/?q=' + search_str)
 
     """ Search test Book Store for relevant links """
-    def get_links_for_search(self, search_str):
+    def get_links_for_page(self, url):
         links = []
-        link = 'http://127.0.0.1:8000/testBookstore/library/?q=' + search_str
-        res = requests.get(link)
-        res.raise_for_status()
-        soup = bs4.BeautifulSoup(res.text, "html.parser")
+        soup = get_soup_from_url(url)
 
         for link in soup.find_all('a', class_="book_title"):
             links.append("http://127.0.0.1:8000/testBookstore" + link.get('href'))
 
-        pattern = re.compile(r'Last')
-        find_page_num = str(soup.find('a', text=pattern))
-        if find_page_num != "None":
-            temp = re.findall(r'\d+', find_page_num)
-            num_pages = temp[0]
+        '''For Pagination'''
+        # pattern = re.compile(r'Last')
+        # find_page_num = str(soup.find('a', text=pattern))
+        # if find_page_num != "None":
+        #     temp = re.findall(r'\d+', find_page_num)
+        #     num_pages = temp[0]
         
-            for i in range(2, int(num_pages)+1):
-                link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
-                res = requests.get(link)
-                res.raise_for_status()
-                soup = bs4.BeautifulSoup(res.text, "html.parser")
+        #     for i in range(2, int(num_pages)+1):
+        #         link = 'http://127.0.0.1:8000/testBookstore/library/?page=' + str(i)
+        #         res = requests.get(link)
+        #         res.raise_for_status()
+        #         soup = bs4.BeautifulSoup(res.text, "html.parser")
 
-                for link in soup.find_all('a', class_="book_title"):
-                    links.append("http://127.0.0.1:8000/testBookstore" + link.get('href')) 
+        #         for link in soup.find_all('a', class_="book_title"):
+        #             links.append("http://127.0.0.1:8000/testBookstore" + link.get('href')) 
 
         
         return links 

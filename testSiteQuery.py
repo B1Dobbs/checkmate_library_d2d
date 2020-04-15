@@ -1,8 +1,7 @@
 #from book_data import BookData, Format
 import sys
 sys.path.append(".")
-from book_site.scribd import Scribd
-from checkmate import get_book_site, Audiobooks, GoogleBooks, Kobo, LivrariaCultura
+from checkmate import get_book_site, Audiobooks, GoogleBooks, Kobo, LivrariaCultura, Scribd, TestBookstore
 from book_data import BookData, Format, ParseStatus
 
     
@@ -37,3 +36,7 @@ if __name__ == "__main__":
     if testToRun == LivrariaCultura.SLUG or testToRun == None:
         print("Starting test for LivrariaCulture.")
         testSiteQuery(get_book_site("LC"))
+
+    if testToRun == TestBookstore.SLUG or testToRun == None:
+        print("Starting test for Test Bookstore.")
+        testSiteQuery(get_book_site("TB"))

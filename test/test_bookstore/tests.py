@@ -36,3 +36,12 @@ class TestTestBookstoreBookDataLive(BaseBookParseTest):
         self.common_test(local_url, TestBookstoreTestCases.reid_live, TestBookstore())
 
 
+class TestTestBookstoreLinks(unittest.TestCase): 
+  
+    def test_books(self):  
+        parser = TestBookstore()
+        links = parser.get_links_for_page("test/test_bookstore/test_pages/search_books.html")
+        self.assertEqual(links, TestBookstoreTestCases.links_book)
+
+ 
+

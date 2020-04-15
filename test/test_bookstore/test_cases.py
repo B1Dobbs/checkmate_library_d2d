@@ -80,3 +80,14 @@ class TestBookstoreTestCases():
             **reid_local,
             "url" : "http://127.0.0.1:8000/library/9781533791917/",
     } 
+
+    links_book = ['http://127.0.0.1:8000/testBookstore/library/9781524243456/',
+		'http://127.0.0.1:8000/testBookstore/library/9781927767498/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386820031/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386420248/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386989752/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386865063/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386494683/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386910961/',
+		'http://127.0.0.1:8000/testBookstore/library/9781515044413/',
+		'http://127.0.0.1:8000/testBookstore/library/9781386172093/']
