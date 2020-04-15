@@ -1,3 +1,0 @@
-book_site
-checkmate_tool
-test
