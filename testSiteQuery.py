@@ -1,15 +1,13 @@
 #from book_data import BookData, Format
 import sys
-sys.path.append(".")
-from book_site.scribd import Scribd
-from checkmate import get_book_site, Audiobooks, GoogleBooks, Kobo, LivrariaCultura
-from book_data import BookData, Format, ParseStatus
+from checkmate_tool.checkmate import get_book_site, Audiobooks, GoogleBooks, Kobo, LivrariaCultura, Scribd
+from checkmate_tool.book_data import BookData, Format, ParseStatus
 
     
 def testSiteQuery(book_site):
     book_data = BookData()
     book_data.format = Format.AUDIO_BOOK
-    book_data.authors = ["suzanne collins"]
+    book_data.authors = ["collins"]
     print(book_site.find_book_matches(book_data))
     
 
