@@ -5,6 +5,7 @@ import io
 import requests, bs4
 from PIL import Image
 from isbnlib import to_isbn13
+import json
 
 
 def get_image_from_url(url):
@@ -56,6 +57,15 @@ def get_soup_from_url(url):
         content = open(url, encoding="utf8")
 
     return bs4.BeautifulSoup(content, "html.parser")
+
+def get_json_from_url(url):
+    if 'http' in url:
+            api_response = requests.get(url)
+            content = api_response.json()
+
+    else:
+        content = json.load(open(url, encoding="utf8"))
+    return content
 
 def query_html(root, expr, get_first=False):
     """

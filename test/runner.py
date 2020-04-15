@@ -1,7 +1,7 @@
 import unittest
 import sys
 from scribd.tests import TestScribdBookDataLocal, TestScribdBookDataLive, TestScribdLinks
-from google_books.google_book_data import TestGoogleBookDataLocal, TestGoogleBookDataLive
+from google_books.tests import TestGoogleBooksDataLocal, TestGoogleBooksDataLive, TestGoogleBooksLinks
 from kobo.tests import TestKoboBookDataLocal, TestKoboBookDataLive, TestKoboLinks
 from test_bookstore.test_bookstore_book_data import TestTestBookstoreBookDataLocal, TestTestBookstoreBookDataLive
 from livraria_cultura.tests import TestLivrariaCulturaBookDataLocal, TestLivrariaCulturaBookDataLive, TestLivrariaCulturaLinks
@@ -20,7 +20,7 @@ def load_book_local(loader, slugs):
     if Scribd.SLUG == slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestScribdBookDataLocal)
     if GoogleBooks.SLUG == slugs or slugs == None:
-        tests += loader.loadTestsFromTestCase(TestGoogleBookDataLocal)
+        tests += loader.loadTestsFromTestCase(TestGoogleBooksDataLocal)
     if Kobo.SLUG == slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestKoboBookDataLocal)
     if TestBookstore.SLUG == slugs or slugs == None:
@@ -38,7 +38,7 @@ def load_book_live(loader, slugs):
     if Scribd.SLUG == slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestScribdBookDataLive)
     if GoogleBooks.SLUG == slugs or slugs == None:
-        tests += loader.loadTestsFromTestCase(TestGoogleBookDataLive)
+        tests += loader.loadTestsFromTestCase(TestGooglesBookDataLive)
     if Kobo.SLUG == slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestKoboBookDataLive)
     if TestBookstore.SLUG == slugs or slugs == None:
@@ -60,6 +60,8 @@ def load_link_search(loader, slugs):
         tests += loader.loadTestsFromTestCase(TestKoboLinks)
     if LivrariaCultura.SLUG == slugs or slugs == None:
         tests += loader.loadTestsFromTestCase(TestLivrariaCulturaLinks)
+    if GoogleBooks.SLUG == slugs or slugs == None:
+        tests += loader.loadTestsFromTestCase(TestGoogleBooksLinks)
     return tests
 
 

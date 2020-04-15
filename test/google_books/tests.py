@@ -7,7 +7,7 @@ from base_tests import BaseBookParseTest
 from google_books.test_cases import GoogleBooksTestCases
   
 
-class TestGoogleBookDataLocal(BaseBookParseTest): 
+class TestGoogleBooksDataLocal(BaseBookParseTest): 
   
     def test_adams(self):  
         local_url = "test/google_books/test_pages/murder_and_intrigue_on_the_mexican_border_by_adams.html"
@@ -23,7 +23,7 @@ class TestGoogleBookDataLocal(BaseBookParseTest):
         self.common_test(local_url, GoogleBooksTestCases.sandford_local, GoogleBooks())
 
 
-class TestGoogleBookDataLive(BaseBookParseTest):
+class TestGoogleBooksDataLive(BaseBookParseTest):
 
     def test_adams(self):  
         local_url = "https://play.google.com/store/books/details?id=-lRoDwAAQBAJ&source=gbs_api"
@@ -36,4 +36,11 @@ class TestGoogleBookDataLive(BaseBookParseTest):
     def test_sandford(self):  
         local_url = "https://play.google.com/store/books/details/John_Sandford_Neon_Prey?id=m75mDwAAQBAJ&hl=en_US"
         self.common_test(local_url, GoogleBooksTestCases.sandford_live, GoogleBooks())
+
+class TestGoogleBooksLinks(unittest.TestCase): 
+  
+    def test_books(self):  
+        parser = GoogleBooks()
+        links = parser.get_links_for_page("test/google_books/test_pages/api_search.json")
+        self.assertEqual(links, GoogleBooksTestCases.links_book)
 

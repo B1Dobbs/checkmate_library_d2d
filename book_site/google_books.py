@@ -1,5 +1,5 @@
 from book_data import BookData, Format
-from book_site.common.utils import query_html
+from book_site.common.utils import query_html, get_json_from_url
 from book_site import base_parser
 import requests
 from lxml import etree
@@ -71,14 +71,21 @@ class GoogleBooks(base_parser.BookSite):
             
         return links
 
-    def get_links_for_search(self, search_str):
-        links = []
-        link = 'https://www.googleapis.com/books/v1/volumes?q=' + search_str + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40'
-        api_response = requests.get(link)
+    def get_links_for_search(self, search_str, format):
+        '''No differentiation between formats'''
+        return self.get_links_for_page('https://www.googleapis.com/books/v1/volumes?q=' + search_str + '&filter=ebooks&key=AIzaSyCAFFlw7GGtYtnOwN7MZpHMaK_qq11GxdA&maxResults=40')
 
-        for item in api_response.json()['items']:
+
+    def get_links_for_page(self, url):
+        links = []
+        api_response = get_json_from_url(url)
+
+        count = 0
+
+        for item in api_response['items']:
             links.append(item['volumeInfo']['infoLink'])
-            if self.found_enough_matches(links):
+            count += 1
+            if count > 20:
                 break
     
         return links
