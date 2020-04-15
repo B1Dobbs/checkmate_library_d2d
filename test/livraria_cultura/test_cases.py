@@ -81,4 +81,30 @@ class LivrariaCulturaTestCases():
             "url" : "https://www3.livrariacultura.com.br/meditacoes-2112189903/p",
     } 
 
+
+    links_book = ['https://www3.livrariacultura.com.br/snowdens-box-2013190773/p',
+		'https://www3.livrariacultura.com.br/snowden-sin-un-lugar-donde-esconderse-2013252329/p',
+		'https://www3.livrariacultura.com.br/snowden-2010954187/p',
+		'https://www3.livrariacultura.com.br/snowden-86300321/p',
+		'https://www3.livrariacultura.com.br/snowden-white-and-the-seven-short-mexicans-111598926/p',
+		'https://www3.livrariacultura.com.br/snowden-2011302858/p',
+		'https://www3.livrariacultura.com.br/pendejo-snowden-111166232/p',
+		'https://www3.livrariacultura.com.br/edward-snowden-111074337/p',
+		'https://www3.livrariacultura.com.br/beyond-snowden-2010391283/p',
+		'https://www3.livrariacultura.com.br/arquivos-snowden-os-42200057/p',
+		'https://www3.livrariacultura.com.br/beyond-snowden-111311798/p',
+		'https://www3.livrariacultura.com.br/ciencias-politicas-edward-snowden-duthel-heinz-60357942/p',
+		'https://www3.livrariacultura.com.br/the-snowden-files-103207007/p',
+		'https://www3.livrariacultura.com.br/on-snowden-mountain-2011924653/p',
+		'https://www3.livrariacultura.com.br/the-story-of-snowden-111158697/p',
+		'https://www3.livrariacultura.com.br/the-snowden-avalanche-112104710/p',
+		'https://www3.livrariacultura.com.br/journalism-after-snowden-112074031/p',
+		'https://www3.livrariacultura.com.br/beyond-edward-snowden-2013102908/p',
+		'https://www3.livrariacultura.com.br/the-post-snowden-era-111095647/p',
+		'https://www3.livrariacultura.com.br/surveillance-after-snowden-95969820/p',
+		'https://www3.livrariacultura.com.br/the-snowden-files-111973025/p',
+		'https://www3.livrariacultura.com.br/ciencias-politicas-el-caso-snowden-lefebure-antoine-111230270/p',
+		'https://www3.livrariacultura.com.br/summary-permanent-record-by-edward-snowden-2013042157/p',
+		'https://www3.livrariacultura.com.br/if-i-was-analyzing-edward-snowden-108296114/p']
+
     

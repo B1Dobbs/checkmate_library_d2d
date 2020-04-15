@@ -23,7 +23,7 @@ class LivrariaCultura(base_parser.BookSite):
 
         #Series and Volume Number are not available on site
 
-        authorsTag = query_html(root, ".//th[contains(text(), 'Colaborado')]/following-sibling::td").text
+        authorsTag = query_html(root, ".//td[@class='value-field Colaborador']/descendant-or-self::*/text()")
 
         #Parsing Author Name
         collaborators = authorsTag.split("|")
@@ -32,8 +32,9 @@ class LivrariaCultura(base_parser.BookSite):
 
         for a in matchingAuthor:
             authorsNamesString = a.split(":")
-            authorsNamesArray = authorsNamesString[1].split(",")
-            authorsArray.append(authorsNamesArray[1].strip() + " " + authorsNamesArray[0].strip())
+            if "," in authorsNamesString[1]:
+                authorsNamesArray = authorsNamesString[1].split(",")
+                authorsArray.append(authorsNamesArray[1].strip() + " " + authorsNamesArray[0].strip())
         
         book_data.authors = authorsArray
 
@@ -46,24 +47,6 @@ class LivrariaCultura(base_parser.BookSite):
         book_data.extra = {"price" : str(query_html(root, ".//meta[@property='product:price:amount']/@content"))}
 
         return book_data
-
-    """Given a SiteBookData, search for the book at the `book_site` site
-    and provide a list of likely matches paired with how good
-    of a match it is (1.0 is an exact match). 
-    This should take into account all the info we have about a book, 
-    including the cover.""" 
-    def get_site_links(self, book_data):
-        links = []
-        if book_data.authors != None: # If a title is sent in to search by, record link matches
-            links += get_links_for_search(book_data.get_authors_as_string())
-
-        if book_data.isbn_13 != None: # If a title is sent in to search by, record link matches
-            links += get_links_for_search(book_data.isbn_13)
-
-        if book_data.title != None: # If a title is sent in to search by, record link matches
-            links += get_links_for_search(book_data.title)
-            
-        return links
 
     def get_links_for_search(self, search_str, format):
         '''No differentiation between formats'''

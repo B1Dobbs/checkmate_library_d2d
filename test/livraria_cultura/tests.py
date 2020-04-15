@@ -39,4 +39,12 @@ class TestLivrariaCulturaBookDataLive(BaseBookParseTest):
         live_url = "https://www3.livrariacultura.com.br/meditacoes-2112189903/p"
         self.common_test(live_url, LivrariaCulturaTestCases.aurelio_live, LivrariaCultura())
 
+class TestLivrariaCulturaLinks(unittest.TestCase): 
+  
+    def test_books(self):  
+        parser = LivrariaCultura()
+        links = parser.get_links_for_page("test/livraria_cultura/test_pages/search_books.html")
+        self.assertEqual(links, LivrariaCulturaTestCases.links_book)
+
+
 

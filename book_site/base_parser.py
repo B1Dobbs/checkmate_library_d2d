@@ -54,7 +54,7 @@ class BookSite:
 
         matches = []
         links = self.get_links_for_search(search_str, book_data.format)
-        print(links)
+        #print(links)
         if links != []:
             matches += self.get_matches_from_links(links, book_data)
 
@@ -96,19 +96,16 @@ class BookSite:
         matches = []
         last_match = 1
         index = 1
+
         for lnk in link_list:
             search_book_data = self.get_book_data(lnk)
             match_value = search_book_data.compare(book_data)
-            # search_book_data.print_data()
-            # print("MATCH: ", match_value)
-            # print("\nLAST: ", last_match)
-            # print("INDEX: ", index)
-            if match_value != 0.0 and not self.found_enough_matches(matches):
+            if match_value != 0.0:
                 matches.append((match_value, search_book_data))
                 last_match = index
-            elif (last_match / index) < self._MAX_DISTANCE:
-                self._STOP_SEARCH = True
-                break
+            # elif (last_match / index) < self._MAX_DISTANCE:
+            #     self._STOP_SEARCH = True
+            #     break
 
             index += 1
 
