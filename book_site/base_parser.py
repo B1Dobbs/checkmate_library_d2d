@@ -1,8 +1,10 @@
-from book_site.common.utils import get_image_from_url, get_root_from_url, query_html
-from book_data import BookData, Format, ParseStatus
+from checkmate_library.book_site.common.utils import get_image_from_url, get_root_from_url, query_html
+from checkmate_library.book_data import BookData, Format, ParseStatus
 import sys, traceback
 import requests
 from isbnlib import to_isbn13
+import multiprocessing
+from joblib import Parallel, delayed
 
 class BookSite:
 
@@ -78,7 +80,7 @@ class BookSite:
         query_string = ""
 
         # If authors is included, add to the query
-        if book_data.authors != None: 
+        if len(book_data.author) > 0:  
             query_string += book_data.get_authors_as_string()
         
         # If a title is included, add to the query
@@ -87,7 +89,7 @@ class BookSite:
         
         # If an isbn included, only search by isbn
         if book_data.isbn_13 != None:
-            query_string = book_data.isbn
+            query_string = book_data.isbn_13
         
         return query_string
 
@@ -97,6 +99,10 @@ class BookSite:
         last_match = 1
         index = 1
 
+        # num_cores = multiprocessing.cpu_count()
+        # inputs = link_list
+
+        # processed_list = Parallel(n_jobs=num_cores)(delayed(my_function(i,matches) for i in inputs))
         for lnk in link_list:
             search_book_data = self.get_book_data(lnk)
             match_value = search_book_data.compare(book_data)
